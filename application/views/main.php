@@ -201,7 +201,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<!-- Modal -->
 	<div class="modal fade" id="customer_detail_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h4 class="modal-title" id="exampleModalLabel">ORDER DETAILS</h4>
