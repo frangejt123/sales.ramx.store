@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require '../sales.ramx.store/escpos-php/vendor/autoload.php';
-use Mike42\Escpos\Printer;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+//require '../sales.ramx.store/escpos-php/vendor/autoload.php';
+//use Mike42\Escpos\Printer;
+//use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 
 class Main extends CI_Controller {
 
@@ -149,47 +149,6 @@ class Main extends CI_Controller {
 		echo json_encode($result);
 	}
 
-	public function printtest(){
-		$this->load->model('modTransaction', "", TRUE);
-		$this->load->model('modTransactionDetail', "", TRUE);
-		$lasttrans = $this->modTransaction->getLastTransactionID(null)->row_array();
-
-		$detailparam["transaction_id"] = $lasttrans["id"];
-		//$details["id"] = $lasttrans["id"];
-		// $details["table_number"] = $lasttrans["table_number"];
-		// $details["transaction_time"] = $lasttrans["datetime"];
-		$details = $this->modTransactionDetail->getAll($detailparam)->result_array();
-
-		$connector = new NetworkPrintConnector("192.168.1.108", 9100);
-		$printer = new Printer($connector);
-		/* Initialize */
-		$printer -> initialize();
-
-		$printer->setFont(Printer::FONT_A);
-		$printer -> setTextSize(2, 1);
-		/* Text */
-		$printer -> text("TABLE NUMBER : #".$lasttrans["table_number"]."\n\n");
-		$printer -> text(date("m/d/Y H:i:s", strtotime($lasttrans["datetime"]))."\n");
-		$printer -> text("\n\n");
-
-		foreach($details as $ind => $row){
-			$printer -> setTextSize(2, 1);
-			$printer -> text($row["quantity"]);
-			$printer -> setTextSize(2, 1);
-			$printer -> text(" ".$row["description"]."\n\n");
-		}
-
-		$printer -> text("\n\n");
-		$printer->setJustification(Printer::JUSTIFY_CENTER);
-
-		$printer -> setTextSize(1, 1);
-		$printer -> text("TRANSACTION #".$lasttrans["id"]."\n");
-		$printer -> text("RIBSHACK GRILL CORPORATION\n");
-
-		$printer -> cut();
-		$printer -> close();
-	}
-
 	public function ut($id){
 		$this->load->model('modProduct', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
@@ -321,4 +280,46 @@ class Main extends CI_Controller {
 		//echo json_encode($res);
 
 	}
+
+	/*public function printtest(){
+		$this->load->model('modTransaction', "", TRUE);
+		$this->load->model('modTransactionDetail', "", TRUE);
+		$lasttrans = $this->modTransaction->getLastTransactionID(null)->row_array();
+
+		$detailparam["transaction_id"] = $lasttrans["id"];
+		//$details["id"] = $lasttrans["id"];
+		// $details["table_number"] = $lasttrans["table_number"];
+		// $details["transaction_time"] = $lasttrans["datetime"];
+		$details = $this->modTransactionDetail->getAll($detailparam)->result_array();
+
+		$connector = new NetworkPrintConnector("192.168.1.108", 9100);
+		$printer = new Printer($connector);
+		// Initialize
+		$printer -> initialize();
+
+		$printer->setFont(Printer::FONT_A);
+		$printer -> setTextSize(2, 1);
+		//Text
+		$printer -> text("TABLE NUMBER : #".$lasttrans["table_number"]."\n\n");
+		$printer -> text(date("m/d/Y H:i:s", strtotime($lasttrans["datetime"]))."\n");
+		$printer -> text("\n\n");
+
+		foreach($details as $ind => $row){
+			$printer -> setTextSize(2, 1);
+			$printer -> text($row["quantity"]);
+			$printer -> setTextSize(2, 1);
+			$printer -> text(" ".$row["description"]."\n\n");
+		}
+
+		$printer -> text("\n\n");
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+
+		$printer -> setTextSize(1, 1);
+		$printer -> text("TRANSACTION #".$lasttrans["id"]."\n");
+		$printer -> text("RIBSHACK GRILL CORPORATION\n");
+
+		$printer -> cut();
+		$printer -> close();
+	}*/
+
 }
