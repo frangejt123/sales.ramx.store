@@ -33,7 +33,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<i class="fa fa-cubes"></i> &nbsp; Product List
 	</button>
 	<span class="pull-right span_seperator"></span>
-	<button id="product_list_btn" class="btn-secondary pull-right">
+	<button id="inventory_adjustment_btn" class="btn-secondary pull-right route_btn">
 		<i class="fa fa-cogs"></i> &nbsp; Inv. Adjustment
 	</button>
 	<?php } ?>

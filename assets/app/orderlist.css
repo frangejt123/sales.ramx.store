@@ -11,7 +11,7 @@ html{
 	color: #db5e73;
 }
 
-#create_order_btn{
+#create_order_btn, .create-btn{
 	margin-bottom: 10px;
 	padding: 10px;
 	border-radius: 10px;
@@ -20,7 +20,7 @@ html{
 	font-size: 20px;
 }
 
-#product_list_btn{
+#product_list_btn, .route_btn {
 	margin-bottom: 10px;
 	padding: 10px;
 	border-radius: 10px;
@@ -74,7 +74,11 @@ textarea{
 	resize: none;
 }
 
-#cancel_orderlist_btn, #pending_order_btn{
+.routing-btn {
+	cursor: pointer;
+}
+
+#cancel_orderlist_btn, #pending_order_btn, .lg-btn {
 	margin-bottom: 10px;
 	padding: 10px;
 	border-radius: 10px;
@@ -247,4 +251,41 @@ span.span_seperator{
 
 #delete_product_btn, #update_product_btn, #undo_delete_btn{
 	display: none;
+}
+
+.action-btn {
+	border-radius: 100%;
+	outline: none !important;
+	margin-top: 2px;
+}
+
+.form-readonly {
+	background-color: #fff !important;
+}
+
+.mb-0 {
+	margin-bottom: 0 !important;
+}
+
+.lg-btn + .dropdown-menu {
+	font-size:20px;
+}
+
+.text-danger {
+	color: #a94442 !important;
+}
+
+.form-disabled {
+	background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: auto !important;
+}
+
+select.form-disabled::-ms-expand {
+	display: none;
+	  /* for Firefox */
+	  -moz-appearance: none;
+	  /* for Chrome */
+	  -webkit-appearance: none;
 }
