@@ -1,0 +1,13 @@
+
+#nav { position:fixed; top:0; left:0; background:#fff; padding:15px; border-radius:20px; width:200px; }
+#nav ul { list-style-type:square; list-style-position:inside; margin:20px 0 0 0; padding:0; }
+#nav a { text-decoration:none; color:#000; }
+#nav a:hover { text-decoration: underline }
+#git-fork img { position:fixed; top:0; right:0; border:0; z-index:999; }
+
+.autocomplete-suggestions { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
+.autocomplete-suggestion { padding: 8px 8px; white-space: nowrap; overflow: hidden; font-size: 16px; }
+.autocomplete-no-suggestion { padding: 2px 5px;}
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: bold; color: #000; }
+.autocomplete-group { padding: 2px 5px; font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000; }

@@ -1,0 +1,250 @@
+html{
+	touch-action: manipulation;
+}
+
+#container{
+	padding: 20px;
+}
+
+.voided{
+	text-decoration: line-through;
+	color: #db5e73;
+}
+
+#create_order_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 300px;
+	font-size: 20px;
+}
+
+#product_list_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 250px;
+	font-size: 20px;
+}
+
+.grid_container{
+	padding-top: 20px;
+}
+
+#search_customer_name{
+	border: 2px solid #cfcfcf;
+	font-size: 18px;
+}
+
+table#orderlist_table tr, table#orderdata_table tr{
+	cursor: pointer;
+}
+
+.text-success{
+	color: #0dbc5f !important;
+}
+
+.text-warning{
+	color: #deb22c !important;
+}
+
+.text-primary{
+	color: #2574e0 !important;
+}
+
+table#table_trans_detail{
+	width: 100%;
+}
+
+table#table_trans_detail td{
+	font-size: 16px;
+	padding: 12px;
+	border-bottom: 1px solid #257dc7;
+}
+
+
+table#table_trans_detail td.sep{
+	border: 0px;
+	width: 50px;
+}
+
+textarea{
+	resize: none;
+}
+
+#cancel_orderlist_btn, #pending_order_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 150px;
+	font-size: 20px;
+}
+
+#print_order_btn, #void_order_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 150px;
+	font-size: 20px;
+}
+
+#process_order_btn, #complete_order_btn, #update_order_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 200px;
+	font-size: 20px;
+}
+
+#logout_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 150px;
+	font-size: 20px;
+}
+
+.detail_grand_total{
+	font-size: 30px;
+	font-weight: bold;
+	padding-bottom: 14px;
+}
+
+.void_notif{
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	margin-left: -150px;
+	width: 300px;
+	border: 1px solid #b02b2b;
+	padding: 15px;
+	background: #e97272;
+	color: #fff;
+	text-align: center;
+	cursor: pointer;
+	display: none;
+}
+
+/* modal confirm */
+.modal-confirm {
+	color: #636363;
+	width: 400px;
+}
+.modal-confirm .modal-content {
+	padding: 20px;
+	border-radius: 5px;
+	border: none;
+	text-align: center;
+	font-size: 14px;
+}
+.modal-confirm .modal-header {
+	border-bottom: none;
+	position: relative;
+}
+.modal-confirm h4 {
+	text-align: center;
+	font-size: 26px;
+	margin: 30px 0 -10px;
+}
+.modal-confirm .close {
+	position: absolute;
+	top: -5px;
+	right: -2px;
+}
+.modal-confirm .modal-body {
+	color: #999;
+}
+.modal-confirm .modal-footer {
+	border: none;
+	text-align: center;
+	border-radius: 5px;
+	font-size: 13px;
+	padding: 10px 15px 25px;
+}
+.modal-confirm .modal-footer a {
+	color: #999;
+}
+.modal-confirm .icon-box {
+	width: 80px;
+	height: 80px;
+	margin: 0 auto;
+	border-radius: 50%;
+	z-index: 9;
+	text-align: center;
+}
+.modal-confirm .icon-box i {
+	font-size: 46px;
+	display: inline-block;
+	margin-top: 13px;
+}
+.modal-confirm .btn {
+	color: #fff;
+	border-radius: 4px;
+	background: #60c7c1;
+	text-decoration: none;
+	transition: all 0.4s;
+	line-height: normal;
+	min-width: 120px;
+	border: none;
+	min-height: 40px;
+	border-radius: 3px;
+	margin: 0 5px;
+	outline: none !important;
+}
+.modal-confirm .btn-info {
+	background: #c1c1c1;
+}
+.modal-confirm .btn-info:hover, .modal-confirm .btn-info:focus {
+	background: #a8a8a8;
+}
+.modal-confirm .btn-danger {
+	background: #f15e5e;
+}
+.modal-confirm .btn-danger:hover, .modal-confirm .btn-danger:focus {
+	background: #ee3535;
+}
+/* modal confirm */
+
+span.span_seperator{
+	width: 20px;
+	display: block;
+	border: 1px solid #fff;
+	visibility: hidden
+}
+
+#product_list_modal input{
+	font-size: 16px;
+}
+
+#product_list_modal .form_container{
+	margin-bottom: 4px;
+}
+
+#product_list_modal .form_button_container{
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 15px;
+	margin-bottom: 10px;
+}
+
+.new_prod{
+	border-left: 8px solid #2574e0;
+}
+
+.remove_prod{
+	border-left: 8px solid #a94442;
+	text-decoration: line-through;
+}
+
+.update_prod{
+	 border-left: 8px solid #0dbc5f;
+}
+
+#delete_product_btn, #update_product_btn, #undo_delete_btn{
+	display: none;
+}
