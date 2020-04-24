@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			$total = "";
 			$custid = "";
 			$locationimage = "#";
-			$fb_name = "#";
+			$fb_name = "";
 
 			if(isset($transaction)){
 				$name = $transaction["name"];

@@ -116,8 +116,6 @@ $("document").ready(function(){
 
 	$("#settlebtn").on("click", function(){
 
-		console.log(inventorydata);
-
 	  	  var total = parseFloat($("#totalvalue").html());
 
 	      var products = $("#productsummary").find(".row");
@@ -335,9 +333,11 @@ $("document").ready(function(){
 				  var id = suggestion.data;
 				  var contactnumber = customerdetail[id]["contact_number"];
 				  var deliveryaddress = customerdetail[id]["delivery_address"];
+				  var facebookname = customerdetail[id]["fb_name"];
 
 				  $("#cust_contact_number").val(contactnumber);
 				  $("#cust_delivery_address").val(deliveryaddress);
+				  $("#facebook_name").val(facebookname);
 				  $("#customer_id").val(id);
 
 				  var bsurl = baseurl.replace("index.php", "");
