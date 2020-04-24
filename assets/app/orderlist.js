@@ -28,6 +28,13 @@ $(document).ready(function(){
 		window.location = baseurl + "/main/pos";
 	});
 
+		
+	$("button#inventory_adjustment_btn").on("click", function(){
+		NProgress.start();
+		window.location = baseurl + "/inventory/adjustment";
+	});
+
+
 	$("table#orderlist_table").on("click", "tr", function(){
 		var id = $(this).attr("id").split("_")[1];
 		NProgress.start();
