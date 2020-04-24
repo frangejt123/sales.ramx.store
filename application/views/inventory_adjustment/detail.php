@@ -12,6 +12,7 @@
 		$remarks = $adjustment["remarks"];
 		$prepared_by =  isset($prep_by) ? $prep_by["username"] : "" ;
 		$approved_by = isset($app_by) ? $app_by["username"] : "" ;
+		$btn_class = "";
 	} else {
 		$id = "";
 		$status = "1";
@@ -20,6 +21,7 @@
 		$remarks = "";
 		$prepared_by = "";
 		$approved_by = "";
+		$btn_class = "hidden";
 	}
 ?>
 
@@ -34,17 +36,15 @@
 	</button>
 	<span class="pull-right span_seperator"></span>
 
-<?php 
-	if(isset($adjustment)) {
-?>
-	<button id="approve-btn" class="btn-primary pull-right lg-btn <?= $status==1 ? '' : 'hidden' ?>" data-toggle="modal" data-target="#approve-modal">
+
+	<button id="approve-btn" class="btn-primary pull-right lg-btn <?= $btn_class ?>" data-toggle="modal" data-target="#approve-modal">
 			<i class="fa fa-thumbs-up"></i> &nbsp; Approve
 	</button>
 	<span class="pull-right span_seperator"></span>
-	<button id="delete-btn" class="btn-danger pull-right lg-btn <?= $status==1 ? '' : 'hidden' ?>" data-toggle="modal" data-target="#delete-modal">
+	<button id="delete-btn" class="btn-danger pull-right lg-btn <?= $btn_class ?>" data-toggle="modal" data-target="#delete-modal">
 			<i class="fa fa-trash"></i> &nbsp; Delete
 	</button>
-<?php } ?>
+
 
 	<div style="clear:both"></div>
 

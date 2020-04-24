@@ -309,6 +309,8 @@ $(document).ready(() => {
 
 					
 					}
+					$("#approve-btn").removeClass("hidden");
+					$("#delete-btn").removeClass("hidden");
 					alert("Inventory adjustment has been saved succesfuly.")
 				}
 			},
