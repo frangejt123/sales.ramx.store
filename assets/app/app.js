@@ -38,7 +38,7 @@ $("document").ready(function(){
 		}
 
 		var new_qty = availqty - qty;
-		if(new_qty < 0)
+		if(new_qty < 0 || qty <= 0)
 			return;
 
 		var html = '<div class="row prodsumrow new haschanges" id="'+id+'">'
