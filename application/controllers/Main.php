@@ -31,6 +31,7 @@ class Main extends CI_Controller {
 		foreach($customer as $ind => $row){
 			$customerarray[$row["id"]] = array();
 			$customerarray[$row["id"]]["name"] = $row["name"];
+			$customerarray[$row["id"]]["fb_name"] = $row["facebook_name"];
 			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
 			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
 			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
