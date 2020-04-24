@@ -111,8 +111,9 @@ class Main extends CI_Controller {
 		$this->modTransaction->updateChanges($id);
 	}
 
-	public function settle(){
-		date_default_timezone_set ( "Asia/Manila");
+	public function settle()
+	{
+		date_default_timezone_set("Asia/Manila");
 		session_start();
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
@@ -120,6 +121,30 @@ class Main extends CI_Controller {
 		$this->load->model('modProduct', "", TRUE);
 
 		$param = $this->input->post(NULL, "true");
+
+		/* UPDATE INVENTORY */
+		$noavailqty = false;
+		$productnoavailqty = array();
+		if (isset($param["inventorydata"]))
+			foreach ($param["inventorydata"] as $ind => $row) {
+					$prodqty = $this->modProduct->availQty($row["id"])->row_array();
+					if (($prodqty["qty"] + $row["qty"]) < 0) {
+						$noavailqty = true;
+						array_push($productnoavailqty, $prodqty["description"]);
+					} else {
+						$this->modProduct->updateInventory($row);
+					}
+			}
+
+		/* UPDATE INVENTORY */
+		if($noavailqty){
+			$result["success"] = false;
+			$result["error"] = "Some products have no available quantity.";
+			$result["product"] = $productnoavailqty;
+			echo json_encode($result);
+			return;
+		}
+
 		$param["trans"]["datetime"] = date("Y-m-d H:i:s");
 
 		$image = $param["locationimg"];
@@ -173,13 +198,6 @@ class Main extends CI_Controller {
 					$this->modTransactionDetail->delete($row);
 			}
 		}
-
-		/* UPDATE INVENTORY */
-		if(isset($param["inventorydata"]))
-			foreach($param["inventorydata"] as $ind => $row){
-				$this->modProduct->updateInventory($row);
-			}
-		/* UPDATE INVENTORY */
 
 		echo json_encode($result);
 	}
