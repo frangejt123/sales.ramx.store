@@ -257,14 +257,15 @@ $(document).ready(() => {
 		}
 
 		if(window.adjustment) {
-			if(changedData.length > 0) {
-				param.details = changedData;
-			}
-	
+
 		} else {
 			if(changedData.length == 0) {
 				return;
 			}
+		}
+
+		if(changedData.length > 0) {
+			param.details = changedData;
 		}
 		
 		$.ajax({
