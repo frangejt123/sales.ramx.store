@@ -2,6 +2,10 @@ $("document").ready(function(){
 
 	NProgress.configure({ showSpinner: false });
 	$("input.inpqty").val("1");
+	var croppieimg = "";
+	var imghaschanges;
+	var croppie;
+	var croppieready = false;
 
 	var deviceheight = document.documentElement.clientHeight;
 	$("body").css({
@@ -17,11 +21,14 @@ $("document").ready(function(){
 		height: deviceheight - 300 + "px"
 	});
 
+	var inventorydata = {};
+
 	$("div#container").on("click", ".product_cont", function(){
 		var id = $(this).attr("id");
 		var description = $(".product_main #"+id).find("div.product_desc").html();
 		var price = $(".product_main #"+id).find("div.product_price").html();
-		var qty = $("input#inpqty"+id).val();
+		var qty = parseFloat($("input#inpqty"+id).val());
+		var availqty = parseFloat($(".product_main #qty_"+id+" span").html());
 
 		var products = $("#productsummary").find(".row#"+id);
 
@@ -29,6 +36,8 @@ $("document").ready(function(){
 		if(products.length > 0) {
 			$exist = true;
 		}
+
+		var new_qty = availqty - qty;
 
 		var html = '<div class="row prodsumrow new haschanges" id="'+id+'">'
 					+ '<div class="col-lg-7 summary_desc left_floater">'
@@ -55,6 +64,14 @@ $("document").ready(function(){
 				$("#productsummary .row#"+id).addClass("edited haschanges");
 		}
 
+		if(id in inventorydata) {
+			inventorydata[id]["qty"] -= qty;
+		}else{
+			var qty = (qty * -1);
+			inventorydata[id] = {id, qty};
+		}
+
+		$(".product_main #qty_"+id+" span").text(new_qty);
 		changeprice();
 	});
 
@@ -62,11 +79,24 @@ $("document").ready(function(){
 		var id = $(this).attr("id").split("_")[1];
 		var row = $("div#container").find(".prodsumrow#"+id);
 
+		var availqty = parseFloat($(".product_main #qty_"+id+" span").html());
+		var inputqty = parseFloat($("div.prodsumrow#"+id+" div.summary_qty").text());
+
+
+		$(".product_main #qty_"+id+" span").text(availqty + inputqty);
+		if(id in inventorydata) {
+			inventorydata[id]["qty"] += inputqty;
+		}else{
+			var qty = inputqty;
+			inventorydata[id] = {id, qty};
+		}
+
 		if($(row).hasClass("existing")){
 			$(row).hide().addClass("deleted haschanges").attr("id",id+"_deleted").removeClass("edited");
 		}else{
 			$(row).remove();
 		}
+
 		changeprice();
 	});
 
@@ -85,6 +115,9 @@ $("document").ready(function(){
 	}
 
 	$("#settlebtn").on("click", function(){
+
+		console.log(inventorydata);
+
 	  	  var total = parseFloat($("#totalvalue").html());
 
 	      var products = $("#productsummary").find(".row");
@@ -110,6 +143,8 @@ $("document").ready(function(){
 
 	  	var total = parseFloat($("#totalvalue").html()).toFixed(2);
 		var customer_id = $("input#customer_id").val();
+		var customer_name = $("input#customer_name").val();
+		var facebook_name = $("input#facebook_name").val();
 		var delivery_address = ucwords($("#cust_delivery_address").val());
 		var delivery_date = $("input#delivery_date").val();
 		var payment_method = $("#payment_method").val();
@@ -122,7 +157,8 @@ $("document").ready(function(){
 		if(transaction_id != ""){
 			haschanges = 1;
 		}
-	  	var transdata = {transaction_id, customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0};
+
+	  	var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0};
 	  	var product = $("#productsummary").find(".row.haschanges");
 
 	  	$.each(product, function(ind, row){
@@ -142,41 +178,59 @@ $("document").ready(function(){
 	  		detail.push(datarow);
 	  	});
 
-	  	var data = {"trans":transdata,"detail":detail};
+		var locationimg = croppieimg;
+
+	  	var data = {"trans":transdata, "detail": detail, locationimg, inventorydata};
+
 		if(newcustomer !== undefined){
 			data["newcustomer"] = newcustomer;
 		}else{
 			data["customerdetail"] = {customer_id,contact_number,delivery_address};
 		}
-	  	$.ajax({
-        	method: 'POST',
-        	data: data,
-        	url: baseurl+'/main/settle',
-        	success: function(res){
-        		var res = JSON.parse(res);
+
+		$.ajax({
+			method: 'POST',
+			data: data,
+			url: baseurl+'/main/settle',
+			success: function(res){
+				var res = JSON.parse(res);
 				NProgress.done();
-          		if(res["success"]){
+				if(res["success"]){
 					alert("Transaction Successfully Settled!");
 					location.reload();
-          		}
-	        },
-	        error: function(xhr, status, error){
-        		
+				}
+			},
+			error: function(xhr, status, error){
+
 				NProgress.done();
-	        	alert("Oppss!. Something went wrong!.")
-	        },
+				alert("Oppss!. Something went wrong!.")
+			},
 			beforeSend: function(){
 				NProgress.start();
 			}
-	    });
+		});
 	  });
 
 	$("#customer_name").trigger("changed");
+
 	$("#customer_details_main_btn").on("click", function(){
 		$("#customer_detail_modal").modal("show");
 		setTimeout(function(){
 			$("#customer_name").focus();
 		},500);
+	});
+
+	$("#customer_detail_modal").on("shown.bs.modal", function(){
+		if (!croppieready) {
+			croppie = $('#map_img_preview').croppie({
+				"viewport": {
+					width: $("#map_preview").width() + "px",
+					height: '200px',
+					type: 'square'
+				}
+			});
+			croppieready = true;
+		}
 	});
 
 	$("#save_customer_detail_btn").on("click", function(){
@@ -189,6 +243,16 @@ $("document").ready(function(){
 		if(cname == ""){
 			alert("Customer name cannot be empty");
 			return;
+		}
+
+
+		if(imghaschanges){
+			$('#map_img_preview').croppie("result", {
+				type: "base64",
+				format: "jpeg"
+			}).then(function(img) {
+				croppieimg = img;
+			});
 		}
 
 		if(customerdetail[cid] == undefined){
@@ -275,6 +339,30 @@ $("document").ready(function(){
 				  $("#cust_contact_number").val(contactnumber);
 				  $("#cust_delivery_address").val(deliveryaddress);
 				  $("#customer_id").val(id);
+
+				  var bsurl = baseurl.replace("index.php", "");
+
+				  if(customerdetail[id]["cust_location_image"] !== ""){
+						if (!croppieready) {
+							  croppie = $('#map_img_preview').croppie({
+								  "viewport": {
+									  width: $("#map_preview").width() + "px",
+									  height: '200px',
+									  type: 'square'
+								  }
+							  });
+							  croppieready = true;
+						}
+					  imghaschanges = true;
+					  croppie.croppie('bind', {
+						  url: bsurl+"assets/location_image/"+customerdetail[id]["cust_location_image"]
+					  });
+				  }else{
+				  	$(".cr-boundary").remove();
+				  	$(".cr-slider-wrap").remove();
+				  	croppieready = false;
+				  	imghaschanges = false;
+				  }
 			  },
 			  onHint: function (hint) {
 				  $('#name_autocomplete_hint').val(hint);
@@ -286,11 +374,60 @@ $("document").ready(function(){
 			  }
 		  });
 	}
+
 	function ucwords (str) {
 		return (str + '')
 			.replace(/^(.)|\s+(.)/g, function ($1) {
 				return $1.toUpperCase()
 			})
+	}
+
+	$("#customer_location").change(function(){
+		var imgfile = $(this).val();
+		var extension = imgfile.replace(/^.*\./, '');
+		if (extension == imgfile)
+			extension = '';
+		else
+			extension = extension.toLowerCase();
+
+		var currentimgsrc = $("#map_preview").attr("src");
+
+		if(extension !== "jpg" && extension !== "jpeg"){
+			alert("Please upload JPEG / JPG file only.");
+			$(this).val("");
+			$("#map_preview").attr("src", currentimgsrc);
+			return;
+		}
+
+		$("#map_img_preview").css({
+			width: $("#map_preview").width() + "px",
+		});
+		readURL(this);
+	});
+
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+				$('#map_img_preview').attr('src', e.target.result);
+				if (!croppieready) {
+					croppie = $('#map_img_preview').croppie({
+						"viewport": {
+							width: $("#map_preview").width() + "px",
+							height: '200px',
+							type: 'square'
+						}
+					});
+					croppieready = true;
+				}
+				croppie.croppie('bind', {
+					url: e.target.result
+				});
+				imghaschanges = true;
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
 	}
 
 });

@@ -104,4 +104,9 @@ class ModProduct extends CI_Model {
 		return $result;
 	}
 
+	function updateInventory($param){
+    	$sql = "UPDATE `inventory` SET `qty` = `qty` + ".$param["qty"]." WHERE `product_id` = '".$param["id"]."'";
+		$this->db->query($sql);
+	}
+
 }

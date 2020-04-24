@@ -10,8 +10,10 @@ class ModCustomer extends CI_Model {
 		$FIELDS = array(
 		"id" => "customer.customer_id",
 		"name" => "customer.name",
+		"facebook_name" => "customer.facebook_name",
 		"contact_number" => "customer.contact_number",
-		"delivery_address" => "customer.delivery_address"
+		"delivery_address" => "customer.delivery_address",
+		"location_image" => "customer.location_image"
 	);
 
 	function __construct() {
@@ -46,6 +48,9 @@ class ModCustomer extends CI_Model {
 		$result = array();
 		$data = array();
 		unset($this->FIELDS["id"]);
+		if($param["location_image"] == ""){
+			unset($this->FIELDS["location_image"]);
+		}
 
 		foreach ($this->FIELDS as $alias => $field) {
 			if (array_key_exists($alias, $param)) {
@@ -73,6 +78,10 @@ class ModCustomer extends CI_Model {
 		$data = array();
 
 		$id = $param["customer_id"];
+
+		if($param["location_image"] == ""){
+			unset($this->FIELDS["location_image"]);
+		}
 
 		foreach ($this->FIELDS as $alias => $field) {
 			if (array_key_exists($alias, $param))

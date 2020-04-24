@@ -260,6 +260,35 @@ textarea{
 	font-size: 16px;
 }
 
+.modal-xl{
+	width: 1000px !important;
+}
+
 #customer_detail_modal input{
 	font-size: 16px;
+}
+
+#map_preview{
+	border: 1px solid #ccc;
+	height: 230px;
+}
+
+#map_img_preview{
+	max-height: 230px;
+}
+
+/* custom file input style */
+input[type="file"] {
+	white-space: normal;
+	word-wrap: break-word;
+	width: 400px;
+	overflow: auto;
+}
+
+input[type='date']{
+	line-height: 22px !important;
+}
+
+.croppie-container .cr-slider-wrap{
+	margin-top: 0px !important;
 }

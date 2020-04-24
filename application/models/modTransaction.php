@@ -20,7 +20,8 @@ class ModTransaction extends CI_Model {
 				"remarks" => "transaction.remarks",
                 "status" => "transaction.status",
                 "void_reason" => "transaction.void_reason",
-				"haschanges" => "transaction.haschanges"
+				"haschanges" => "transaction.haschanges",
+				"location_image" => "transaction.location_image"
     );
 
     function __construct() {
@@ -31,6 +32,8 @@ class ModTransaction extends CI_Model {
     function getAll($param) {
         $tablefield = "";
 		$this->FIELDS["name"] = "customer.name";
+		$this->FIELDS["facebook_name"] = "customer.facebook_name";
+		$this->FIELDS["cust_location_image"] = "customer.location_image";
 		$this->FIELDS["contact_number"] = "customer.contact_number";
 
         foreach ($this->FIELDS as $alias => $field) {
