@@ -14,6 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/slimscroll.css">
 	 <!-- Ionicons -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/nprogress.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/croppie.css">
 	 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/app.css">
 	
 </head>
@@ -29,16 +30,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			$remarks = "";
 			$total = "";
 			$custid = "";
+			$locationimage = "#";
+			$fb_name = "#";
+
 			if(isset($transaction)){
 				$name = $transaction["name"];
 				$custid = $transaction["customer_id"];
 				$cn = $transaction["contact_number"];
-				$delivery_dt = date("m/d/Y", strtotime($transaction["delivery_date"]));
+				$delivery_dt = $transaction["delivery_date"];
 				$delivery_add = $transaction["delivery_address"];
 				$pm = $transaction["payment_method"];
 				$pcd = $transaction["payment_confirmation_detail"];
 				$remarks = $transaction["remarks"];
 				$total = $transaction["total"];
+				$locationimage = $transaction["cust_location_image"];
+				$fb_name = $transaction["facebook_name"];
 			}
 		?>
 		<input type="text" id="transaction_id_inp" hidden value="<?php echo isset($transaction) ? $transaction["id"] : "" ?>">
@@ -73,7 +79,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							echo '<div class="product_desc">'.$row["description"].'</div>';
 							echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
 							echo '</div>';//product_cont
-							echo '<div class="availqty_cont">Qty : 100000</div>';//product_cont
+							echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
+									($row["avail_qty"] != null ? $row["avail_qty"] : 0)
+									.'</span></div>';//product_cont
 							echo '<div class="product_qty">';
 							echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
 							echo '</div>';//product_qty
@@ -207,43 +215,64 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<h4 class="modal-title" id="exampleModalLabel">ORDER DETAILS</h4>
 				</div>
 				<div class="modal-body">
-					<div class="form-group">
-						<label>Customer Name</label>
-						<input type="text" id="customer_id" hidden value="<?php echo $custid; ?>">
-						<div style="position: relative; height: 34px;">
-						<input type="text" class="form-control" placeholder="Customer Name" id="customer_name" style="position: absolute; z-index: 2; background: transparent;" value="<?php echo $name; ?>">
-						<input type="text" class="form-control" id="name_autocomplete_hint"  disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
-						</div>
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Customer Name</label>
+									<input type="text" id="customer_id" hidden value="<?php echo $custid; ?>">
+									<div style="position: relative; height: 34px;">
+										<input type="text" class="form-control" placeholder="Customer Name" id="customer_name" style="position: absolute; z-index: 2; background: transparent;" value="<?php echo $name; ?>">
+										<input type="text" class="form-control" id="name_autocomplete_hint"  disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Facebook Name</label>
+									<input type="text" class="form-control" id="facebook_name" value="<?php echo $fb_name; ?>">
+								</div>
+								<div class="form-group">
+									<label>Contact Number</label>
+									<input type="text" class="form-control" placeholder="etc. 09123456789" id="cust_contact_number" value="<?php echo $cn; ?>">
+								</div>
+								<div class="form-group">
+									<label>Customer Location</label>
+									<input type='file' id="customer_location" class="custom-file-input" />
+									<div id="map_preview">
+										<img id="map_img_preview" src="<?php echo $locationimage; ?>" alt="Map of Customer's Location" />
+									</div>
+								</div>
+							</div><!-- col 6 / left panel -->
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Delivery Address</label>
+									<textarea class="form-control" rows="2" id="cust_delivery_address"><?php echo $delivery_add; ?></textarea>
+								</div>
+								<div class="form-group">
+									<label>Delivery Date</label>
+									<input type="date" class="form-control" id="delivery_date" value="<?php echo $delivery_dt; ?>">
+								</div>
+								<div class="form-group">
+									<label>Payment Method</label>
+									<select class="form-control" id="payment_method">
+										<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash on Delivery (COD)</option>
+										<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer</option>
+										<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label>Payment Confirmation Details</label>
+									<textarea class="form-control" rows="1" id="payment_confirmation_detail"><?php echo $pcd; ?></textarea>
+								</div>
+
+								<div class="form-group">
+									<label>Remarks</label>
+									<textarea class="form-control" rows="2" id="trans_remarks"><?php echo $remarks; ?></textarea>
+								</div>
+							</div><!-- col 6 / right panel -->
+						</div><!-- row -->
 					</div>
-					<div class="form-group">
-						<label>Contact Number</label>
-						<input type="text" class="form-control" placeholder="etc. 09123456789" id="cust_contact_number" value="<?php echo $cn; ?>">
-					</div>
-					<div class="form-group">
-						<label>Delivery Date</label>
-						<input type="text" class="form-control" placeholder="" id="delivery_date" value="<?php echo $delivery_dt; ?>">
-					</div>
-					<div class="form-group">
-						<label>Delivery Address</label>
-						<textarea class="form-control" rows="1" id="cust_delivery_address"><?php echo $delivery_add; ?></textarea>
-					</div>
-					<div class="form-group">
-						<label>Payment Method</label>
-						<select class="form-control" id="payment_method">
-							<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash on Delivery (COD)</option>
-							<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer</option>
-							<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label>Payment Confirmation Details</label>
-						<textarea class="form-control" rows="1" id="payment_confirmation_detail"><?php echo $pcd; ?></textarea>
-					</div>
-					<div class="form-group">
-						<label>Remarks</label>
-						<textarea class="form-control" rows="1" id="trans_remarks"><?php echo $remarks; ?></textarea>
-					</div>
-				</div>
+
+				</div><!-- modal body -->
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-primary" id="save_customer_detail_btn">Save changes</button>
@@ -268,6 +297,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/nprogress.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/croppie.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/app.js"></script>
 
 </body>

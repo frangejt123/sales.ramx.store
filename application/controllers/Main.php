@@ -33,6 +33,7 @@ class Main extends CI_Controller {
 			$customerarray[$row["id"]]["name"] = $row["name"];
 			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
 			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
+			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
 			json_encode($nameopt[$row["id"]] = $row["name"]);
 		}
 
@@ -115,19 +116,43 @@ class Main extends CI_Controller {
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
+		$this->load->model('modProduct', "", TRUE);
 
 		$param = $this->input->post(NULL, "true");
 		$param["trans"]["datetime"] = date("Y-m-d H:i:s");
 
+		$image = $param["locationimg"];
+		$param["customerdetail"]["location_image"] = "";
+		$imgname = strtolower(str_replace(" ", "", $param["trans"]["customer_name"]));
+
+		if($image != "") {
+			list($type, $image) = explode(';', $image);
+			list(, $image) = explode(',', $image);
+			$image = base64_decode($image);
+
+			$filepath = "assets/location_image/".$imgname.".jpeg";
+			$param["customerdetail"]["location_image"] = $imgname.".jpeg";
+
+			file_put_contents($filepath, $image);
+		}
+
 		if(isset($param["newcustomer"])){
+			if($image == "")
+				$param["newcustomer"]["location_image"] = "";
+			else{
+				$param["newcustomer"]["location_image"] = $imgname.".jpeg";
+			}
+			$param["newcustomer"]["facebook_name"] = $param["trans"]["facebook_name"];
 			$customerres = $this->modCustomer->insert($param["newcustomer"]);
 			$param["trans"]["customer_id"] = $customerres["id"];
 		}else{
+			$param["customerdetail"]["facebook_name"] = $param["trans"]["facebook_name"];
 			$customerres = $this->modCustomer->update($param["customerdetail"]);
 		}
 
 		$param["trans"]["user_id"] = $_SESSION["id"];
 		$param["trans"]["delivery_date"] = date("Y-m-d", strtotime($param["trans"]["delivery_date"]));
+		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
 		if($param["trans"]["haschanges"] == 1){
 			$param["trans"]["id"] = $param["trans"]["transaction_id"];
 			$result = $this->modTransaction->update($param["trans"]);
@@ -136,15 +161,23 @@ class Main extends CI_Controller {
 			$result = $this->modTransaction->insert($param["trans"]);
 		}
 
-		foreach($param["detail"] as $ind => $row){
-			$row["transaction_id"] = $result["id"];
-			if($row["status"] == "new")
-				$this->modTransactionDetail->insert($row);
-			else if($row["status"] == "edited")
-				$this->modTransactionDetail->update($row);
-			else if($row["status"] == "deleted")
-				$this->modTransactionDetail->delete($row);
+		if(isset($param["detail"])) {
+			foreach ($param["detail"] as $ind => $row) {
+				$row["transaction_id"] = $result["id"];
+				if ($row["status"] == "new")
+					$this->modTransactionDetail->insert($row);
+				else if ($row["status"] == "edited")
+					$this->modTransactionDetail->update($row);
+				else if ($row["status"] == "deleted")
+					$this->modTransactionDetail->delete($row);
+			}
 		}
+
+		/* UPDATE INVENTORY */
+		foreach($param["inventorydata"] as $ind => $row){
+			$this->modProduct->updateInventory($row);
+		}
+		/* UPDATE INVENTORY */
 
 		echo json_encode($result);
 	}
@@ -168,6 +201,7 @@ class Main extends CI_Controller {
 			$customerarray[$row["id"]]["name"] = $row["name"];
 			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
 			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
+			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
 			json_encode($nameopt[$row["id"]] = $row["name"]);
 		}
 
