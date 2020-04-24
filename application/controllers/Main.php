@@ -190,6 +190,7 @@ class Main extends CI_Controller {
 		if(isset($param["detail"])) {
 			foreach ($param["detail"] as $ind => $row) {
 				$row["transaction_id"] = $result["id"];
+				$row["total_price"] = $row["quantity"] * $row["price"];
 				if ($row["status"] == "new")
 					$this->modTransactionDetail->insert($row);
 				else if ($row["status"] == "edited")

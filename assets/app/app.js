@@ -165,6 +165,7 @@ $("document").ready(function(){
 	  		var product_id = $(row).attr("id");
 	  		var id = $(row).attr("data-id") != undefined ? $(row).attr("data-id") : "";
 	  		var quantity = parseFloat($(row).find(".summary_qty").html());
+	  		var price = $(".product_main #"+product_id).find(".product_price").html();
 
 	  		var status;
 	  		if($(row).hasClass("new"))
@@ -174,7 +175,7 @@ $("document").ready(function(){
 	  		else
 				status = "deleted";
 
-	  		var datarow = {product_id, quantity, id, status};
+	  		var datarow = {product_id, quantity, id, price, status};
 	  		detail.push(datarow);
 	  	});
 
