@@ -29,8 +29,8 @@ class ModInventoryAdjustmentDetail extends CI_Model {
             }
             //Construct table field selection
             $tablefield .= $field . " AS `" . $alias . "`";
-            if($param)
-            if (array_key_exists($alias, $param)) {
+      
+            if ( $param && array_key_exists($alias, $param)) {
                 $this->db->where($field, $param[$alias]);
             }
         }
@@ -45,9 +45,9 @@ class ModInventoryAdjustmentDetail extends CI_Model {
 	
 	function getDetailById($param) {
      
-        $tablefield = "";
+		$tablefield = "";
 
-		$this->FIELDS["type"] = "inventory_adjustment.type";
+		$this->FIELDS['type'] = "inventory_adjustment.`type`";
 		
         foreach ($this->FIELDS as $alias => $field) {
             if ($tablefield != "") {
@@ -55,8 +55,8 @@ class ModInventoryAdjustmentDetail extends CI_Model {
             }
             //Construct table field selection
             $tablefield .= $field . " AS `" . $alias . "`";
-            if($param)
-            if (array_key_exists($alias, $param)) {
+    
+            if ($param && array_key_exists($alias, $param)) {
                 $this->db->where($field, $param[$alias]);
             }
         }
@@ -65,8 +65,10 @@ class ModInventoryAdjustmentDetail extends CI_Model {
 		$this->db->from($this->TABLE);
 		$this->db->join("inventory_adjustment", "inventory_adjustment.id = inventory_adjustment_detail.inventory_adjustment_id", "INNER");
         $this->db->order_by('inventory_adjustment_detail.id', 'ASC');
+		
+	
+		$query = $this->db->get();	
 
-        $query = $this->db->get();
         return $query;
     }
 
@@ -129,19 +131,13 @@ class ModInventoryAdjustmentDetail extends CI_Model {
 		return $result;
 	}
 
-	function addInventory($product, $quantity) {
-		$sql = "UPDATE `inventory` SET `qty`=qty+$quantity WHERE  `product_id`=$product";
-		$result = array();
-		if($this->db->query($sql)){
-			$result["success"] = true;
-		}
-		return $result;
-	}
 
-	function lessInventory($product, $quantity) {
-		$sql = "UPDATE `inventory` SET `qty`=qty-$quantity WHERE  `product_id`=$product";
+	function updateInventory($product, $quantity) {
+		$sql = "INSERT INTO inventory (product_id, qty) VALUES (? , ?)
+					ON DUPLICATE KEY UPDATE qty = qty+VALUES(qty)";
+
 		$result = array();
-		if($this->db->query($sql)){
+		if($this->db->query($sql, array($product, $quantity))){
 			$result["success"] = true;
 		}
 		return $result;

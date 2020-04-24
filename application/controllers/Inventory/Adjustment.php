@@ -150,15 +150,16 @@ class Adjustment extends CI_Controller {
 	public function setProductQty($id) {
 		$this->load->model('modInventoryAdjustmentDetail', "", TRUE);
 
-		$details = $this->modInventoryAdjustmentDetail->getDetailById(["inventory_adjustment_id" => $id ])->result_array();
-	
+		$details = $this->modInventoryAdjustmentDetail->getDetailById(["inventory_adjustment_id" => $id])->result_array();
+
+
 		foreach($details as $i => $detail) {
 
-			if($detail["type"] == 1) {
-				$this->modInventoryAdjustmentDetail->addInventory($detail["product_id"], $detail["quantity"]);
-			} else if( $detail["type"] == 2) {
-				$this->modInventoryAdjustmentDetail->lessInventory($detail["product_id"], $detail["quantity"]);
+			if( $detail["type"] == 2) {
+				$detail["quantity"] = $detail["quantity"] * -1;
 			}
+
+			$this->modInventoryAdjustmentDetail->updateInventory($detail["product_id"], $detail["quantity"]);
 		}
 		
 	}
