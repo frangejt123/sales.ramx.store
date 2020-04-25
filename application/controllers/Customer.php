@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Adjustment extends CI_Controller {
+class Customer extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -25,15 +25,15 @@ class Adjustment extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->model('modInventoryAdjustment', "", TRUE);
+		$this->load->model('modCustomer', "", TRUE);
 
 
 		$data = array(
-			"adjustments" => $this->modInventoryAdjustment->getAll(null)->result_array()
+			"customers" => $this->modCustomer->getAll(null)->result_array()
 		);
 
 		if(isset($_SESSION["username"])) {
-			$this->view('inventory_adjustment/index', $data);
+			$this->view('customer/index', $data);
 		}else{
 			$this->load->view('login');
 		}
@@ -45,7 +45,7 @@ class Adjustment extends CI_Controller {
 			$data = array(
 				"product" => $this->modProduct->getAll(null)->result_array()
 			);
-			$this->view('inventory_adjustment/detail', $data);
+			$this->view('customer/detail', $data);
 		}
 		else{
 			$this->load->view('login');
@@ -56,7 +56,7 @@ class Adjustment extends CI_Controller {
 			$this->load->view("layouts/header");
 			$this->load->view($page, $data);
 			$this->load->view("layouts/js");
-			$this->load->view("inventory_adjustment/js");
+			$this->load->view("customer/js");
 			$this->load->view("layouts/footer");
 	}
 
@@ -137,20 +137,6 @@ class Adjustment extends CI_Controller {
 		}
 	}
 
-	public function approve() {
-	
-		$this->load->model('modInventoryAdjustment', "", TRUE);
-		$param = $this->input->post(NULL, "true");
-		$user = $_SESSION["id"];
-		$id = $param["id"];
-
-		$result["adjustment"] = $this->modInventoryAdjustment->approve($id,  $user);
-		$result["adjustment"]["approved_by_name"] = $_SESSION["username"]; 
-
-		$this->setProductQty($id);
-		echo json_encode($result);
-		
-	}
 
 	public function delete() {
 		$this->load->model('modInventoryAdjustment', "", TRUE);

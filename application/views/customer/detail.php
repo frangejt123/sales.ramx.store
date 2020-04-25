@@ -26,28 +26,22 @@
 ?>
 
 <div id="container">
-	<button class="btn-danger lg-btn routing-btn" data-route-to="/inventory/adjustment">
+	<button class="btn-danger lg-btn routing-btn" data-route-to="/customer">
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>
 
-
-	<button id="save-btn" class="btn-success pull-right lg-btn <?=$status==1 ? '' : 'hidden' ?>">
+	<button id="save-btn" class="btn-success pull-right lg-btn">
 			<i class="fa fa-save"></i> &nbsp; Save
 	</button>
+
 	<span class="pull-right span_seperator"></span>
 
-
-	<button id="approve-btn" class="btn-primary pull-right lg-btn <?= $btn_class ?>" data-toggle="modal" data-target="#approve-modal">
-			<i class="fa fa-thumbs-up"></i> &nbsp; Approve
-	</button>
 	<span class="pull-right span_seperator"></span>
-	<button id="delete-btn" class="btn-danger pull-right lg-btn <?= $btn_class ?>" data-toggle="modal" data-target="#delete-modal">
+	<button id="delete-btn" class="btn-danger pull-right lg-btn" data-toggle="modal" data-target="#delete-modal">
 			<i class="fa fa-trash"></i> &nbsp; Delete
 	</button>
 
-
 	<div style="clear:both"></div>
-
 
 	<div class="transaction_detail_container">
 		<form class="form-inline" id="form" method="post">
