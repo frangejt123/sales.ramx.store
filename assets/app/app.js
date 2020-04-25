@@ -20,7 +20,7 @@ $("document").ready(function(){
 		height: deviceheight - 100 + "px"
 	});
 
-	$('#productsummary').slimScroll({
+	$('#slimscrollcont').slimScroll({
 		height: deviceheight - 300 + "px"
 	});
 
