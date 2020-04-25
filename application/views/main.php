@@ -109,25 +109,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div><!-- col left -->
 
 			<div class="col-lg-3 right_floater">
-				<div class="row" id="productsummary">
-					<?php
-						if(isset($transactiondetail)){
-							foreach($transactiondetail as $ind => $row){
-								echo '<div class="row prodsumrow existing" data-id="'.$row["id"].'" id="'.$row["product_id"].'">';
-								echo '<div class="col-lg-7 summary_desc left_floater">'.$row["description"].'</div>';
-								echo '<div class="col-lg-2 summary_qty left_floater">'.$row["quantity"].'</div>';
-								echo '<div class="col-lg-2 right_floater">';
-								echo '<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" style="height: 50px;width: 50px;">';
-								echo '<i class="fa fa-trash"></i>';
-								echo '</button>';
-								echo '</div>';
-								echo '<div style="clear:both"></div>';
-								echo '</div>';
+				<div id="slimscrollcont">
+					<div class="row" id="productsummary">
+						<?php
+							if(isset($transactiondetail)){
+								foreach($transactiondetail as $ind => $row){
+									echo '<div class="row prodsumrow existing" data-id="'.$row["id"].'" id="'.$row["product_id"].'">';
+									echo '<div class="col-lg-7 summary_desc left_floater">'.$row["description"].'</div>';
+									echo '<div class="col-lg-2 summary_qty left_floater">'.$row["quantity"].'</div>';
+									echo '<div class="col-lg-2 right_floater">';
+									echo '<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" style="height: 50px;width: 50px;">';
+									echo '<i class="fa fa-trash"></i>';
+									echo '</button>';
+									echo '</div>';
+									echo '<div style="clear:both"></div>';
+									echo '</div>';
+								}
 							}
-						}
-					?>
-				</div><!-- row wrapper product_summary -->
-
+						?>
+					</div><!-- row wrapper product_summary -->
+				</div><!-- slimscroll container -->
 				<br/><br/>
 
 				<div class="row total_summary">
