@@ -31,6 +31,7 @@ class Main extends CI_Controller {
 		foreach($customer as $ind => $row){
 			$customerarray[$row["id"]] = array();
 			$customerarray[$row["id"]]["name"] = $row["name"];
+			$customerarray[$row["id"]]["fb_name"] = $row["facebook_name"];
 			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
 			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
 			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
@@ -110,8 +111,9 @@ class Main extends CI_Controller {
 		$this->modTransaction->updateChanges($id);
 	}
 
-	public function settle(){
-		date_default_timezone_set ( "Asia/Manila");
+	public function settle()
+	{
+		date_default_timezone_set("Asia/Manila");
 		session_start();
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
@@ -119,6 +121,30 @@ class Main extends CI_Controller {
 		$this->load->model('modProduct', "", TRUE);
 
 		$param = $this->input->post(NULL, "true");
+
+		/* UPDATE INVENTORY */
+		$noavailqty = false;
+		$productnoavailqty = array();
+		if (isset($param["inventorydata"]))
+			foreach ($param["inventorydata"] as $ind => $row) {
+					$prodqty = $this->modProduct->availQty($row["id"])->row_array();
+					if (($prodqty["qty"] + $row["qty"]) < 0) {
+						$noavailqty = true;
+						array_push($productnoavailqty, $prodqty["description"]);
+					} else {
+						$this->modProduct->updateInventory($row);
+					}
+			}
+
+		/* UPDATE INVENTORY */
+		if($noavailqty){
+			$result["success"] = false;
+			$result["error"] = "Some products have no available quantity.";
+			$result["product"] = $productnoavailqty;
+			echo json_encode($result);
+			return;
+		}
+
 		$param["trans"]["datetime"] = date("Y-m-d H:i:s");
 
 		$image = $param["locationimg"];
@@ -164,6 +190,7 @@ class Main extends CI_Controller {
 		if(isset($param["detail"])) {
 			foreach ($param["detail"] as $ind => $row) {
 				$row["transaction_id"] = $result["id"];
+				$row["total_price"] = $row["quantity"] * $row["price"];
 				if ($row["status"] == "new")
 					$this->modTransactionDetail->insert($row);
 				else if ($row["status"] == "edited")
@@ -172,12 +199,6 @@ class Main extends CI_Controller {
 					$this->modTransactionDetail->delete($row);
 			}
 		}
-
-		/* UPDATE INVENTORY */
-		foreach($param["inventorydata"] as $ind => $row){
-			$this->modProduct->updateInventory($row);
-		}
-		/* UPDATE INVENTORY */
 
 		echo json_encode($result);
 	}
@@ -199,6 +220,7 @@ class Main extends CI_Controller {
 		foreach($customer as $ind => $row){
 			$customerarray[$row["id"]] = array();
 			$customerarray[$row["id"]]["name"] = $row["name"];
+			$customerarray[$row["id"]]["fb_name"] = $row["facebook_name"];
 			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
 			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
 			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
