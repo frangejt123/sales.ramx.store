@@ -7,8 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends CI_Controller {
 
-	public function index()
-	{
+	public function index(){
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->model('modTransaction', "", TRUE);
@@ -111,8 +110,7 @@ class Main extends CI_Controller {
 		$this->modTransaction->updateChanges($id);
 	}
 
-	public function settle()
-	{
+	public function settle(){
 		date_default_timezone_set("Asia/Manila");
 		session_start();
 		$this->load->model('modTransaction', "", TRUE);

@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	NProgress.configure({ showSpinner: false });
+	var selectedorder = $("#selected_order").val();
 
 	$("button#cancel_orderlist_btn").on("click", function(){
 		NProgress.start();
@@ -14,9 +15,15 @@ $(document).ready(function(){
 	$("#close_void_detail").on("click", function(){
 		$("#voiddetailmodal").modal("hide");
 	});
+	
+	$("#print_order_btn").on("click", function(){
+		$("form#report_data input#trans_id").val(selectedorder)
+		
+		window.open('', 'new_window');
+		document.getElementById('report_data').submit();
+	});
 
 	/* AJAX LONG POOLING. CHECK FOR CHANGES */
-	var selectedorder = $("#selected_order").val();
 	poll();
 	function poll(){
 		$.ajax({
@@ -27,7 +34,7 @@ $(document).ready(function(){
 				var res = JSON.parse(res);
 				updateChanges(selectedorder)
 				if(res["status"] == "3"){
-					$(".transaction_detail_container, .detail_grand_total, table#orderlist_table tbody").addClass("voided");
+					$(".transaction_detail_container, .detail_grand_total, table#orderdata_table tbody").addClass("voided");
 					$(".void_notif").show();
 					$("#voiddetailmodal p#voidreason").text("Reason: "+res["void_reason"]);
 					$("#void_order_btn").hide();
@@ -90,7 +97,7 @@ $(document).ready(function(){
 			success: function (res) {
 				var res = JSON.parse(res);
 				if(res["success"]){
-					$(".transaction_detail_container, .detail_grand_total, table#orderlist_table tbody").addClass("voided");
+					$(".transaction_detail_container, .detail_grand_total, table#orderdata_table tbody").addClass("voided");
 					$(".void_notif").show();
 					$("#process_order_btn").hide();
 					$("#void_order_btn").hide();
@@ -142,6 +149,10 @@ $(document).ready(function(){
 		}else{
 			changeorderstatus(2);
 		}
+	});
+
+	$("#cancel_change_status").on("click", function(){
+		$("#statusmodal").modal("hide");
 	});
 
 	$("#update_order_btn").on("click", function(){
