@@ -56,11 +56,15 @@
 					<td><label>Inventory Adjustment # : </label> 	
 					<input type="text" class="form-control form-readonly" name="id" value="<?php echo $id ?>"" id="adjustment_id" readonly placeholder="#NEW#"></td>
 					<td class="sep"></td>
-					<td> <label>Type : </label> <select class="form-control" id="type" name="type" value="<?=$type?>" required>
-							<option value="1">IN</option>
-							<option value="2">OUT</option>
-					</select></td>
-					<td class="sep"></td>
+					<td> 
+						<label>Type : </label> 
+						<select class="form-control" id="type" name="type" value="<?=$type?>" required>
+								<option value="1">IN</option>
+								<option value="2">OUT</option>
+						</select>
+					</td>
+					<td class="sep">
+					</td>
 					<td>
 						<div class="form-group">
 							<label for="date">Date : </label>
