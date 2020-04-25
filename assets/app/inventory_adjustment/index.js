@@ -74,12 +74,12 @@ function today() {
 }
 
 function showUndo(tr) {
-	$tr.find('.action-btn.undo').removeClass('hidden');
-	$tr.find('.action-btn.delete').addClass('hidden');
+	$tr.find('.action-btn.undo').removeClass('d-none');
+	$tr.find('.action-btn.delete').addClass('d-none');
 }
 function showDelete(tr) {
-	$tr.find('.action-btn.delete').removeClass('hidden');
-	$tr.find('.action-btn.undo').addClass('hidden');
+	$tr.find('.action-btn.delete').removeClass('d-none');
+	$tr.find('.action-btn.undo').addClass('d-none');
 }
 
 function isEditable() {
@@ -117,7 +117,18 @@ function setDisabledPage() {
 	$("#remarks").addClass("form-readonly").attr("readonly", true);
 
 	//hide action buttons
-	$(".action-btn, #save-btn, #approve-btn, #delete-btn").addClass("hidden");
+	$(".action-btn, #save-btn, #approve-btn, #delete-btn").addClass("d-none");
+}
+
+function showMessage(message) {
+	Swal.fire({
+		position: 'top-end',
+		icon: 'success',
+		title: message,
+		showConfirmButton: false,
+		timer: 1500
+	  })
+
 }
 
 
@@ -156,8 +167,8 @@ $(document).ready(() => {
 			if(window.rows[ind]._state == "") {
 				window.rows[ind]._state = "edited";
 				$tr.addClass("info");
-				$tr.find('.action-btn.undo').removeClass('hidden');
-				$tr.find('.action-btn.delete').addClass('hidden');
+				$tr.find('.action-btn.undo').removeClass('d-none');
+				$tr.find('.action-btn.delete').addClass('d-none');
 			}
 		
 
@@ -170,7 +181,7 @@ $(document).ready(() => {
 						$tr.data("tmp-id", window.rows[ind].tmp_id)
 						$tr.attr("data-tmp-id", window.rows[ind].tmp_id);
 						$tr.addClass("success");
-						$tr.find(".action-btn.undo").removeClass("hidden")
+						$tr.find(".action-btn.undo").removeClass("d-none")
 					} 			
 		
 
@@ -202,13 +213,13 @@ $(document).ready(() => {
 				} else if(window.rows[ind]._state == "deleted") {
 					window.rows[ind]._state = "";
 					$tr.removeClass("danger");
-					$(e.currentTarget).addClass('hidden');
-					$tr.find('.action-btn.delete').removeClass('hidden');
+					$(e.currentTarget).addClass('d-none');
+					$tr.find('.action-btn.delete').removeClass('d-none');
 					$tr.find('.input').attr('disabled', false);
 				} else if (window.rows[ind]._state == "edited") {
 					$tr.removeClass("info");
-					$(e.currentTarget).addClass("hidden");
-					$tr.find('.action-btn.delete').removeClass('hidden');
+					$(e.currentTarget).addClass("d-none");
+					$tr.find('.action-btn.delete').removeClass('d-none');
 
 					window.rows[ind].quantity = window.rows[ind]._original.quantity;
 					window.rows[ind].product_id = window.rows[ind]._original.product_id;
@@ -221,8 +232,8 @@ $(document).ready(() => {
 			} else if (action == "delete") {
 				window.rows[ind]._state = "deleted";
 				$tr.addClass("danger");
-				$(e.currentTarget).addClass('hidden');
-				$tr.find('.action-btn.undo').removeClass('hidden');
+				$(e.currentTarget).addClass('d-none');
+				$tr.find('.action-btn.undo').removeClass('d-none');
 				$tr.find('.input').attr('disabled', true);
 			}
 		}
@@ -299,8 +310,8 @@ $(document).ready(() => {
 									window.rows[ind].id = detail.id;
 									window.rows[ind]._original = Object.assign({}, window.rows[ind]);
 									$tr.removeClass("success info danger");
-									$tr.find('.action-btn.undo').addClass('hidden');
-									$tr.find('.action-btn.delete').removeClass('hidden');
+									$tr.find('.action-btn.undo').addClass('d-none');
+									$tr.find('.action-btn.delete').removeClass('d-none');
 								}	
 							} else {
 								console.log("error ind not found")
@@ -309,9 +320,9 @@ $(document).ready(() => {
 
 					
 					}
-					$("#approve-btn").removeClass("hidden");
-					$("#delete-btn").removeClass("hidden");
-					alert("Inventory adjustment has been saved succesfuly.")
+					$("#approve-btn").removeClass("d-none");
+					$("#delete-btn").removeClass("d-none");
+					showMessage("Inventory adjustment has been saved succesfuly.")
 				}
 			},
 			error: function (xhr, status, error) {
@@ -345,7 +356,7 @@ $(document).ready(() => {
 										.addClass("text-primary");
 					//set inputs to readonly
 					setDisabledPage();
-					alert("Inventory adjustment has been approved succesfuly.")
+					showMessage("Inventory adjustment has been approved succesfuly.")
 					$("#approve-modal").modal("hide");
 				}
 			}
@@ -365,7 +376,7 @@ $(document).ready(() => {
 				var res = JSON.parse(res);
 
 				if(res.adjustment.success) {
-					alert("Inventory adjustment has been deleted succesfuly.")
+					showMessage("Inventory adjustment has been deleted succesfuly.")
 					NProgress.start();
 					window.location = baseurl + "/inventory/adjustment";
 				}

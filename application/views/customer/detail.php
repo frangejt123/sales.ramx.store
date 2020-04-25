@@ -21,7 +21,7 @@
 		$remarks = "";
 		$prepared_by = "";
 		$approved_by = "";
-		$btn_class = "hidden";
+		$btn_class = "invisible";
 	}
 ?>
 
@@ -112,7 +112,7 @@
 								</select>
 							<td><input type="number" class="form-control input_quantity input" data-model="quantity" value='<?=$row["quantity"]?>' ></td>
 							<td class="" v-align="middle">
-								<button class="btn-info action-btn btn btn-sm btn-round undo hidden" title="Undo" data-action="undo">
+								<button class="btn-info action-btn btn btn-sm btn-round undo invisible" title="Undo" data-action="undo">
 									<i class="fa fa-undo"></i>
 								</button>
 								<button class="btn-danger action-btn btn btn-sm btn-round delete " title="Delete" data-action="delete">
@@ -212,10 +212,10 @@
 					</select>
 				<td><input type="number" class="form-control input_quantity input" data-model="quantity" ></td>
 				<td class="" v-align="middle">
-					<button class="btn-info action-btn btn btn-sm btn-round undo hidden" title="Undo" data-action="undo">
+					<button class="btn-info action-btn btn btn-sm btn-round undo invisible" title="Undo" data-action="undo">
 						<i class="fa fa-undo"></i>
 					</button>
-					<button class="btn-danger action-btn btn btn-sm btn-round delete hidden" title="Delete" data-action="delete">
+					<button class="btn-danger action-btn btn btn-sm btn-round delete invisible" title="Delete" data-action="delete">
 						<i class="fa fa-trash"></i>
 					</button>
 				</td>

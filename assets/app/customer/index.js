@@ -9,4 +9,7 @@ $(document).ready(() => {
 	 *	ROUTING BUTTONS
 	 */
 	$(".routing-btn").click(routeTo);
+
+
+	$("#save_customer_detail_btn")
 });
