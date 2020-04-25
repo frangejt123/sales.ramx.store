@@ -23,24 +23,28 @@ class Adjustment extends CI_Controller {
 		session_start();
     }
 
+
+
 	public function index()
 	{
 		$this->load->model('modInventoryAdjustment', "", TRUE);
 
-
-		$data = array(
+		$data = [
 			"adjustments" => $this->modInventoryAdjustment->getAll(null)->result_array()
-		);
+		];
+
 
 		if(isset($_SESSION["username"])) {
 			$this->view('inventory_adjustment/index', $data);
 		}else{
 			$this->load->view('login');
 		}
+
 	}
 
 	public function new() {
 		$this->load->model('modProduct', "", TRUE);
+
 		if(isset($_SESSION["username"])) {
 			$data = array(
 				"product" => $this->modProduct->getAll(null)->result_array()
@@ -74,11 +78,11 @@ class Adjustment extends CI_Controller {
 		} else if ($state == "edited") {
 			$adjustment =  $this->modInventoryAdjustment->update($param["adjustment"]);
 		}
-		$result = array(
+		$result = [
 			"adjustment" => $adjustment
-		);
+		];
 		
-		$details = array();
+		$details = [];
 		if(array_key_exists("details", $param)) {
 
 			if($adjustment["success"]) {
@@ -113,19 +117,19 @@ class Adjustment extends CI_Controller {
 		$this->load->model('modInventoryAdjustment', "", TRUE);
 		$this->load->model('modInventoryAdjustmentDetail', "", TRUE);
 		$this->load->model('modUser', "", TRUE);
-		$data = array(
+		$data = [
 			"product" => $this->modProduct->getAll(null)->result_array(),
-			"adjustment" => $this->modInventoryAdjustment->getAll(array("id" => $id))->row_array(),
-			"details" => $this->modInventoryAdjustmentDetail->getAll(array("inventory_adjustment_id" => $id))->result_array()
-		);
+			"adjustment" => $this->modInventoryAdjustment->getAll(["id" => $id])->row_array(),
+			"details" => $this->modInventoryAdjustmentDetail->getAll(["inventory_adjustment_id" => $id])->result_array()
+		];
 
 		if($data["adjustment"]["prepared_by"]) {
-			$prep_by  = $this->modUser->getAll(array("id" => $data["adjustment"]["prepared_by"]))->row_array();
+			$prep_by  = $this->modUser->getAll(["id" => $data["adjustment"]["prepared_by"]])->row_array();
 			$data["prep_by"] = $prep_by;
 		}
 
 		if($data["adjustment"]["approved_by"]) {
-			$app_by  = $this->modUser->getAll(array("id" => $data["adjustment"]["approved_by"]))->row_array();
+			$app_by  = $this->modUser->getAll(["id" => $data["adjustment"]["approved_by"]])->row_array();
 			$data["app_by"] = $app_by;
 		}
 
@@ -165,7 +169,7 @@ class Adjustment extends CI_Controller {
 	public function setProductQty($id) {
 		$this->load->model('modInventoryAdjustmentDetail', "", TRUE);
 
-		$details = $this->modInventoryAdjustmentDetail->getDetailById(array("inventory_adjustment_id" => $id))->result_array();
+		$details = $this->modInventoryAdjustmentDetail->getDetailById(["inventory_adjustment_id" => $id])->result_array();
 
 
 		foreach($details as $i => $detail) {

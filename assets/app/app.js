@@ -6,6 +6,9 @@ $("document").ready(function(){
 	var imghaschanges;
 	var croppie;
 	var croppieready = false;
+	var total = 0;
+	
+	$('[data-toggle="tooltip"]').tooltip()
 
 	var deviceheight = document.documentElement.clientHeight;
 	$("body").css({
@@ -74,6 +77,9 @@ $("document").ready(function(){
 		}
 
 		$(".product_main #qty_"+id+" span").text(new_qty);
+		if(new_qty <= 0){
+			$(".product_cont#"+id).addClass("notavailable");
+		}
 		changeprice();
 	});
 
@@ -86,6 +92,7 @@ $("document").ready(function(){
 
 
 		$(".product_main #qty_"+id+" span").text(availqty + inputqty);
+		$(".product_cont#"+id).removeClass("notavailable");
 		if(id in inventorydata) {
 			inventorydata[id]["qty"] += inputqty;
 		}else{
@@ -104,8 +111,7 @@ $("document").ready(function(){
 
 	function changeprice(){
 		var products = $("#productsummary").find(".prodsumrow").not(".deleted");
-
-		var total = 0;
+		total = 0;
 		$.each(products, function(ind, row){
 			var id = $(row).attr("id");
 			var qty = $(row).find(".summary_qty").html();
@@ -113,19 +119,21 @@ $("document").ready(function(){
 			    total += (parseFloat(qty) * parseFloat(price));
 		});
 
-		$("#totalvalue").html(parseFloat(total).toFixed(2));
+		$("#totalvalue").html(toCurrency(total));
+		total = total;
 	}
 
 	$("#settlebtn").on("click", function(){
 
 	  	  var total = parseFloat($("#totalvalue").html());
 
-	      var products = $("#productsummary").find(".row");
+	      var products = $("#productsummary").find(".row").not(".deleted");
+		  
 	      if(products.length < 1){
 	      	alert("Please add product");
 			return;
 		  }
-
+		  
 	      if($("input#customer_name").val() == ""){
 	      	alert("Please add order detail.");
 	      	return;
@@ -141,7 +149,6 @@ $("document").ready(function(){
 	$("#confirm_yesopt").on("click", function(){
 	  	var detail = [];
 
-	  	var total = parseFloat($("#totalvalue").html()).toFixed(2);
 		var customer_id = $("input#customer_id").val();
 		var customer_name = $("input#customer_name").val();
 		var facebook_name = $("input#facebook_name").val();
@@ -157,12 +164,12 @@ $("document").ready(function(){
 		if(transaction_id != ""){
 			haschanges = 1;
 		}
-
+		
 	  	var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0};
 	  	var product = $("#productsummary").find(".row.haschanges");
 
 	  	$.each(product, function(ind, row){
-	  		var product_id = $(row).attr("id");
+	  		var product_id = ($(row).attr("id")).replace("_deleted", "");
 	  		var id = $(row).attr("data-id") != undefined ? $(row).attr("data-id") : "";
 	  		var quantity = parseFloat($(row).find(".summary_qty").html());
 	  		var price = $(".product_main #"+product_id).find(".product_price").html();
@@ -174,7 +181,7 @@ $("document").ready(function(){
 				status = "edited";
 	  		else
 				status = "deleted";
-
+			
 	  		var datarow = {product_id, quantity, id, price, status};
 	  		detail.push(datarow);
 	  	});
@@ -260,6 +267,11 @@ $("document").ready(function(){
 			return;
 		}
 
+		if(cnumber == ""){
+			alert("Contact number cannot be empty");
+			return;
+		}
+
 		if(imghaschanges){
 			$('#map_img_preview').croppie("result", {
 				type: "base64",
@@ -329,6 +341,10 @@ $("document").ready(function(){
 
 	$("#cancel_suspend_transaction").on("click", function(){
 		$("#confirmcancelmodal").modal("hide");
+	});
+
+	$("#copy_details").on("click", function(){
+		copytoclipboard();
 	});
 
 	inputautocomplete();
@@ -445,5 +461,66 @@ $("document").ready(function(){
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
+	
+	function toCurrency(value) {
+        if (isNaN(value)) {
+            return "--";
+        } else {
+            return new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP"
+            }).format(value);
+        }
+    }
 
+	function copytoclipboard(){
+		/*Name:
+		Address:
+		Delivery Date:
+		Contact Number:
+		Mode of Payment:
+		Orders:
+		Remarks:*/
+		
+		var modeofpaymentarray = ["Cash on Delivery", "Bank Transfer", "GCash"];
+		var name = $("#customer_name").val();
+		var cust_address = $("#cust_delivery_address").val();
+		var deliver_date = $("#delivery_date").val();
+		var contact_number = $("#cust_contact_number").val();
+		var mop = modeofpaymentarray[$("#payment_method").val()];
+		var remarks = $("#trans_remarks").val();
+		
+		var products = $("#productsummary").find(".prodsumrow").not(".deleted");
+		var ordershtml = "";
+		$.each(products, function(ind, row){
+			var id = $(row).attr("id");
+			var pdesc = $(row).find(".summary_desc").html();
+			var qty = $(row).find(".summary_qty").html();
+			var price = $(".product_main #"+id).find("div.product_price").html();
+			ordershtml += "\n"+qty +" - "+pdesc+" @ "+toCurrency(price * qty);
+		});
+		
+		var clipboardtext = "Name: "+name+"\n"
+						+"Address: "+cust_address+"\n"
+						+"Delivery Date: "+deliver_date+"\n"
+						+"Contact #: "+contact_number+"\n"
+						+"Mode of Payment: "+mop+"\n"
+						+"Orders: "+ordershtml+"\n"
+						+"Total: "+toCurrency(total)+"\n"
+						+"Remarks: "+remarks;
+						
+		$("textarea#clipboard").val(clipboardtext);
+		
+		var copyText = document.getElementById("clipboard");
+		
+		/* Select the text field */
+		copyText.select();
+		copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+		/* Copy the text inside the text field */
+		document.execCommand("copy");
+
+		/* Alert the copied text */
+		alert("Details copied to clipboard");
+	}
 });

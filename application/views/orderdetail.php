@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</button>
 
 		<?php if($transaction["status"] == 0){ ?>
-		<span style="width: 20px;display: block;border: 1px solid #000;visibility: hidden" class="pull-right"></span>
+		<span class="pull-right span_seperator"></span>
 		<button id="process_order_btn" class="btn-warning pull-right">
 			<i class="fa fa-truck"></i> &nbsp; For Delivery
 		</button>
@@ -49,17 +49,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<i class="fa fa-undo"></i> &nbsp; Pending
 		</button>
 	<?php } } ?>
-
+	
 	<?php
-		if($transaction["status"] == 0){
+		if(($transaction["status"] == 0) && ($_SESSION["id"] == $transaction["user_id"] || $_SESSION["access_level"] == 0)){
 	?>
-	<span class="pull-right span_seperator"></span>
-	<button id="update_order_btn" class="btn-info pull-right">
-		<i class="fa fa-pencil"></i> &nbsp; Update
-	</button>
-	<?php
-		}
-	?>
+		<span class="pull-right span_seperator"></span>
+		<button id="update_order_btn" class="btn-info pull-right">
+			<i class="fa fa-pencil"></i> &nbsp; Update
+		</button>
+	<?php } ?>
 
 	<div style="clear:both"></div>
 
@@ -75,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<td>Date : <?php echo date("m/d/Y H:i:s", strtotime($transaction["datetime"])); ?></td>
 			</tr>
 			<tr>
-				<td>Contact Number : <?php echo $transaction["contact_number"]; ?></td>
+				<td>Facebook Name : <?php echo $transaction["facebook_name"]; ?></td>
 				<td class="sep"></td>
 				<?php
 					$paymentmethodarray = array("Cash on Delivery (COD)", "Bank Transfer", "GCash");
@@ -83,12 +81,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<td>Payment Method : <?php echo $paymentmethodarray[$transaction["payment_method"]]; ?></td>
 			</tr>
 			<tr>
-				<td width="50%">Delivery Date : <?php echo date("m/d/Y", strtotime($transaction["delivery_date"])); ?></td>
+				<td>Contact Number : <?php echo $transaction["contact_number"]; ?></td>
 				<td class="sep"></td>
 				<td>Payment Confirmation Details : <?php echo $transaction["payment_confirmation_detail"]; ?></td>
 			</tr>
 			<tr>
-				<td colspan="3">Delivery Address : <?php echo $transaction["delivery_address"]; ?></td>
+				<td width="50%">Delivery Date : <?php echo date("m/d/Y", strtotime($transaction["delivery_date"])); ?></td>
+				<td class="sep"></td>
+				<td>Sales Agent : <?php echo $transaction["sales_agent"]; ?></td>
+			</tr>
+			<tr>
+				<td>Delivery Address : <?php echo $transaction["delivery_address"]; ?></td>
+				<td class="sep"></td>
+				<td>Remarks : <?php echo $transaction["remarks"]; ?></td>
 			</tr>
 		</table>
 	</div>
@@ -198,8 +203,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		</div>
 	</div><!-- modal -->
-
 </div>
+
+<form id="report_data" method="post" action="<?php echo base_url(); ?>index.php/report" target="new_window">
+	<input type="hidden" id="trans_id" name="id" />
+</form>
 
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>

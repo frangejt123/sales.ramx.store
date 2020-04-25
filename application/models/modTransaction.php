@@ -34,6 +34,7 @@ class ModTransaction extends CI_Model {
 		$this->FIELDS["name"] = "customer.name";
 		$this->FIELDS["facebook_name"] = "customer.facebook_name";
 		$this->FIELDS["cust_location_image"] = "customer.location_image";
+		$this->FIELDS["sales_agent"] = "user.name";
 		$this->FIELDS["contact_number"] = "customer.contact_number";
 
         foreach ($this->FIELDS as $alias => $field) {
@@ -51,6 +52,7 @@ class ModTransaction extends CI_Model {
         $this->db->select($tablefield);
         $this->db->from("transaction");
 		$this->db->join("customer", 'customer.customer_id = transaction.customer_id');
+		$this->db->join("user", 'user.id = transaction.user_id');
 		$this->db->order_by('transaction.delivery_date', 'DESC');
 		$this->db->order_by('transaction.status', 'ASC');
 

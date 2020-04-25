@@ -52,10 +52,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<button id="cancel_order_btn" class="btn-danger">
 			<i class="fa fa-arrow-left"></i> &nbsp; Back
 		</button>
-
+		
 		<button id="customer_details_main_btn" class="btn-primary pull-right">
 			<?php echo $name == "" ? "Order Details" : $name; ?>
 		</button>
+		<span class="pull-right span_seperator"></span>
+		<button id="copy_details" class="btn-secondary pull-right" data-toggle="tooltip" data-placement="bottom" title="Copy details to clipboard">
+			<i class="fa fa-copy"></i>
+		</button>
+
 		<!--<input type="text" class="form-control" id="table_number" placeholder="Table Number" value="0">-->
 
 		<!-- <button type="button" class="btn btn-warning" id="reprint_transaction"
@@ -73,15 +78,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							if($tdcounter == 1){
 								echo '<br/><div class="row">';
 							}
-
+							$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
 							echo '<div class="col-lg-3 right_floater">';
 							echo '<div class="product_main">';
-							echo '<div class="product_cont" id="'.$row["id"].'">';
+							echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
 							echo '<div class="product_desc">'.$row["description"].'</div>';
 							echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
 							echo '</div>';//product_cont
 							echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
-									($row["avail_qty"] != null ? $row["avail_qty"] : 0)
+									$availableqty
 									.'</span></div>';//product_cont
 							echo '<div class="product_qty">';
 							echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
@@ -237,7 +242,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								</div>
 								<div class="form-group">
 									<label>Customer Location</label>
-									<input type='file' id="customer_location" class="custom-file-input" />
+									<input type='file' id="customer_location" class="" />
 									<div id="map_preview">
 										<img id="map_img_preview" src="<?php echo $locationimage; ?>" alt="Map of Customer's Location" />
 									</div>
@@ -267,7 +272,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 								<div class="form-group">
 									<label>Remarks</label>
-									<textarea class="form-control" rows="2" id="trans_remarks"><?php echo $remarks; ?></textarea>
+									<textarea class="form-control" rows="3" id="trans_remarks"><?php echo $remarks; ?></textarea>
 								</div>
 							</div><!-- col 6 / right panel -->
 						</div><!-- row -->
@@ -281,11 +286,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		</div>
 	</div>
+	
+	<textarea id="clipboard" area-hidden="true"></textarea>
 </div>
 
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/jquery.autocomplete.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>
 <script>
