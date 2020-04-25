@@ -289,3 +289,7 @@ select.form-disabled::-ms-expand {
 	  /* for Chrome */
 	  -webkit-appearance: none;
 }
+
+input[type='date']{
+	line-height: 22px !important;
+}

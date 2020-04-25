@@ -11,7 +11,8 @@ class ModTransactionDetail extends CI_Model {
                 "id" => "transaction_detail.id",
                 "transaction_id" => "transaction_detail.transaction_id",
                 "product_id" => "transaction_detail.product_id",
-                "quantity" => "transaction_detail.quantity"
+                "quantity" => "transaction_detail.quantity",
+                "total_price" => "transaction_detail.total_price"
     );
 
     function __construct() {

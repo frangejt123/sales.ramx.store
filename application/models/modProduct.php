@@ -109,4 +109,12 @@ class ModProduct extends CI_Model {
 		$this->db->query($sql);
 	}
 
+	function availQty($id){
+		$sql = "SELECT `inventory`.`qty`, `product`.`description` FROM `product` LEFT JOIN `inventory`
+					ON `product`.`id` = `inventory`.`product_id` 
+					WHERE `inventory`.`product_id` = '".$id."'";
+		$result = $this->db->query($sql);
+		return $result;
+	}
+
 }

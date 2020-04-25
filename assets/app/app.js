@@ -38,6 +38,8 @@ $("document").ready(function(){
 		}
 
 		var new_qty = availqty - qty;
+		if(new_qty < 0 || qty <= 0)
+			return;
 
 		var html = '<div class="row prodsumrow new haschanges" id="'+id+'">'
 					+ '<div class="col-lg-7 summary_desc left_floater">'
@@ -116,8 +118,6 @@ $("document").ready(function(){
 
 	$("#settlebtn").on("click", function(){
 
-		console.log(inventorydata);
-
 	  	  var total = parseFloat($("#totalvalue").html());
 
 	      var products = $("#productsummary").find(".row");
@@ -165,6 +165,7 @@ $("document").ready(function(){
 	  		var product_id = $(row).attr("id");
 	  		var id = $(row).attr("data-id") != undefined ? $(row).attr("data-id") : "";
 	  		var quantity = parseFloat($(row).find(".summary_qty").html());
+	  		var price = $(".product_main #"+product_id).find(".product_price").html();
 
 	  		var status;
 	  		if($(row).hasClass("new"))
@@ -174,7 +175,7 @@ $("document").ready(function(){
 	  		else
 				status = "deleted";
 
-	  		var datarow = {product_id, quantity, id, status};
+	  		var datarow = {product_id, quantity, id, price, status};
 	  		detail.push(datarow);
 	  	});
 
@@ -198,6 +199,8 @@ $("document").ready(function(){
 				if(res["success"]){
 					alert("Transaction Successfully Settled!");
 					location.reload();
+				}else{
+					alert(res["error"] + "\n" + res["product"]);
 				}
 			},
 			error: function(xhr, status, error){
@@ -238,6 +241,8 @@ $("document").ready(function(){
 		var cname = ucwords($("input#customer_name").val());
 		var cnumber = $("input#cust_contact_number").val();
 		var address = ucwords($("#cust_delivery_address").val());
+		var delivery_date =  $("input#delivery_date").val();
+		var delivery_address =  $("#cust_delivery_address").val();
 		var cid = $("input#customer_id").val();
 
 		if(cname == ""){
@@ -245,6 +250,15 @@ $("document").ready(function(){
 			return;
 		}
 
+		if(delivery_address == ""){
+			alert("Delivery address cannot be empty");
+			return;
+		}
+
+		if(delivery_date == ""){
+			alert("Delivery date cannot be empty");
+			return;
+		}
 
 		if(imghaschanges){
 			$('#map_img_preview').croppie("result", {
@@ -300,7 +314,7 @@ $("document").ready(function(){
 				else
 					window.location = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
 			}
-	  });
+	});
 
 	$("#confirm_cancel_transaction").on("click", function(){
 		if($("#transaction_id_inp").val() == "")
@@ -335,9 +349,11 @@ $("document").ready(function(){
 				  var id = suggestion.data;
 				  var contactnumber = customerdetail[id]["contact_number"];
 				  var deliveryaddress = customerdetail[id]["delivery_address"];
+				  var facebookname = customerdetail[id]["fb_name"];
 
 				  $("#cust_contact_number").val(contactnumber);
 				  $("#cust_delivery_address").val(deliveryaddress);
+				  $("#facebook_name").val(facebookname);
 				  $("#customer_id").val(id);
 
 				  var bsurl = baseurl.replace("index.php", "");
