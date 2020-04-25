@@ -8,9 +8,4 @@
 	<!-- Bootstrap 3.3.7 -->
 	<script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/app/nprogress.js"></script>
-	<script src="<?php echo base_url(); ?>assets/app/inventory_adjustment/index.js"></script>					
-					
-   
-</body>
-
-</html>
+			
