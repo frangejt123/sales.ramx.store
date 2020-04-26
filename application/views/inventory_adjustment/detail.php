@@ -1,6 +1,4 @@
 <?php
-
-
 	$status_txt = array("", "Pending", "Approved");
 	$status_color = array("", "text-success", 'text-primary');
 	if(isset($adjustment)) {

@@ -180,7 +180,7 @@ $(document).ready(() => {
 						window.rows[ind].tmp_id = getId.next().value;
 						$tr.data("tmp-id", window.rows[ind].tmp_id)
 						$tr.attr("data-tmp-id", window.rows[ind].tmp_id);
-						$tr.addClass("table-successs");
+						$tr.addClass("table-success");
 						$tr.find(".action-btn.undo").removeClass("d-none")
 					} 			
 		
@@ -309,7 +309,7 @@ $(document).ready(() => {
 									window.rows[ind]._state = "";
 									window.rows[ind].id = detail.id;
 									window.rows[ind]._original = Object.assign({}, window.rows[ind]);
-									$tr.removeClass("table-successs table-info table-danger");
+									$tr.removeClass("table-success table-info table-danger");
 									$tr.find('.action-btn.undo').addClass('d-none');
 									$tr.find('.action-btn.delete').removeClass('d-none');
 								}	
