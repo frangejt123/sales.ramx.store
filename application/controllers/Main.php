@@ -19,6 +19,36 @@ class Main extends CI_Controller {
 		}
 	}
 
+	public function main2() {
+		$this->load->model('modProduct', "", TRUE);
+		$this->load->model('modCustomer', "", TRUE);
+
+		$data["product"] = $this->modProduct->getAll(null)->result_array();
+		$customer = $this->modCustomer->getAll(null)->result_array();
+		$customerarray = array();
+		$nameopt = array();
+		foreach($customer as $ind => $row){
+			$customerarray[$row["id"]] = array();
+			$customerarray[$row["id"]]["name"] = $row["name"];
+			$customerarray[$row["id"]]["fb_name"] = $row["facebook_name"];
+			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
+			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
+			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
+			json_encode($nameopt[$row["id"]] = $row["name"]);
+		}
+
+		$data["customerdetail"] = json_encode($customerarray);
+		$data["namelist"] = json_encode($nameopt);
+
+		session_start();
+		if(isset($_SESSION["username"])) {
+			$this->load->view('main2', $data);
+		}else{
+			$this->load->view('login');
+		}
+	}
+
+
 	public function pos(){
 		$this->load->model('modProduct', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
