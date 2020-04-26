@@ -70,40 +70,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="row">
 	        <div class="col-lg-9 left_floater">
-				<div id="left_panel">
-					<?php
-						$tdcounter = 1;
-						foreach($product as $ind => $row){
+				<div id="left_panel floater_left">
+					<div class="row row-cols-1 row-cols-md-4">
+						<?php
+							foreach($product as $ind => $row){
 
-							if($tdcounter == 1){
-								echo '<br/><div class="row">';
+								$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
+								echo '<div class="col mb-4">';
+								echo '<div class="product_main">';
+								echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
+								echo '<div class="product_desc">'.$row["description"].'</div>';
+								echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
+								echo '</div>';//product_cont
+								echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
+										$availableqty
+										.'</span></div>';//product_cont
+								echo '<div class="product_qty">';
+								echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
+								echo '</div>';//product_qty
+								echo '</div>';//product_main
+								echo '</div>';//col
+
 							}
-							$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
-							echo '<div class="col-lg-3 right_floater">';
-							echo '<div class="product_main">';
-							echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
-							echo '<div class="product_desc">'.$row["description"].'</div>';
-							echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
-							echo '</div>';//product_cont
-							echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
-									$availableqty
-									.'</span></div>';//product_cont
-							echo '<div class="product_qty">';
-							echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
-							echo '</div>';//product_qty
-							echo '</div>';//product_main
-							echo '</div>';//col
-
-							$tdcounter++;
-
-							if($tdcounter == 5){
-								echo '</div>';//row
-								echo '<div style="clear:both"></div>';
-								$tdcounter=1;
-							}
-
-						}
-					?>
+						?>
+						</div>
 					<br />
 				</div>
 			</div><!-- col left -->
