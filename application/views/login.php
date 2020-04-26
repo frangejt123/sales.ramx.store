@@ -33,6 +33,11 @@
 	#login_logo{
 		width: 200px;
 	}
+	#login_btn_container.row{
+		margin-left: 0px !important;
+		margin-right: 0px !important;
+		display: block !important;
+	}
 </style>
 </head>
 <body class="hold-transition login-page">
@@ -56,7 +61,7 @@
 			<div id="error_container">
 				Invalid Username and Password
 			</div>
-			<div class="row">
+			<div class="row" id="login_btn_container">
 				<div class="col-xs-8">
 					<div class="checkbox icheck">
 						<label>

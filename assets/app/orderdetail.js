@@ -39,6 +39,7 @@ $(document).ready(function(){
 					$("#voiddetailmodal p#voidreason").text("Reason: "+res["void_reason"]);
 					$("#void_order_btn").hide();
 					$("#process_order_btn").hide();
+					$("#update_order_btn").hide();
 					$("#statusmodal").modal("hide");
 				}else{
 					alert("Order have been modified. Press OK to reload data.");
@@ -99,6 +100,7 @@ $(document).ready(function(){
 				if(res["success"]){
 					$(".transaction_detail_container, .detail_grand_total, table#orderdata_table tbody").addClass("voided");
 					$(".void_notif").show();
+					$("#update_order_btn").hide();
 					$("#process_order_btn").hide();
 					$("#void_order_btn").hide();
 					$("#void_detail_modal").modal("hide");

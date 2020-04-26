@@ -25,7 +25,7 @@ $("document").ready(function(){
 	});
 
 	var inventorydata = {};
-
+	
 	$("div#container").on("click", ".product_cont", function(){
 		var id = $(this).attr("id");
 		var description = $(".product_main #"+id).find("div.product_desc").html();
@@ -45,7 +45,7 @@ $("document").ready(function(){
 			return;
 
 		var html = '<div class="row prodsumrow new haschanges" id="'+id+'">'
-					+ '<div class="col-lg-7 summary_desc left_floater">'
+					+ '<div class="col-lg-8 summary_desc left_floater">'
 					+ description
 					+ '</div>'
 					+ '<div class="col-lg-2 summary_qty left_floater">'
@@ -481,9 +481,10 @@ $("document").ready(function(){
 		Mode of Payment:
 		Orders:
 		Remarks:*/
-		
+		var clipboardtotal = 0;
 		var modeofpaymentarray = ["Cash on Delivery", "Bank Transfer", "GCash"];
 		var name = $("#customer_name").val();
+		var fb_name = $("#facebook_name").val();
 		var cust_address = $("#cust_delivery_address").val();
 		var deliver_date = $("#delivery_date").val();
 		var contact_number = $("#cust_contact_number").val();
@@ -498,15 +499,17 @@ $("document").ready(function(){
 			var qty = $(row).find(".summary_qty").html();
 			var price = $(".product_main #"+id).find("div.product_price").html();
 			ordershtml += "\n"+qty +" - "+pdesc+" @ "+toCurrency(price * qty);
+			clipboardtotal += (price * qty);
 		});
 		
 		var clipboardtext = "Name: "+name+"\n"
+						+"Facebook Name: "+fb_name+"\n"
 						+"Address: "+cust_address+"\n"
 						+"Delivery Date: "+deliver_date+"\n"
 						+"Contact #: "+contact_number+"\n"
 						+"Mode of Payment: "+mop+"\n"
 						+"Orders: "+ordershtml+"\n"
-						+"Total: "+toCurrency(total)+"\n"
+						+"Total: "+toCurrency(clipboardtotal)+"\n"
 						+"Remarks: "+remarks;
 						
 		$("textarea#clipboard").val(clipboardtext);

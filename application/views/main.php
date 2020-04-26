@@ -115,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							if(isset($transactiondetail)){
 								foreach($transactiondetail as $ind => $row){
 									echo '<div class="row prodsumrow existing" data-id="'.$row["id"].'" id="'.$row["product_id"].'">';
-									echo '<div class="col-lg-7 summary_desc left_floater">'.$row["description"].'</div>';
+									echo '<div class="col-lg-8 summary_desc left_floater">'.$row["description"].'</div>';
 									echo '<div class="col-lg-2 summary_qty left_floater">'.$row["quantity"].'</div>';
 									echo '<div class="col-lg-2 right_floater">';
 									echo '<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" style="height: 50px;width: 50px;">';
@@ -157,10 +157,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			  <div class="modal-header">
 			    <div class="icon-box" style="border: 3px solid #5cb85c; color: #5cb85c">
 			      <i class="fa fa-save"></i>
-			    </div>        
-			    <h4 class="modal-title">SETTLE TRANSACTION</h4>  
-			            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			    </div>          
+			   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			  </div>
+			  
+			  <h4 class="modal-title">SETTLE TRANSACTION</h4>
 			  <div class="modal-body">
 			    <p>Are you sure you want to settle this transaction?.</p>
 			  </div>
@@ -179,9 +180,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="icon-box" style="border: 3px solid #5cb85c; color: #5cb85c">
 						<i class="fa fa-save"></i>
 					</div>
-					<h4 class="modal-title">ADD NEW CUSTOMER</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
+				<h4 class="modal-title">ADD NEW CUSTOMER</h4>
 				<div class="modal-body">
 					<p><b><span id="new_customer_name"></span></b> is not on the customer list. Would you like to add his/her detail?.</p>
 				</div>
@@ -200,9 +201,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="icon-box" style="border: 3px solid #c01a25; color: #e53441">
 						<i class="fa fa-remove"></i>
 					</div>
-					<h4 class="modal-title">CANCEL TRANSACTION</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
+				<h4 class="modal-title">CANCEL TRANSACTION</h4>
 				<div class="modal-body">
 					<p>You have unsaved changes. Are you sure you want to cancel transaction?.</p>
 				</div>

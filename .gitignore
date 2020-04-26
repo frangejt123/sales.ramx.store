@@ -32,3 +32,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 escpos-php/
 application/config/config.php
 
+assets/location_image/mauinasal.jpeg
+assets/location_image/milamorada.jpeg
+assets/location_image/test2.jpeg
+assets/location_image/test3.jpeg
