@@ -34,6 +34,12 @@ $(document).ready(function(){
 		window.location = baseurl + "/inventory/adjustment";
 	});
 
+	$("button#customer_btn").on("click", function(){
+		NProgress.start();
+		window.location = baseurl + "/customer";
+	});
+
+
 
 	$("table#orderlist_table").on("click", "tr", function(){
 		var id = $(this).attr("id").split("_")[1];

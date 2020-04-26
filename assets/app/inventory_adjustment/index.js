@@ -166,7 +166,7 @@ $(document).ready(() => {
 			
 			if(window.rows[ind]._state == "") {
 				window.rows[ind]._state = "edited";
-				$tr.addClass("info");
+				$tr.addClass("table-info");
 				$tr.find('.action-btn.undo').removeClass('d-none');
 				$tr.find('.action-btn.delete').addClass('d-none');
 			}
@@ -180,7 +180,7 @@ $(document).ready(() => {
 						window.rows[ind].tmp_id = getId.next().value;
 						$tr.data("tmp-id", window.rows[ind].tmp_id)
 						$tr.attr("data-tmp-id", window.rows[ind].tmp_id);
-						$tr.addClass("success");
+						$tr.addClass("table-successs");
 						$tr.find(".action-btn.undo").removeClass("d-none")
 					} 			
 		
@@ -212,12 +212,12 @@ $(document).ready(() => {
 					$tr.remove();
 				} else if(window.rows[ind]._state == "deleted") {
 					window.rows[ind]._state = "";
-					$tr.removeClass("danger");
+					$tr.removeClass("table-danger");
 					$(e.currentTarget).addClass('d-none');
 					$tr.find('.action-btn.delete').removeClass('d-none');
 					$tr.find('.input').attr('disabled', false);
 				} else if (window.rows[ind]._state == "edited") {
-					$tr.removeClass("info");
+					$tr.removeClass("table-info");
 					$(e.currentTarget).addClass("d-none");
 					$tr.find('.action-btn.delete').removeClass('d-none');
 
@@ -231,7 +231,7 @@ $(document).ready(() => {
 				
 			} else if (action == "delete") {
 				window.rows[ind]._state = "deleted";
-				$tr.addClass("danger");
+				$tr.addClass("table-danger");
 				$(e.currentTarget).addClass('d-none');
 				$tr.find('.action-btn.undo').removeClass('d-none');
 				$tr.find('.input').attr('disabled', true);
@@ -309,7 +309,7 @@ $(document).ready(() => {
 									window.rows[ind]._state = "";
 									window.rows[ind].id = detail.id;
 									window.rows[ind]._original = Object.assign({}, window.rows[ind]);
-									$tr.removeClass("success info danger");
+									$tr.removeClass("table-successs table-info table-danger");
 									$tr.find('.action-btn.undo').addClass('d-none');
 									$tr.find('.action-btn.delete').removeClass('d-none');
 								}	
@@ -322,7 +322,7 @@ $(document).ready(() => {
 					}
 					$("#approve-btn").removeClass("d-none");
 					$("#delete-btn").removeClass("d-none");
-					showMessage("Inventory adjustment has been saved succesfuly.")
+					showMessage("Inventory adjustment has been saved successfuly.")
 				}
 			},
 			error: function (xhr, status, error) {
@@ -379,9 +379,52 @@ $(document).ready(() => {
 					showMessage("Inventory adjustment has been deleted succesfuly.")
 					NProgress.start();
 					window.location = baseurl + "/inventory/adjustment";
-				}
+				} 
 			}
 		});
+	});
+
+
+	$("input#search").on("keyup", function(e){
+		let tbl = $(this).data("table");
+
+		// Declare variables
+		var input, filter, table, tr, td, i, txtValue;
+		input = $(e.currentTarget);
+		
+		if(input.val() == "") {
+			$(`#${tbl} tbody tr`).css("display", "");
+			return;
+		}
+
+		filter = input.val().toUpperCase();
+		table = document.getElementById(tbl);
+		tr = $(`#${tbl} tbody tr`);
+
+	
+		// Loop through all table rows, and hide those who don't match the search query
+		for (i = 0; i < tr.length; i++) {
+			let tds = tr[i].getElementsByTagName("td");
+			let exists = true;
+			for(let j = 0; j < tds.length; j++) {
+				if(tds[j]) {
+					txtValue = tds[j].textContent || tds[j].innerText;
+					if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						exists = true;
+						console.log("td break", j)
+						break;
+					} else {
+						exists = false;
+					}
+					console.log(txtValue, filter, exists);
+				}
+			}
+			if(exists) {
+				tr[i].style.display = "";
+			} else {
+				tr[i].style.display = "none";
+			}
+		}
 	});
     
 });

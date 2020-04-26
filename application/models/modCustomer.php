@@ -48,15 +48,17 @@ class ModCustomer extends CI_Model {
 		$result = array();
 		$data = array();
 		unset($this->FIELDS["id"]);
-		if($param["location_image"] == ""){
-			unset($this->FIELDS["location_image"]);
-		}
+
+	
+ 		// if( $param["location_image"] == ""){
+		// 	unset($this->FIELDS["location_image"]);
+		// }
 
 		foreach ($this->FIELDS as $alias => $field) {
-			if (array_key_exists($alias, $param)) {
-				if ($param[$alias] != "") {
-					$data[$field] = $param[$alias];
-				}
+			if (array_key_exists($alias, $param)) {					// if(array_key_exists("location_image", $param))
+				if ($param[$alias] != "") {							//    if($param["location_image] != "")
+					$data[$field] = $param[$alias];					//			$data[$field] = $param[$alias]
+				}													//						
 			}
 		}
 
@@ -77,15 +79,26 @@ class ModCustomer extends CI_Model {
 		$result = array();
 		$data = array();
 
-		$id = $param["customer_id"];
-
-		if($param["location_image"] == ""){
-			unset($this->FIELDS["location_image"]);
+		
+		
+		if(array_key_exists("id", $param)) {
+			$id = $param["id"];
+		} else {
+			$id = $param["customer_id"];
 		}
 
+		
+		// if($param["location_image"] == ""){
+		// 	unset($this->FIELDS["location_image"]);
+		// }
+
 		foreach ($this->FIELDS as $alias => $field) {
-			if (array_key_exists($alias, $param))
-				$data[$field] = $param[$alias];
+			if (array_key_exists($alias, $param)) {
+				if ($param[$alias] != "") {		
+					$data[$field] = $param[$alias];
+				}
+			}
+			
 		}
 
 		$this->db->where($this->FIELDS['id'], $id);
@@ -98,6 +111,16 @@ class ModCustomer extends CI_Model {
 			$result["message"] = $this->db->_error_message();
 		}
 
+		return $result;
+	}
+
+
+	function delete($id){
+		$sql = "DELETE FROM `customer` WHERE `customer`.`customer_id` = '$id'";
+		$result = array();
+		if($this->db->query($sql)){
+			$result["success"] = true;
+		}
 		return $result;
 	}
 

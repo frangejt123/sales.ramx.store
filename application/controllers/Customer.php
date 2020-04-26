@@ -39,18 +39,6 @@ class Customer extends CI_Controller {
 		}
 	}
 
-	public function new() {
-		$this->load->model('modProduct', "", TRUE);
-		if(isset($_SESSION["username"])) {
-			$data = array(
-				"product" => $this->modProduct->getAll(null)->result_array()
-			);
-			$this->view('customer/detail', $data);
-		}
-		else{
-			$this->load->view('login');
-		}
-	}
 
 	private function view($page, $data) {
 			$this->load->view("layouts/header");
@@ -62,75 +50,39 @@ class Customer extends CI_Controller {
 
 	public function save() {
 		$param = $this->input->post(NULL, "true");
-		$this->load->model('modInventoryAdjustment', "", TRUE);
-		$this->load->model('modInventoryAdjustmentDetail', "", TRUE);
+		$this->load->model('modCustomer', "", TRUE);
 
-		// $this->db->transStart();
 
-		$param["adjustment"]["prepared_by"] = $_SESSION["id"];
-		$state = $param["adjustment"]["_state"];
-		if($state == "new") {
-			$adjustment =  $this->modInventoryAdjustment->insert($param["adjustment"]);
-		} else if ($state == "edited") {
-			$adjustment =  $this->modInventoryAdjustment->update($param["adjustment"]);
+		if(!array_key_exists("id", $param)) {
+			$customer =  $this->modCustomer->insert($param);
+		} else  {
+			$customer =  $this->modCustomer->update($param);
 		}
-		$result = array(
-			"adjustment" => $adjustment
-		);
-		
-		$details = array();
-		if(array_key_exists("details", $param)) {
-
-			if($adjustment["success"]) {
-				//insert details;
-			
-				foreach($param["details"] as $i => $detail) {
-					$detail["inventory_adjustment_id"] = $adjustment["id"];
-					if($detail["_state"] == "new") {
-						$details[$i] = $this->modInventoryAdjustmentDetail->insert($detail);
-						$details[$i]["tmp_id"] = $detail["tmp_id"]; 
-					} else if($detail["_state"] == "edited") {
-						$details[$i] = $this->modInventoryAdjustmentDetail->update($detail);
-						$details[$i]["tmp_id"] = $detail["tmp_id"]; 
-					} else if($detail["_state"] == "deleted") {
-						$details[$i] = $this->modInventoryAdjustmentDetail->delete($detail);
-						$details[$i]["tmp_id"] = $detail["tmp_id"]; 
-					}
-				}
-				$result["details"] = $details;			
-			}
-		}
+	
+	
 		// $this->db->transComplete();
 		
 		
 
-		echo json_encode($result);
+		echo json_encode($customer);
 
 	}
 
 	public function detail($id) {
-		$this->load->model('modProduct', "", TRUE);
-		$this->load->model('modInventoryAdjustment', "", TRUE);
-		$this->load->model('modInventoryAdjustmentDetail', "", TRUE);
-		$this->load->model('modUser', "", TRUE);
+		$this->load->model('modCustomer', "", TRUE);
+		$this->load->model('modTransaction', "", TRUE);
+
 		$data = array(
-			"product" => $this->modProduct->getAll(null)->result_array(),
-			"adjustment" => $this->modInventoryAdjustment->getAll(array("id" => $id))->row_array(),
-			"details" => $this->modInventoryAdjustmentDetail->getAll(array("inventory_adjustment_id" => $id))->result_array()
+			"customer" => $this->modCustomer->getAll(["id" => $id])->row_array(),
+			"transactions" => $this->modTransaction->getAllNoImage(array("customer_id" => $id))->result_array(),
+			"status" => $this->modTransaction->STATUS,
+			"payment_method" => $this->modTransaction->PAYMENT_METHOD
 		);
 
-		if($data["adjustment"]["prepared_by"]) {
-			$prep_by  = $this->modUser->getAll(array("id" => $data["adjustment"]["prepared_by"]))->row_array();
-			$data["prep_by"] = $prep_by;
-		}
-
-		if($data["adjustment"]["approved_by"]) {
-			$app_by  = $this->modUser->getAll(array("id" => $data["adjustment"]["approved_by"]))->row_array();
-			$data["app_by"] = $app_by;
-		}
+		
 
 		if(isset($_SESSION["username"])) {
-			$this->view('inventory_adjustment/detail', $data);
+			$this->view('customer/detail', $data);
 		}
 		else{
 			$this->load->view('login');
@@ -139,29 +91,14 @@ class Customer extends CI_Controller {
 
 
 	public function delete() {
-		$this->load->model('modInventoryAdjustment', "", TRUE);
+		$this->load->model('modCustomer', "", TRUE);
 		$param = $this->input->post(NULL, "true");
 		$id = $param["id"];
 
-		$result["adjustment"] = $this->modInventoryAdjustment->delete($id);
+		$result = $this->modCustomer->delete($id);
 		
 		echo json_encode($result);
 	}
 	
-	public function setProductQty($id) {
-		$this->load->model('modInventoryAdjustmentDetail', "", TRUE);
 
-		$details = $this->modInventoryAdjustmentDetail->getDetailById(array("inventory_adjustment_id" => $id))->result_array();
-
-
-		foreach($details as $i => $detail) {
-
-			if( $detail["type"] == 2) {
-				$detail["quantity"] = $detail["quantity"] * -1;
-			}
-
-			$this->modInventoryAdjustmentDetail->updateInventory($detail["product_id"], $detail["quantity"]);
-		}
-		
-	}
 }

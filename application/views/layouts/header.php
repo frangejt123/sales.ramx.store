@@ -19,5 +19,5 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/slimscroll.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/nprogress.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/orderlist.css">
-
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/croppie.css">
 </head>

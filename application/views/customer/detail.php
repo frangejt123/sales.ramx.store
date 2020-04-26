@@ -1,27 +1,17 @@
 <?php
-
-
-	$status_txt = array("", "Pending", "Approved");
-	$status_color = array("", "text-success", 'text-primary');
-	if(isset($adjustment)) {
 	
-		$id = $adjustment["id"];
-		$status = $adjustment["status"];
-		$date = $adjustment["date"];
-		$type = $adjustment["type"];
-		$remarks = $adjustment["remarks"];
-		$prepared_by =  isset($prep_by) ? $prep_by["username"] : "" ;
-		$approved_by = isset($app_by) ? $app_by["username"] : "" ;
-		$btn_class = "";
-	} else {
-		$id = "";
-		$status = "1";
-		$date = "";
-		$type= "";
-		$remarks = "";
-		$prepared_by = "";
-		$approved_by = "";
-		$btn_class = "invisible";
+	if(isset($customer)) {	
+		$id = $customer["id"];
+		$name = $customer["name"];
+		$fb_name = $customer["facebook_name"];
+		$contact_number = $customer["contact_number"];
+		$delivery_address = $customer["delivery_address"];
+		$location_image = $customer["location_image"];
+		$status_class = array("success", "warning", "primary", "danger");
+	}
+
+	if(isset($transactions)) {
+		$hasTransactions = count($transactions) > 0;
 	}
 ?>
 
@@ -29,200 +19,147 @@
 	<button class="btn-danger lg-btn routing-btn" data-route-to="/customer">
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>
-
 	<button id="save-btn" class="btn-success pull-right lg-btn">
 			<i class="fa fa-save"></i> &nbsp; Save
 	</button>
-
 	<span class="pull-right span_seperator"></span>
-
 	<span class="pull-right span_seperator"></span>
-	<button id="delete-btn" class="btn-danger pull-right lg-btn" data-toggle="modal" data-target="#delete-modal">
+	<button id="delete-btn" class="btn-danger pull-right lg-btn <?= $hasTransactions ? 'd-none' : ''?>">
 			<i class="fa fa-trash"></i> &nbsp; Delete
 	</button>
 
+
 	<div style="clear:both"></div>
 
-	<div class="transaction_detail_container">
-		<form class="form-inline" id="form" method="post">
-			<table id="table_trans_detail">
-				<tr>
-					<td><label>Inventory Adjustment # : </label> 	
-					<input type="text" class="form-control form-readonly" name="id" value="<?php echo $id ?>"" id="adjustment_id" readonly placeholder="#NEW#"></td>
-					<td class="sep"></td>
-					<td> 
-						<label>Type : </label> 
-						<select class="form-control" id="type" name="type" value="<?=$type?>" required>
-								<option value="1">IN</option>
-								<option value="2">OUT</option>
-						</select>
-					</td>
-					<td class="sep">
-					</td>
-					<td>
-						<div class="form-group">
-							<label for="date">Date : </label>
-							<input type="date" class="form-control" value="<?=$date?>" name="date" id="date" required>
+
+	<div class="container-fluid">
+		<form class="needs-validation" novalidate id="customer_form" method="post">
+			<button type="submit" class="d-none"></button>
+		<div class="row">
+			<div class="col-6">
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Customer ID :  </label> 	
+					<div class="col-sm-9">
+						<input type="text" class="form-control form-readonly" name="id" value="<?php echo $id ?>"" id="customer_id" readonly placeholder="#NEW#">
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Name :  </label> 	
+					<div class="col-sm-9">
+						<input type="text" class="form-control input" data-model="name" name="name" value="<?php echo $name ?>" required id="customer_name" >
+						<div class="invalid-feedback">
+							Please input `Customer Name`.
 						</div>
-					</td>
-					<td>
-						<div class="form-group">
-							<label for="status">Status : </label>
-							<span id="status-display" class='<?=$status_color[$status] ?>'><?=$status_txt[$status] ?></span>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Facebook Name :  </label> 	
+					<div class="col-sm-9">
+						<input type="text" class="form-control input"  required data-model="facebook_name" name="facebook_name" value="<?php echo $fb_name ?>"" id="fb_name" >
+						<div class="invalid-feedback">
+							Please input `Facebook Name`.
 						</div>
-					</td>
-				</tr>
-			</table>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Contact Number :  </label> 	
+					<div class="col-sm-9">
+						<input type="text" class="form-control input" required  data-model="contact_number" name="contact_number" value="<?php echo $contact_number ?>"" id="contact_number" >
+						<div class="invalid-feedback">
+							Please input `Contact Number`.
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Delivery Address :  </label> 	
+					<div class="col-sm-9">
+						<textarea data-model="delivery_address" required class="form-control input" rows="3" required id="cust_delivery_address"><?= $delivery_address ?>
+						</textarea>
+						<div class="invalid-feedback">
+							Please input `Delivery Address`.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-6">
+				<div class="form-group">
+					<label>Customer Location</label>
+					<input type='file' id="customer_location" class="custom-file-input" />
+					<div id="map_preview">
+						<img id="map_img_preview" src="<?= $location_image ?>" alt="Map of Customer's Location" />
+					</div>
+				</div>
+			</div>
+		</div>
+
 		</form>
 	</div>
 
-	<div class="grid_container">
-		<div class="box">
-			<div class="box-body no-padding">
-				<table class="table table-striped table-hover" id="adjustment-detail-table">
+
+		<div class="card">
+			<div class="card-header pb-1">
+				<div class="row">
+					<div class="col-6">
+						<h5 class="card-title mt-1">Transaction History</h5>	 
+					</div>
+					<div class="col-6">
+					<input type="text" id="search" class="form-control" data-table="transaction_tbl" placeholder="Search...">
+					</div>
+				</div>
+			</div>
+			<div class="card-body p-0">
+				<table class="table table-striped table-hover mb-0" id="transaction_tbl">
 					<thead>
 					<tr>
-						<th>Product Name</th>
-						<th>Quantity</th>
-						<th style="width:30px"></th>
+						<th class="border-top-0">Trans #</th>
+						<th class="border-top-0">Datetime</th>
+						<th class="border-top-0">Delivery Date</th>
+						<th class="border-top-0">Payment Method</th>
+						<th class="border-top-0">Total</th>
+						<th class="border-top-0 text-center">Status</th>
 					</tr>
 					</thead>
 					<tbody>
 					<?php
-					if(isset($details))
-						foreach($details as $ind => $row){
+					if(isset($transactions) && count($transactions) > 0)
+						foreach($transactions as $ind => $row){
 					?>		
-						<tr class="detail-row" data-tmp-id="<?=$row['id']?>">
-							<td>
-								<select 
-									class="form-control input_product input" 
-									data-model="product_id" 
-									placeholder="Select Product">
-									<option value=""></option>
-								<?php
-									if(isset($product)) {
-										foreach($product as $ind => $prod) {
-											$selected = $prod["id"] == $row["product_id"] ? "selected" : "";
-											$prod_id = $prod["id"];
-											$prod_desc = $prod["description"];
-											echo "<option value='$prod_id' $selected>$prod_desc</option>";
-										}
-									}
-								?>
-								</select>
-							<td><input type="number" class="form-control input_quantity input" data-model="quantity" value='<?=$row["quantity"]?>' ></td>
-							<td class="" v-align="middle">
-								<button class="btn-info action-btn btn btn-sm btn-round undo invisible" title="Undo" data-action="undo">
-									<i class="fa fa-undo"></i>
-								</button>
-								<button class="btn-danger action-btn btn btn-sm btn-round delete " title="Delete" data-action="delete">
-									<i class="fa fa-trash"></i>
-								</button>
-							</td>
+						<tr class="transaction-row routing-btn" data-id="<?=$row['id']?>" data-route-to="/main/orderdetail/<?=base64_encode($row['id']) ?>">
+							<td><?= $row["id"] ?></td>
+							<td><?= date('m/d/Y H:i:s', strtotime($row["datetime"])) ?></td>
+							<td><?= date('m/d/Y', strtotime($row["delivery_date"])) ?></td>
+							<td><?= $payment_method[$row["payment_method"]] ?></td>
+							<td class="text-right"><?= number_format($row["total"], 2) ?></td>
+							<td class="text-center"><span class="badge badge-pill badge-<?= $status_class[$row['status']] ?>"><?= $status[$row["status"]] ?></span></td>
 						</tr>
 
 					<?php
-						}
-					?>
+							} else  { ?>
+								<tr>
+									  <td colspan='6' class='text-center'>No records found</td>
+								</tr>
+						
+						<?php } ?>
+			
 						
 					</tbody>
 					</table>
 			</div>
 			<!-- /.box-body -->
 		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group">
-				<label for="remarks">Remarks</label>
-				<textarea class="form-control" id="remarks" rows="3" ><?= $remarks ?></textarea>
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="form-group">
-				<label for="prepared_by">Prepared by: 	<span id="prepared_by"><?=$prepared_by ?></span></label>
-			</div>
-		</div>
-
-		<div class="col-md-3">
-			<div class="form-group">
-				<label for="prepared_by">Approved by: <span id="approved_by"><?=$approved_by ?></span></label>
-			</div>
-		</div>
-	</div>
 </div>
 
-<div id="approve-modal" class="modal fade">
-		<div class="modal-dialog modal-confirm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="icon-box">
-						<span class="fa fa-thumbs-up fa-5x text-primary"></span>
-					</div>
-					<h4 class="modal-title">APPROVE INVENTORY ADJUSTMENT</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-info" data-dismiss="modal">No</button>
-					<button type="button" class="btn btn-success" id="approve-adjustment">Yes</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<div id="delete-modal" class="modal fade">
-		<div class="modal-dialog modal-confirm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="icon-box">
-						<span class="fa fa-trash fa-5x text-danger"></span>
-					</div>
-					<h4 class="modal-title">DELETE INVENTORY ADJUSTMENT</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-info" data-dismiss="modal">No</button>
-					<button type="button" class="btn btn-danger" id="delete-adjustment">Yes</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
-<template>
-			<tr class="detail-row" data-tmp-id="pre_new">
-				<td>
-				    <select class="form-control input_product input" data-model="product_id" placeholder="Select Product">
-						<option value=""></option>
-					<?php
-						if(isset($product)) {
-							foreach($product as $ind => $prod) {
-								$prod_id = $prod["id"];
-								$prod_desc = $prod["description"];
-								echo "<option value='$prod_id'>$prod_desc</option>";
-							}
-						}
-					?>
-					</select>
-				<td><input type="number" class="form-control input_quantity input" data-model="quantity" ></td>
-				<td class="" v-align="middle">
-					<button class="btn-info action-btn btn btn-sm btn-round undo invisible" title="Undo" data-action="undo">
-						<i class="fa fa-undo"></i>
-					</button>
-					<button class="btn-danger action-btn btn btn-sm btn-round delete invisible" title="Delete" data-action="delete">
-						<i class="fa fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-	</template>
+</div>
+</div>
+
 
 <script type="text/javascript">
-	window.rows = <?php echo isset($details) ? json_encode($details) : '[]' ?>;
-	window.adjustment = <?php echo isset($adjustment) ? json_encode($adjustment) : 'null' ?>
+	window.form = <?php echo isset($customer) ? json_encode($customer) : 'null' ?>
 </script>
