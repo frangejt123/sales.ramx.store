@@ -70,40 +70,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="row">
 	        <div class="col-lg-9 left_floater">
-				<div id="left_panel">
-					<?php
-						$tdcounter = 1;
-						foreach($product as $ind => $row){
+				<div id="left_panel floater_left">
+					<div class="row row-cols-1 row-cols-md-4">
+						<?php
+							foreach($product as $ind => $row){
 
-							if($tdcounter == 1){
-								echo '<br/><div class="row">';
+								$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
+								echo '<div class="col mb-4">';
+								echo '<div class="product_main">';
+								echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
+								echo '<div class="product_desc">'.$row["description"].'</div>';
+								echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
+								echo '</div>';//product_cont
+								echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
+										$availableqty
+										.'</span></div>';//product_cont
+								echo '<div class="product_qty">';
+								echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
+								echo '</div>';//product_qty
+								echo '</div>';//product_main
+								echo '</div>';//col
+
 							}
-							$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
-							echo '<div class="col-lg-3 right_floater">';
-							echo '<div class="product_main">';
-							echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
-							echo '<div class="product_desc">'.$row["description"].'</div>';
-							echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
-							echo '</div>';//product_cont
-							echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
-									$availableqty
-									.'</span></div>';//product_cont
-							echo '<div class="product_qty">';
-							echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
-							echo '</div>';//product_qty
-							echo '</div>';//product_main
-							echo '</div>';//col
-
-							$tdcounter++;
-
-							if($tdcounter == 5){
-								echo '</div>';//row
-								echo '<div style="clear:both"></div>';
-								$tdcounter=1;
-							}
-
-						}
-					?>
+						?>
+						</div>
 					<br />
 				</div>
 			</div><!-- col left -->
@@ -115,7 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							if(isset($transactiondetail)){
 								foreach($transactiondetail as $ind => $row){
 									echo '<div class="row prodsumrow existing" data-id="'.$row["id"].'" id="'.$row["product_id"].'">';
-									echo '<div class="col-lg-7 summary_desc left_floater">'.$row["description"].'</div>';
+									echo '<div class="col-lg-8 summary_desc left_floater">'.$row["description"].'</div>';
 									echo '<div class="col-lg-2 summary_qty left_floater">'.$row["quantity"].'</div>';
 									echo '<div class="col-lg-2 right_floater">';
 									echo '<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" style="height: 50px;width: 50px;">';
@@ -157,10 +147,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			  <div class="modal-header">
 			    <div class="icon-box" style="border: 3px solid #5cb85c; color: #5cb85c">
 			      <i class="fa fa-save"></i>
-			    </div>        
-			    <h4 class="modal-title">SETTLE TRANSACTION</h4>  
-			            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			    </div>          
+			   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			  </div>
+			  
+			  <h4 class="modal-title">SETTLE TRANSACTION</h4>
 			  <div class="modal-body">
 			    <p>Are you sure you want to settle this transaction?.</p>
 			  </div>
@@ -179,9 +170,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="icon-box" style="border: 3px solid #5cb85c; color: #5cb85c">
 						<i class="fa fa-save"></i>
 					</div>
-					<h4 class="modal-title">ADD NEW CUSTOMER</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
+				<h4 class="modal-title">ADD NEW CUSTOMER</h4>
 				<div class="modal-body">
 					<p><b><span id="new_customer_name"></span></b> is not on the customer list. Would you like to add his/her detail?.</p>
 				</div>
@@ -200,9 +191,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="icon-box" style="border: 3px solid #c01a25; color: #e53441">
 						<i class="fa fa-remove"></i>
 					</div>
-					<h4 class="modal-title">CANCEL TRANSACTION</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
+				<h4 class="modal-title">CANCEL TRANSACTION</h4>
 				<div class="modal-body">
 					<p>You have unsaved changes. Are you sure you want to cancel transaction?.</p>
 				</div>

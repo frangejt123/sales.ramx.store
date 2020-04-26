@@ -92,12 +92,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<div class="modal-body">
 					<div class="form_container container-fluid">
 						<div class="row">
-							<input type="text" class="form-control hidden" id="selected_product">
+							<input type="hidden" class="form-control" id="selected_product">
 							<div class="form-group col-xs-6">
 								<label>Description</label>
 								<input type="text" class="form-control" id="product_description">
 							</div>
-							<div class="form-group col-xs-6">
+							<div class="form-group col-xs-6" style="margin-left: 12px;">
 								<label>Price</label>
 								<input type="text" class="form-control" id="product_price">
 							</div>
@@ -133,7 +133,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<tr>
 										<th>Description</th>
 										<th width="20%">Price</th>
-										<th width="20%">Available Qty</th>
+										<th width="20%">Qty</th>
 									</tr>
 									</thead>
 									<tbody>

@@ -138,9 +138,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="icon-box" style="border: 3px solid #c01a25; color: #e53441">
 						<i class="fa fa-trash"></i>
 					</div>
-					<h4 class="modal-title">ORDED VOIDED</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
+				<h4 class="modal-title">ORDED VOIDED</h4>
 				<div class="modal-body">
 					<p id="voidreason">Reason: <?php echo $transaction["void_reason"]; ?></p>
 				</div>
@@ -156,9 +156,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="icon-box"></div>
-					<h4 class="modal-title">UPDATE ORDER STATUS</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
+				<h4 class="modal-title">UPDATE ORDER STATUS</h4>
 				<div class="modal-body">
 					<p>Update order status to <b>"<span id="ordernewstatus"></span>"</b>?</p>
 				</div>

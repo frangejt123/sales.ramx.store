@@ -111,7 +111,7 @@ $(document).ready(function(){
 					tr += "<tr id='tr_" + row["id"] + "'>";
 					tr += "<td class='pdesc'>" + row["description"] + "</td>";
 					tr += "<td class='pprice'>" + parseFloat(row["price"]).toFixed(2) + "</td>";
-					tr += "<td align='center'>" + parseFloat(avail_qty).toFixed(2) + "</td>";
+					tr += "<td>" + parseFloat(avail_qty).toFixed(2) + "</td>";
 					tr += "</tr>";
 				});
 
