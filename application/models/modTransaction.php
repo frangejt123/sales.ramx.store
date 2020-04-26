@@ -22,7 +22,9 @@ class ModTransaction extends CI_Model {
                 "void_reason" => "transaction.void_reason",
 				"haschanges" => "transaction.haschanges",
 				"location_image" => "transaction.location_image"
-    );
+	);
+	public $STATUS = array("Pending", "For Delivery", "Completed", "Void");
+	public $PAYMENT_METHOD = array("COD", "GCASH", "Bank Transfer");
 
     function __construct() {
         // Call the Model constructor
@@ -37,6 +39,38 @@ class ModTransaction extends CI_Model {
 		$this->FIELDS["sales_agent"] = "user.name";
 		$this->FIELDS["contact_number"] = "customer.contact_number";
 
+        foreach ($this->FIELDS as $alias => $field) {
+            if ($tablefield != "") {
+                $tablefield .= ",";
+            }
+            //Construct table field selection
+            $tablefield .= $field . " AS `" . $alias . "`";
+            if($param)
+            if (array_key_exists($alias, $param)) {
+                $this->db->where($field, $param[$alias]);
+            }
+        }
+
+        $this->db->select($tablefield);
+        $this->db->from("transaction");
+		$this->db->join("customer", 'customer.customer_id = transaction.customer_id');
+		$this->db->join("user", 'user.id = transaction.user_id');
+		$this->db->order_by('transaction.delivery_date', 'DESC');
+		$this->db->order_by('transaction.status', 'ASC');
+
+        $query = $this->db->get();
+        return $query;
+	}
+	
+	function getAllNoImage($param) {
+        $tablefield = "";
+		$this->FIELDS["name"] = "customer.name";
+		$this->FIELDS["facebook_name"] = "customer.facebook_name";
+		$this->FIELDS["cust_location_image"] = "customer.location_image";
+		$this->FIELDS["sales_agent"] = "user.name";
+		$this->FIELDS["contact_number"] = "customer.contact_number";
+
+		unset($this->FIELDS["location_image"]);
         foreach ($this->FIELDS as $alias => $field) {
             if ($tablefield != "") {
                 $tablefield .= ",";

@@ -19,20 +19,25 @@
 
 		<div style="clear:both"></div>
 
-		<div class="grid_container">
-			<div class="form-group">
-				<input type="text" class="form-control" placeholder="Search" id="search_customer_name">
+			<div class="card">
+			<div class="card-header pb-1">
+				<div class="row">
+					<div class="col-6">
+						<h5 class="card-title mt-1">Inventory Adjustments</h5>	 
+					</div>
+					<div class="col-6">
+					<input type="text" id="search" data-table="inventory_adjustment_tbl" class="form-control" placeholder="Search...">
+					</div>
+				</div>
 			</div>
-
-			<div class="box">
-				<div class="box-body no-padding">
-					<table class="table table-striped table-hover" id="inventory_adjustment_tbl">
+				<div class="card-body p-0">
+					<table class="table table-striped table-hover mb-0" id="inventory_adjustment_tbl">
 						<thead>
 							<tr>
-								<th>Inv. Adj. #</th>
-								<th>Date</th>
-								<th>Type</th>
-								<th>Status</th>
+								<th class="border-top-0">Inv. Adj. #</th>
+								<th class="border-top-0">Date</th>
+								<th class="border-top-0">Type</th>
+								<th class="border-top-0">Status</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -63,7 +68,6 @@
 				</div>
 				<!-- /.box-body -->
 			</div>
-		</div>
 	</div>
 
 	

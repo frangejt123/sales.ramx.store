@@ -21,7 +21,7 @@
 		$remarks = "";
 		$prepared_by = "";
 		$approved_by = "";
-		$btn_class = "hidden";
+		$btn_class = "d-none";
 	}
 ?>
 
@@ -31,7 +31,7 @@
 	</button>
 
 
-	<button id="save-btn" class="btn-success pull-right lg-btn <?=$status==1 ? '' : 'hidden' ?>">
+	<button id="save-btn" class="btn-success pull-right lg-btn <?=$status==1 ? '' : 'd-none' ?>">
 			<i class="fa fa-save"></i> &nbsp; Save
 	</button>
 	<span class="pull-right span_seperator"></span>
@@ -49,36 +49,30 @@
 	<div style="clear:both"></div>
 
 
-	<div class="transaction_detail_container">
-		<form class="form-inline" id="form" method="post">
-			<table id="table_trans_detail">
-				<tr>
-					<td><label>Inventory Adjustment # : </label> 	
-					<input type="text" class="form-control form-readonly" name="id" value="<?php echo $id ?>"" id="adjustment_id" readonly placeholder="#NEW#"></td>
-					<td class="sep"></td>
-					<td> 
-						<label>Type : </label> 
-						<select class="form-control" id="type" name="type" value="<?=$type?>" required>
-								<option value="1">IN</option>
-								<option value="2">OUT</option>
-						</select>
-					</td>
-					<td class="sep">
-					</td>
-					<td>
-						<div class="form-group">
-							<label for="date">Date : </label>
-							<input type="date" class="form-control" value="<?=$date?>" name="date" id="date" required>
-						</div>
-					</td>
-					<td>
-						<div class="form-group">
-							<label for="status">Status : </label>
-							<span id="status-display" class='<?=$status_color[$status] ?>'><?=$status_txt[$status] ?></span>
-						</div>
-					</td>
-				</tr>
-			</table>
+	<div class="container-fluid">
+		<form class="" id="form" method="post">
+		<div class="form-group row">
+			<label class="col-sm-2 col-form-label">Inventory Adjustment # :  </label> 	
+			<div class="col-sm-2">
+				<input type="text" class="form-control form-readonly" name="id" value="<?php echo $id ?>"" id="adjustment_id" readonly placeholder="#NEW#">
+			</div>
+			<label class="col-sm-1 col-form-label">Type : </label> 
+			<div class="col-sm-1">
+				<select class="form-control" id="type" name="type" value="<?=$type?>" required>
+						<option value="1">IN</option>
+						<option value="2">OUT</option>
+				</select>	
+			</div>
+			<label for="date" class="col-sm-1 col-form-label">Date : </label>
+			<div class="col-sm-2">
+				<input type="date" class="form-control" value="<?=$date?>" name="date" id="date" required>
+			</div>
+			<label for="status" class="col-sm-1 col-form-label">Status : </label>
+			<div class="col-sm-1 pt-2">
+				<span id="status-display" class='<?=$status_color[$status] ?>'><?=$status_txt[$status] ?></span>
+			</div>
+		</div>	
+
 		</form>
 	</div>
 
@@ -118,7 +112,7 @@
 								</select>
 							<td><input type="number" class="form-control input_quantity input" data-model="quantity" value='<?=$row["quantity"]?>' ></td>
 							<td class="" v-align="middle">
-								<button class="btn-info action-btn btn btn-sm btn-round undo hidden" title="Undo" data-action="undo">
+								<button class="btn-info action-btn btn btn-sm btn-round undo d-none" title="Undo" data-action="undo">
 									<i class="fa fa-undo"></i>
 								</button>
 								<button class="btn-danger action-btn btn btn-sm btn-round delete " title="Delete" data-action="delete">
@@ -163,16 +157,16 @@
 		<div class="modal-dialog modal-confirm">
 			<div class="modal-content">
 				<div class="modal-header">
-					<div class="icon-box">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+				<div class="icon-box">
 						<span class="fa fa-thumbs-up fa-5x text-primary"></span>
 					</div>
 					<h4 class="modal-title">APPROVE INVENTORY ADJUSTMENT</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">
 					
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer d-block">
 					<button type="button" class="btn btn-info" data-dismiss="modal">No</button>
 					<button type="button" class="btn btn-success" id="approve-adjustment">Yes</button>
 				</div>
@@ -184,16 +178,16 @@
 		<div class="modal-dialog modal-confirm">
 			<div class="modal-content">
 				<div class="modal-header">
-					<div class="icon-box">
+				<button type="button" class="close" data-dismiss="modal" aria-d-none="true">&times;</button>
+				</div>
+				<div class="modal-body">
+				<div class="icon-box">
 						<span class="fa fa-trash fa-5x text-danger"></span>
 					</div>
 					<h4 class="modal-title">DELETE INVENTORY ADJUSTMENT</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				</div>
-				<div class="modal-body">
 					
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer d-block">
 					<button type="button" class="btn btn-info" data-dismiss="modal">No</button>
 					<button type="button" class="btn btn-danger" id="delete-adjustment">Yes</button>
 				</div>
@@ -218,15 +212,20 @@
 					</select>
 				<td><input type="number" class="form-control input_quantity input" data-model="quantity" ></td>
 				<td class="" v-align="middle">
-					<button class="btn-info action-btn btn btn-sm btn-round undo hidden" title="Undo" data-action="undo">
+					<button class="btn-info action-btn btn btn-sm btn-round undo d-none" title="Undo" data-action="undo">
 						<i class="fa fa-undo"></i>
 					</button>
-					<button class="btn-danger action-btn btn btn-sm btn-round delete hidden" title="Delete" data-action="delete">
+					<button class="btn-danger action-btn btn btn-sm btn-round delete d-none" title="Delete" data-action="delete">
 						<i class="fa fa-trash"></i>
 					</button>
 				</td>
 			</tr>
 	</template>
+
+
+</div>
+</div>
+
 
 <script type="text/javascript">
 	window.rows = <?php echo isset($details) ? json_encode($details) : '[]' ?>;
