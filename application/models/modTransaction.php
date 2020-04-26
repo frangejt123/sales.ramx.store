@@ -19,6 +19,7 @@ class ModTransaction extends CI_Model {
 				"payment_confirmation_detail" => "transaction.payment_confirmation_detail",
 				"remarks" => "transaction.remarks",
                 "status" => "transaction.status",
+				"paid" => "transaction.paid",
                 "void_reason" => "transaction.void_reason",
 				"haschanges" => "transaction.haschanges",
 				"location_image" => "transaction.location_image"

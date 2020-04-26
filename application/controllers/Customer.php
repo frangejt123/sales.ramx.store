@@ -52,6 +52,18 @@ class Customer extends CI_Controller {
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modCustomer', "", TRUE);
 
+		$image = $param["location_img"];
+		$imgname = strtolower(str_replace(" ", "", $param	["name"]));
+
+		if($image != "") {
+			list($type, $image) = explode(';', $image);
+			list(, $image) = explode(',', $image);
+			$image = base64_decode($image);
+
+			$filepath = "assets/location_image/".$imgname.".jpeg";
+
+			file_put_contents($filepath, $image);
+		}
 
 		if(!array_key_exists("id", $param)) {
 			$customer =  $this->modCustomer->insert($param);
@@ -61,8 +73,6 @@ class Customer extends CI_Controller {
 	
 	
 		// $this->db->transComplete();
-		
-		
 
 		echo json_encode($customer);
 
