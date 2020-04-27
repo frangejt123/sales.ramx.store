@@ -489,6 +489,7 @@ $("document").ready(function(){
 		var contact_number = $("#cust_contact_number").val();
 		var mop = modeofpaymentarray[$("#payment_method").val()];
 		var remarks = $("#trans_remarks").val();
+		var fbname = $("#facebook_name").val();
 
 		var products = $("#productsummary").find(".prodsumrow").not(".deleted");
 		var ordershtml = "";
@@ -501,6 +502,7 @@ $("document").ready(function(){
 		});
 
 		var clipboardtext = "Name: "+name+"\n"
+			+"Facebook Name: "+fbname+"\n"
 			+"Address: "+cust_address+"\n"
 			+"Delivery Date: "+deliver_date+"\n"
 			+"Contact #: "+contact_number+"\n"
