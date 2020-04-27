@@ -188,6 +188,10 @@ $(document).ready(function(){
 		});
 	});
 
+	$("#cancel_tag_as_paid").on("click", function(){
+		$("#tag_as_paid_modal").modal("hide");
+	});
+
 	function changeorderstatus(status){
 		$.ajax({
 			method: 'POST',
