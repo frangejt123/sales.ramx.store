@@ -493,12 +493,14 @@ $("document").ready(function(){
 
 		var products = $("#productsummary").find(".prodsumrow").not(".deleted");
 		var ordershtml = "";
+		var ordertotal = 0;
 		$.each(products, function(ind, row){
 			var id = $(row).attr("id");
 			var pdesc = $(row).find(".summary_desc").html();
 			var qty = $(row).find(".summary_qty").html();
 			var price = $(".product_main #"+id).find("div.product_price").html();
 			ordershtml += "\n"+qty +" - "+pdesc+" @ "+toCurrency(price * qty);
+			ordertotal += price * qty;
 		});
 
 		var clipboardtext = "Name: "+name+"\n"
@@ -508,7 +510,7 @@ $("document").ready(function(){
 			+"Contact #: "+contact_number+"\n"
 			+"Mode of Payment: "+mop+"\n"
 			+"Orders: "+ordershtml+"\n"
-			+"Total: "+toCurrency(total)+"\n"
+			+"Total: "+toCurrency(ordertotal)+"\n"
 			+"Remarks: "+remarks;
 
 		$("textarea#clipboard").val(clipboardtext);
