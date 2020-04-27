@@ -162,6 +162,32 @@ $(document).ready(function(){
 		window.location = baseurl + "/main/ut/"+btoa(orderid);
 	});
 
+	$("#paid_order_btn").on("click", function(){
+		$("#tag_as_paid_modal").modal("show");
+	});
+
+	$("#confirm_tag_as_paid").on("click", function(){
+		$.ajax({
+			method: 'POST',
+			data: {"id":selectedorder, "paid":"1"},
+			url: baseurl + '/main/updateorder',
+			success: function (res) {
+				var res = JSON.parse(res);
+				NProgress.done();
+				$("#paid_order_btn, span.paid_sep").hide();
+				$("#tag_as_paid_modal").modal("hide");
+				$("#paid_stamp").removeClass("hidden").addClass("visible");
+			},
+			error: function (xhr, status, error) {
+				NProgress.done();
+				alert("Oppss! Something went wrong.");
+			},
+			beforeSend: function(){
+				NProgress.start();
+			}
+		});
+	});
+
 	function changeorderstatus(status){
 		$.ajax({
 			method: 'POST',

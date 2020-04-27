@@ -87,7 +87,7 @@ textarea{
 	font-size: 20px;
 }
 
-#print_order_btn, #void_order_btn{
+#print_order_btn, #void_order_btn, #paid_order_btn{
 	margin-bottom: 10px;
 	padding: 10px;
 	border-radius: 10px;
@@ -292,4 +292,68 @@ select.form-disabled::-ms-expand {
 
 input[type='date']{
 	line-height: 22px !important;
+}
+
+input[type='file']#customer_location{
+	white-space: normal;
+	word-wrap: break-word;
+	width: 400px;
+	overflow: auto;
+}
+
+/* PAID LABEL */
+#paid_stamp.visible{
+	display: block;
+}
+#paid_stamp.hidden{
+	 display: none;
+}
+
+#paid_stamp{
+	position: absolute;
+	margin-left: -260px;
+	margin-top: -150px;
+	top: 50%;
+	left: 50%;
+	width: 520px;
+	height: 300px;
+}
+.stamp {
+	transform: rotate(12deg);
+	color: #fc5959;
+	font-size: 3rem;
+	font-weight: 700;
+	border: 0.25rem solid #555;
+	display: inline-block;
+	padding: 0.25rem 1rem;
+	text-transform: uppercase;
+	border-radius: 1rem;
+	font-family: 'Courier';
+	-webkit-mask-image: url('img/grunge.png');
+	-webkit-mask-size: 944px 604px;
+	mix-blend-mode: multiply;
+}
+
+.is-draft {
+	letter-spacing: 25px;
+	color: #fc5959;
+	border: 1rem double #fc5959;
+	transform: rotate(-20deg);
+	font-size: 10rem;
+	font-family: "Open sans", Helvetica, Arial, sans-serif;
+	border-radius: 0;
+	padding: 0.5rem;
+}
+
+#map_preview{
+	border: 1px solid #ccc;
+	height: 230px;
+}
+
+#map_img_preview{
+	max-height: 230px;
+}
+
+.detail_map_preview{
+	width: 454px;
 }

@@ -39,7 +39,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<button id="process_order_btn" class="btn-warning pull-right">
 			<i class="fa fa-truck"></i> &nbsp; For Delivery
 		</button>
-		<?php }else if($transaction["status"] == 1){ ?>
+
+		<?php $paidClass = "visible"; if($transaction["paid"] != "1"){  $paidClass = "hidden"; ?>
+			<span class="pull-right span_seperator paid_sep"></span>
+			<button id="paid_order_btn" class="btn-dark pull-right">
+				<i class="fa fa-credit-card"></i> &nbsp; Paid
+			</button>
+
+		<?php } }else if($transaction["status"] == 1){ ?>
 		<span class="pull-right span_seperator"></span>
 		<button id="complete_order_btn" class="btn-primary pull-right">
 			<i class="fa fa-check"></i> &nbsp; Complete
@@ -170,6 +177,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</div>
 
+	<div id="tag_as_paid_modal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="icon-box" style="border: 3px solid #104675;color: #286090">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<h4 class="modal-title">TAG AS PAID</h4>
+				<div class="modal-body">
+					<p>This order will be tag as PAID. <br />Do you want o continue?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" id="cancel_tag_as_paid">No</button>
+					<button type="button" class="btn btn-success" id="confirm_tag_as_paid">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Modal -->
 	<div class="modal fade" id="void_detail_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog" role="document">
@@ -203,6 +231,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		</div>
 	</div><!-- modal -->
+</div>
+
+<div id="paid_stamp" class="<?php echo $paidClass; ?>">
+	<span class="stamp is-draft">Paid</span>
 </div>
 
 <form id="report_data" method="post" action="<?php echo base_url(); ?>index.php/report" target="new_window">
