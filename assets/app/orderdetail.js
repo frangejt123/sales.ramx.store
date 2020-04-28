@@ -18,12 +18,30 @@ $(document).ready(function(){
 	
 	$("#print_order_btn").on("click", function(){
 		$("form#report_data input#trans_id").val(selectedorder)
-		
-		window.open('', 'new_window');
-		document.getElementById('report_data').submit();
+
+		$.ajax({
+			method: 'POST',
+			data: {"id":selectedorder, "printed":"1", "print_date": "now"},
+			url: baseurl + '/main/updateorder',
+			success: function (res) {
+				var res = JSON.parse(res);
+				NProgress.done();
+				$(".grid_container #date_printed span").html("<i class='fa fa-print'></i> &nbsp;Printed &mdash; "+res["param"]["date_printed"]);
+
+				window.open('', 'new_window');
+				document.getElementById('report_data').submit();
+			},
+			error: function (xhr, status, error) {
+				NProgress.done();
+				alert("Oppss! Something went wrong.");
+			},
+			beforeSend: function(){
+				NProgress.start();
+			}
+		});
 	});
 
-	/* AJAX LONG POOLING. CHECK FOR CHANGES */
+	/* AJAX LONG POLLING. CHECK FOR CHANGES */
 	poll();
 	function poll(){
 		$.ajax({
@@ -118,7 +136,7 @@ $(document).ready(function(){
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #388638",
 			"color": "#5cb85c"
-		}).html('<i class="fa fa-undo"></i>');
+		}).html('<i class="fa fa-star-half-o"></i>');
 
 		$("#statusmodal").modal("show");
 	});
@@ -129,6 +147,16 @@ $(document).ready(function(){
 			"border": "3px solid #c57e19",
 			"color": "#f0ad4e"
 		}).html('<i class="fa fa-truck"></i>');
+
+		$("#statusmodal").modal("show");
+	});
+
+	$("#delivered_order_btn").on("click", function(){
+		$("span#ordernewstatus").text("Delivered");
+		$("#statusmodal").find(".icon-box").css({
+			"border": "3px solid #0a6a7a",
+			"color": "#17a2b8"
+		}).html('<i class="fa fa-truck fa-flip-horizontal"></i>');
 
 		$("#statusmodal").modal("show");
 	});
@@ -148,6 +176,8 @@ $(document).ready(function(){
 			changeorderstatus(1);
 		}else if($("span#ordernewstatus").text() == "Pending"){
 			changeorderstatus(0);
+		}else if($("span#ordernewstatus").text() == "Delivered"){
+			changeorderstatus(4);
 		}else{
 			changeorderstatus(2);
 		}
@@ -164,6 +194,10 @@ $(document).ready(function(){
 
 	$("#paid_order_btn").on("click", function(){
 		$("#tag_as_paid_modal").modal("show");
+	});
+
+	$("#unpaid_order_btn").on("click", function(){
+		$("#unpaid_modal").modal("show");
 	});
 
 	$("#confirm_tag_as_paid").on("click", function(){
@@ -189,8 +223,32 @@ $(document).ready(function(){
 		});
 	});
 
+	$("#confirm_unpaid").on("click", function(){
+		$.ajax({
+			method: 'POST',
+			data: {"id":selectedorder, "paid":"0"},
+			url: baseurl + '/main/updateorder',
+			success: function (res) {
+				var res = JSON.parse(res);
+				NProgress.done();
+				location.reload();
+			},
+			error: function (xhr, status, error) {
+				NProgress.done();
+				alert("Oppss! Something went wrong.");
+			},
+			beforeSend: function(){
+				NProgress.start();
+			}
+		});
+	});
+
 	$("#cancel_tag_as_paid").on("click", function(){
 		$("#tag_as_paid_modal").modal("hide");
+	});
+
+	$("#cancel_unpaid").on("click", function(){
+		$("#unpaid_modal").modal("hide");
 	});
 
 	function changeorderstatus(status){

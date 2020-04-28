@@ -124,8 +124,7 @@ $("document").ready(function(){
 	}
 
 	$("#settlebtn").on("click", function(){
-
-		var total = parseFloat($("#totalvalue").html());
+		//var total = parseFloat($("#totalvalue").html());
 
 		var products = $("#productsummary").find(".row").not(".deleted");
 
@@ -145,7 +144,7 @@ $("document").ready(function(){
 	$("#confirm_noopt").on("click", function(){
 		$("#confirmmodal").modal("hide");
 	});
-
+	changeprice();
 	$("#confirm_yesopt").on("click", function(){
 		var detail = [];
 

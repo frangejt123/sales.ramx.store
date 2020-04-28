@@ -22,7 +22,9 @@ class ModTransaction extends CI_Model {
 				"paid" => "transaction.paid",
                 "void_reason" => "transaction.void_reason",
 				"haschanges" => "transaction.haschanges",
-				"location_image" => "transaction.location_image"
+				"location_image" => "transaction.location_image",
+				"printed" => "transaction.printed",
+				"date_printed" => "transaction.date_printed"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void");
 	public $PAYMENT_METHOD = array("COD", "GCASH", "Bank Transfer");
@@ -177,6 +179,9 @@ class ModTransaction extends CI_Model {
 		if ($this->db->update('transaction', $data)) {
 			$result["success"] = true;
 			$result["id"] = $id;
+			if(isset($param["date_printed"]))
+				$param["date_printed"] = date("m/d/Y H:i:s", strtotime($param["date_printed"]));
+			$result["param"] = $param;
 		} else {
 			$result["success"] = false;
 			$result["error_id"] = $this->db->_error_number();
