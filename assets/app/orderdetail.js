@@ -177,9 +177,7 @@ $(document).ready(function(){
 			success: function (res) {
 				var res = JSON.parse(res);
 				NProgress.done();
-				$("#paid_order_btn, span.paid_sep").hide();
-				$("#tag_as_paid_modal").modal("hide");
-				$("#paid_stamp").removeClass("hidden").addClass("visible");
+				location.reload();
 			},
 			error: function (xhr, status, error) {
 				NProgress.done();
