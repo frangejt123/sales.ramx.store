@@ -30,19 +30,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<i class="fa fa-plus"></i> &nbsp; Create Order
 	</button>
 	<?php } else{ ?>
-	<button id="product_list_btn" class="btn-success pull-right">
-		<i class="fa fa-cubes"></i> &nbsp; Product List
-	</button>
-	<span class="pull-right span_seperator"></span>
-	<button id="inventory_adjustment_btn" class="btn-secondary pull-right route_btn">
-		<i class="fa fa-cogs"></i> &nbsp; Inv. Adjustment
-	</button>
-	<span class="pull-right span_seperator"></span>
-	<button id="customer_btn" class="btn-secondary pull-right route_btn">
-		<i class="fa fa-users"></i> &nbsp; Customers
-	</button>
+		<div class="dropdown pull-right">
+			<button id="dropdown_btn" class="btn-secondary" data-toggle="dropdown">
+				<i class="fa fa-bars"></i>
+			</button>
+			<div class="dropdown-menu">
+				<a class="dropdown-item dd-item text-success" href="#" id="product_list_btn"><i class="fa fa-cubes"></i> &nbsp; Product List</a>
+				<a class="dropdown-item dd-item text-warning" href="#" id="customer_btn"><i class="fa fa-users"></i> &nbsp; Cutomer List</a>
+				<a class="dropdown-item dd-item text-info" href="#" id="inventory_adjustment_btn"><i class="fa fa-cogs"></i> &nbsp; Inv. Adjustment</a>
+			</div>
+		</div>
+		<span class="span_seperator pull-right"></span>
+		<div class="dropdown pull-right">
+			<button id="report_btn" class="btn-success" data-toggle="dropdown">
+				<i class="fa fa-file-text-o"></i> &nbsp;Report
+			</button>
+			<div class="dropdown-menu">
+				<a class="dropdown-item dd-item" href="#"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
+				<a class="dropdown-item dd-item" href="#"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
+			</div>
+		</div>
 	<?php } ?>
-	<div style="clear:both"></div>
 
 	<div class="grid_container">
 		<div class="form-group">
@@ -167,6 +175,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';

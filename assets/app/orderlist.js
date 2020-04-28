@@ -29,12 +29,12 @@ $(document).ready(function(){
 	});
 
 		
-	$("button#inventory_adjustment_btn").on("click", function(){
+	$("#inventory_adjustment_btn").on("click", function(){
 		NProgress.start();
 		window.location = baseurl + "/inventory/adjustment";
 	});
 
-	$("button#customer_btn").on("click", function(){
+	$("#customer_btn").on("click", function(){
 		NProgress.start();
 		window.location = baseurl + "/customer";
 	});

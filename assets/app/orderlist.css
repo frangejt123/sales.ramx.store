@@ -20,7 +20,26 @@ html{
 	font-size: 20px;
 }
 
-#product_list_btn, .route_btn {
+#dropdown_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 80px;
+	font-size: 20px;
+}
+
+#report_btn{
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #c1c1c1;
+	width: 150px;
+	font-size: 20px;
+}
+
+
+/*#product_list_btn, .route_btn {
 	margin-bottom: 10px;
 	padding: 10px;
 	border-radius: 10px;
@@ -28,6 +47,7 @@ html{
 	width: 250px;
 	font-size: 20px;
 }
+*/
 
 .grid_container{
 	padding-top: 20px;
@@ -356,4 +376,8 @@ input[type='file']#customer_location{
 
 .detail_map_preview{
 	width: 454px;
+}
+
+.dd-item{
+	padding: 15px 35px 15px 35px;
 }
