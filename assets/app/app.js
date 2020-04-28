@@ -17,11 +17,11 @@ $("document").ready(function(){
 
 	var whight = $(window).height();
 	$('#left_panel').slimScroll({
-		height: whight+"px"
+		height: (whight - 100) + "px"
 	});
 
 	$('#slimscrollcont').slimScroll({
-		height:  whight+"px"
+		height:  whight +"px"
 	});
 
 	var inventorydata = {};
