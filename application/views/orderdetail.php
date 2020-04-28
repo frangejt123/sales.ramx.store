@@ -188,7 +188,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 				<h4 class="modal-title">TAG AS PAID</h4>
 				<div class="modal-body">
-					<p>This order will be tag as PAID. <br />Do you want o continue?</p>
+					<div class="form-group">
+						<label>Mode of Payment</label>
+						<select class="form-control" id="mode_of_payment">
+							<?php $pm = $transaction["payment_method"]; ?>
+							<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash On Delivery (COD)</option>
+							<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer</option>
+							<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Payment Confirmation Detail</label>
+						<textarea class="form-control" rows="2" id="payment_confirmation_detail"><?php echo $pm = $transaction["payment_confirmation_detail"]; ?></textarea>
+					</div>
+					<p>This order will be tag as PAID. <br />Do you want to continue?</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-info" id="cancel_tag_as_paid">No</button>
