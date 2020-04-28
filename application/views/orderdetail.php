@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>
 
-	<?php if($_SESSION["access_level"] != 0){
+	<?php $paidClass = "visible"; if($_SESSION["access_level"] != 0){
 		if ($transaction["status"] == 0 && $_SESSION["id"] == $transaction["user_id"]) {
 	?>
 		<button id="void_order_btn" class="btn-warning pull-right">
@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<i class="fa fa-truck"></i> &nbsp; For Delivery
 		</button>
 
-		<?php $paidClass = "visible"; if($transaction["paid"] != "1"){  $paidClass = "hidden"; ?>
+		<?php if($transaction["paid"] != "1"){  $paidClass = "hidden"; ?>
 			<span class="pull-right span_seperator paid_sep"></span>
 			<button id="paid_order_btn" class="btn-dark pull-right">
 				<i class="fa fa-credit-card"></i> &nbsp; Paid
