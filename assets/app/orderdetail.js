@@ -167,9 +167,12 @@ $(document).ready(function(){
 	});
 
 	$("#confirm_tag_as_paid").on("click", function(){
+		var payment_method = $("#mode_of_payment").val();
+		var payment_confirmation_detail = $("#payment_confirmation_detail").val();
+
 		$.ajax({
 			method: 'POST',
-			data: {"id":selectedorder, "paid":"1"},
+			data: {"id":selectedorder, "paid":"1", payment_method, payment_confirmation_detail},
 			url: baseurl + '/main/updateorder',
 			success: function (res) {
 				var res = JSON.parse(res);
