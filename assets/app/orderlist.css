@@ -29,13 +29,17 @@ html{
 	font-size: 20px;
 }
 
-#report_btn, #filter_btn{
+#report_btn, #filter_btn, #clear_filter_btn{
 	margin-bottom: 10px;
 	padding: 10px;
 	border-radius: 10px;
 	border: 1px solid #c1c1c1;
 	width: 150px;
 	font-size: 20px;
+}
+
+#clear_filter_btn{
+	display: none;
 }
 
 #status_btn{

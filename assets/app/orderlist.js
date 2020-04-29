@@ -319,7 +319,7 @@ $(document).ready(function(){
 				"paid": paidtd,
 				"printed": printedtd,
 			}
-
+			
 			if(filterarray["delivery_date"].includes(deliverydate)
 				&& (filterarray["status"].includes(status))
 				&& (filterarray["paid"].includes(paid))
@@ -331,7 +331,22 @@ $(document).ready(function(){
 			}
 		}
 
+		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")){
+			$("#clear_filter_btn").hide();
+		}else{
+			$("#clear_filter_btn").show();
+		}
+
 		$("#filter_modal").modal("hide");
+	});
+
+	$("#clear_filter_btn").on("click", function(){
+		$("#filter_delivery_date").val("");
+		$("#filter_status").val("");
+		$("#filter_paid").iCheck('uncheck');
+		$("#filter_printed").iCheck('uncheck');
+
+		$("#confirm_filter").trigger("click");
 	});
 
 	function validate(s) {

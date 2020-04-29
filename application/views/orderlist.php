@@ -58,6 +58,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<button id="filter_btn" class="btn-warning pull-right">
 		<i class="fa fa-filter"></i> &nbsp;Filter By
 	</button>
+	<span class="span_seperator pull-right"></span>
+	<button id="clear_filter_btn" class="btn-default pull-right">
+		<i class="fa fa-remove"></i> &nbsp;Clear Filter
+	</button>
 
 	<div class="grid_container">
 		<div class="form-group">
