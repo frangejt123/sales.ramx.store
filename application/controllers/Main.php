@@ -11,7 +11,13 @@ class Main extends CI_Controller {
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->model('modTransaction', "", TRUE);
-			$data["transaction"] = $this->modTransaction->getAll(null)->result_array();
+			$param["sort_delivery_date"] = true;
+			$param["no_image"] = true;
+			$new_transaction = $this->modTransaction->getAll($param)->result_array();
+			$new_param["old_transaction"] = true;
+			$old_transaction = $this->modTransaction->getAll($new_param)->result_array();
+			$data["transaction"] = array_merge($new_transaction, $old_transaction);
+
 			$data["lastid"] = $this->modTransaction->getLastTransactionID(null)->row_array();
 			$this->load->view('orderlist', $data);
 		}else{
