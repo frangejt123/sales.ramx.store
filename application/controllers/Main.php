@@ -180,7 +180,6 @@ class Main extends CI_Controller {
 			$customerres = $this->modCustomer->update($param["customerdetail"]);
 		}
 
-		$param["trans"]["user_id"] = $_SESSION["id"];
 		$param["trans"]["delivery_date"] = date("Y-m-d", strtotime($param["trans"]["delivery_date"]));
 		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
 		if($param["trans"]["haschanges"] == 1){
@@ -190,6 +189,7 @@ class Main extends CI_Controller {
 			$result = $this->modTransaction->update($param["trans"]);
 		}else{
 			unset($param["trans"]["transaction_id"]);
+			$param["trans"]["user_id"] = $_SESSION["id"];
 			$result = $this->modTransaction->insert($param["trans"]);
 		}
 

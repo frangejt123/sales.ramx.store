@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<th>Delivery Date</th>
 						<th>Customer Name</th>
 						<th>Paid Status</th>
-						<th>Printed Status</th>
+						<th>Print Status</th>
 						<th>Status</th>
 					</tr>
 					</thead>
