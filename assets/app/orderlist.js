@@ -15,7 +15,8 @@ $(document).ready(function(){
 			if (td) {
 				txtValue = td.textContent || td.innerText;
 				if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					tr[i].style.display = "";
+					if($(tr[i]).hasClass("filtered"))
+						tr[i].style.display = "";
 				} else {
 					tr[i].style.display = "none";
 				}
@@ -292,6 +293,45 @@ $(document).ready(function(){
 			}
 		});
 
+	});
+
+	$("#filter_btn").on("click", function(){
+		$("#filter_modal").modal("show");
+	});
+
+	$("#confirm_filter").on("click", function(){
+		var rows = document.querySelector("#orderlist_table tbody").rows;
+
+		var deliverydate = $("#filter_delivery_date").val();
+		var status = ($("#filter_status  option:selected").text()).toUpperCase();
+		var paid = $("#filter_paid").prop('checked') ? "PAID" : "";
+		var printed = $("#filter_printed").prop('checked') ? "PRINTED" : "";
+
+		for (var i = 0; i < rows.length; i++) {
+			$(rows[i]).removeClass("filtered");
+			var deliverydatetd = rows[i].cells[7].textContent;
+			var statustd = (rows[i].cells[6].textContent).toUpperCase();
+			var paidtd = (rows[i].cells[4].textContent).toUpperCase();
+			var printedtd = (rows[i].cells[5].textContent).toUpperCase();
+			var filterarray = {
+				"delivery_date": deliverydatetd,
+				"status": statustd,
+				"paid": paidtd,
+				"printed": printedtd,
+			}
+
+			if(filterarray["delivery_date"].includes(deliverydate)
+				&& (filterarray["status"].includes(status))
+				&& (filterarray["paid"].includes(paid))
+				&& (filterarray["printed"].includes(printed))){
+				$(rows[i]).addClass("filtered");
+				rows[i].style.display = "";
+			}else{
+				rows[i].style.display = "none";
+			}
+		}
+
+		$("#filter_modal").modal("hide");
 	});
 
 	function validate(s) {

@@ -11,6 +11,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css">
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/Ionicons/css/ionicons.min.css">
+	<!-- iCheck -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/iCheck/square/blue.css">
 	<!-- Slimscroll -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/slimscroll.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/nprogress.css">
@@ -52,6 +54,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	<?php } ?>
 
+	<span class="span_seperator pull-right"></span>
+	<button id="filter_btn" class="btn-warning pull-right">
+		<i class="fa fa-filter"></i> &nbsp;Filter By
+	</button>
+
 	<div class="grid_container">
 		<div class="form-group">
 			<input type="text" class="form-control" placeholder="Search for Customer Name" id="search_customer_name">
@@ -69,6 +76,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<th>Paid Status</th>
 						<th>Print Status</th>
 						<th>Status</th>
+						<th hidden></th><!-- filter -->
 					</tr>
 					</thead>
 					<tbody>
@@ -97,6 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								echo '<td class="'.$paidclass.'">'.$paid.'</td>';
 								echo '<td class="'.$printCls.'">'.$printed.'</td>';
 								echo '<td class="'.$tdclass[$row["status"]].'">'.$statusarray[$row["status"]].'</td>';
+								echo '<td hidden>'.$row["delivery_date"].'</td>';
 							echo '</tr>';
 						}
 					?>
@@ -177,6 +186,55 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</div>
 
+	<div class="modal fade" id="filter_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="exampleModalLabel">FILTER ORDER</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Delivery Date</label>
+						<input type="date" class="form-control" id="filter_delivery_date">
+					</div>
+
+					<div class="form-group">
+						<label>Status</label>
+						<select class="form-control" id="filter_status">
+							<option value=""></option>
+							<option value="0" class="text-success">Pending</option>
+							<option value="1" class="text-warning">For Delivery</option>
+							<option value="4" class="text-info">Delivered</option>
+							<option value="2" class="text-primary">Complete</option>
+							<option value="3" class="text-danger">Voided</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label></label>
+						<div class="checkbox icheck">
+							<label>
+							<input type="checkbox" id="filter_paid"> &nbsp; Paid
+							</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="checkbox icheck">
+							<label>
+								<input type="checkbox" id="filter_printed"> &nbsp; Printed
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="confirm_filter">Filter</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 </div>
 
@@ -184,9 +242,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
+<!-- iCheck -->
+<script src="<?php echo base_url(); ?>assets/plugins/iCheck/icheck.min.js"></script>
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
+	$(function () {
+		$('input').iCheck({
+			checkboxClass: 'icheckbox_square-blue',
+			radioClass: 'iradio_square-blue',
+			increaseArea: '20%' /* optional */
+		});
+	});
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
