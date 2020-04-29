@@ -137,8 +137,8 @@ $(document).ready(() => {
 		if (!croppieready) {
 			croppie = $('#map_img_preview').croppie({
 				"viewport": {
-					width: $("#map_preview").width() + "px",
-					height: '200px',
+					width: $(".detail_map_preview").width() + "px",
+					height: '250px',
 					type: 'square'
 				}
 			});
@@ -157,6 +157,8 @@ $(document).ready(() => {
 		if(!$(e.currentTarget)[0].checkValidity()) {
 			return;
 		}
+
+		form.location_img = croppieimg;
 		let customer = form;
 
 		$.ajax({
@@ -187,7 +189,7 @@ $(document).ready(() => {
 		});
 	  });
 
-	  $("#delete-btn").click(() => {
+	$("#delete-btn").click(() => {
 		Swal.fire({
 			title: "Are you sure?",
 			text: "You won't be able to revert this!",
@@ -229,9 +231,6 @@ $(document).ready(() => {
 		  });
 	  });
 
-
-
-
 	$("#customer_location").change(function(){
 		var imgfile = $(this).val();
 		var extension = imgfile.replace(/^.*\./, '');
@@ -261,19 +260,30 @@ $(document).ready(() => {
 
 			reader.onload = function (e) {
 				$('#map_img_preview').attr('src', e.target.result);
-				if (!croppieready) {
-					croppie = $('#map_img_preview').croppie({
-						"viewport": {
-							width: $("#map_preview").width() + "px",
-							height: '200px',
-							type: 'square'
-						}
+				setTimeout(function() {
+					if (!croppieready) {
+						croppie = $('#map_img_preview').croppie({
+							"viewport": {
+								width: $(".detail_map_preview").width() + "px",
+								height: '250px',
+								type: 'square'
+							}
+						});
+						croppieready = true;
+					}
+				}, 500);
+				setTimeout(function(){
+					croppie.croppie('bind', {
+						url: e.target.result
 					});
-					croppieready = true;
-				}
-				croppie.croppie('bind', {
-					url: e.target.result
-				});
+
+					$('#map_img_preview').croppie("result", {
+						type: "base64",
+						format: "jpeg"
+					}).then(function(img) {
+						croppieimg = img;
+					});
+				},600);
 				imghaschanges = true;
 			}
 			reader.readAsDataURL(input.files[0]);

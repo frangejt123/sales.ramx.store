@@ -116,8 +116,8 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Customer Location</label>
-									<input type='file' id="customer_location" class="custom-file-input" />
-									<div id="map_preview">
+									<input type='file' id="customer_location" />
+									<div id="map_preview" class="detail_map_preview">
 										<img id="map_img_preview" src="<?php echo $locationimage; ?>" alt="Map of Customer's Location" />
 									</div>
 								</div>

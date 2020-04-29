@@ -1,5 +1,70 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+$btnvoid = '<span class="pull-right span_seperator"></span><button id="void_order_btn" class="btn-warning pull-right">'.
+				'<i class="fa fa-trash"></i> &nbsp; Void Order</button>';
+
+$btnprint = '<span class="pull-right span_seperator"></span><button id="print_order_btn" class="btn-secondary pull-right">'.
+				'<i class="fa fa-print"></i> &nbsp; Print</button>';
+
+$btnpaid = '<span class="pull-right span_seperator"></span><button id="paid_order_btn" class="btn-dark pull-right">'.
+				'<i class="fa fa-credit-card"></i> &nbsp; Paid</button>';
+
+$btnunpaid = '<span class="pull-right span_seperator"></span><button id="unpaid_order_btn" class="btn-danger pull-right">'.
+		'<i class="fa fa-credit-card"></i> &nbsp; Unpaid</button>';
+
+$btnupdate = '<span class="pull-right span_seperator"></span><button id="update_order_btn" class="btn-info pull-right">'.
+				'<i class="fa fa-pencil"></i> &nbsp; Update</button>';
+
+$paidClass = "visible";
+
+$btnarray = [ //for status dropdown btn
+		"btn"=> [
+				'<i class="fa fa-star-half-o"></i>',
+				'<i class="fa fa-truck"></i>',
+				'<i class="fa fa-check"></i>',
+				'', //void
+				'<i class="fa fa-truck fa-flip-horizontal"></i>'
+		],
+		"text"=> [
+				'Pending',
+				'For Delivery',
+				'Complete',
+				'', //void
+				'Delivered'
+		],
+		"class"=> [
+				'btn-success',
+				'btn-warning',
+				'btn-primary',
+				'', //void
+				'btn-info'
+		]
+];
+
+$dropdownmenu = '';
+if($transaction["status"] == 0)//pending
+	$dropdownmenu .= '<a class="dropdown-item dd-item text-warning" href="#" id="process_order_btn"><i class="fa fa-truck"></i> &nbsp; For Delivery</a>';
+
+if($transaction["status"] == 1){//for delivery
+	$dropdownmenu .= '<a class="dropdown-item dd-item text-success" href="#" id="pending_order_btn"><i class="fa fa-star-half-o"></i> &nbsp; Pending</a>'.
+						'<a class="dropdown-item dd-item text-info" href="#" id="delivered_order_btn"><i class="fa fa-truck fa-flip-horizontal"></i> &nbsp; Delivered</a>';
+}
+
+if($transaction["status"] == 4) {//delivered
+	$dropdownmenu .= '<a class="dropdown-item dd-item text-primary" href="#" id="complete_order_btn"><i class="fa fa-check"></i> &nbsp; Completed</a>';
+}
+
+$btnstatus = '<span class="pull-right span_seperator"></span>'.
+				'<div class="dropdown pull-right">'.
+					'<button id="status_btn" class="'.$btnarray["class"][$transaction["status"]] .'" data-toggle="dropdown">'.
+						$btnarray["btn"][$transaction["status"]].' &nbsp; '.$btnarray["text"][$transaction["status"]].
+					'</button>'.
+					'<div class="dropdown-menu">'.
+						$dropdownmenu.
+					'</div>'.
+				'</div>';
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,46 +84,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div id="container">
 	<input type="text" hidden id="selected_order" value="<?php echo $transaction["id"]; ?>">
-	<button id="cancel_orderlist_btn" class="btn-danger">
+	<button id="cancel_orderlist_btn" class="btn-danger pull-left">
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>
 
-	<?php if($_SESSION["access_level"] != 0){
-		if ($transaction["status"] == 0 && $_SESSION["id"] == $transaction["user_id"]) {
-	?>
-		<button id="void_order_btn" class="btn-warning pull-right">
-			<i class="fa fa-trash"></i> &nbsp; Void Order
-		</button>
-	<?php } } else {  ?>
-		<button id="print_order_btn" class="btn-secondary pull-right">
-			<i class="fa fa-print"></i> &nbsp; Print
-		</button>
-
-		<?php if($transaction["status"] == 0){ ?>
-		<span class="pull-right span_seperator"></span>
-		<button id="process_order_btn" class="btn-warning pull-right">
-			<i class="fa fa-truck"></i> &nbsp; For Delivery
-		</button>
-		<?php }else if($transaction["status"] == 1){ ?>
-		<span class="pull-right span_seperator"></span>
-		<button id="complete_order_btn" class="btn-primary pull-right">
-			<i class="fa fa-check"></i> &nbsp; Complete
-		</button>
-		<span class="pull-right span_seperator"></span>
-		<button id="pending_order_btn" class="btn-success pull-right">
-			<i class="fa fa-undo"></i> &nbsp; Pending
-		</button>
-	<?php } } ?>
-	
 	<?php
-		if(($transaction["status"] == 0) && ($_SESSION["id"] == $transaction["user_id"] || $_SESSION["access_level"] == 0)){
-	?>
-		<span class="pull-right span_seperator"></span>
-		<button id="update_order_btn" class="btn-info pull-right">
-			<i class="fa fa-pencil"></i> &nbsp; Update
-		</button>
-	<?php } ?>
+		if($transaction["paid"] == "0")
+			$paidClass = "hidden";
 
+		if($_SESSION["access_level"] == 1) { // sales agent
+			if (($transaction["status"] == 0 && $_SESSION["id"] == $transaction["user_id"]) && $transaction["paid"] == "0") {
+				echo $btnvoid;
+				echo $btnupdate;
+			}//if logged-in agent = agent created the order && order is not paid
+		}// access level = 1;
+
+		if($_SESSION["access_level"] == 0) { //admin
+
+			if ($transaction["status"] != "3") {
+
+				echo $btnprint;
+
+				if ($transaction["paid"] == "0") {
+					echo $btnpaid;
+				}//if not paid
+				else{
+					echo $btnunpaid;
+				}
+
+				echo $btnstatus;
+			}//if not void
+
+			if ($transaction["status"] == "0" && $transaction["paid"] == "0") {
+				echo $btnupdate;
+			}//if status is Pending
+		}
+	?>
 	<div style="clear:both"></div>
 
 	<div class="void_notif">
@@ -99,9 +160,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 
 	<div class="grid_container">
+		<div id="date_printed" class="pull-left" style="padding-top: 15px;">
+			<span class="text-primary">
+				<?php if($transaction["printed"] == 1){ ?>
+					<i class="fa fa-print"></i> &nbsp;Printed &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_printed"])); ?>
+				<?php } ?>
+			</span>
+		</div>
 		<div class="detail_grand_total pull-right">
 			TOTAL : <?php echo number_format($transaction["total"], 2); ?>
 		</div>
+		<div style="clear:both"></div>
 		<div class="box">
 			<div class="box-body no-padding">
 				<table class="table table-striped table-hover" id="orderdata_table">
@@ -170,6 +239,62 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</div>
 
+	<div id="tag_as_paid_modal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="icon-box" style="border: 3px solid #104675;color: #286090">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<h4 class="modal-title">TAG AS PAID</h4>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Mode of Payment</label>
+						<select class="form-control" id="mode_of_payment">
+							<?php $pm = $transaction["payment_method"]; ?>
+							<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash On Delivery (COD)</option>
+							<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer</option>
+							<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Payment Confirmation Detail</label>
+						<textarea class="form-control" rows="2" id="payment_confirmation_detail"><?php echo $pm = $transaction["payment_confirmation_detail"]; ?></textarea>
+					</div>
+					<p>This order will be tag as PAID. <br />Do you want to continue?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" id="cancel_tag_as_paid">No</button>
+					<button type="button" class="btn btn-success" id="confirm_tag_as_paid">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="unpaid_modal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="icon-box" style="border: 3px solid #d82121;color: #f74242">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<h4 class="modal-title">TAG AS UNPAID</h4>
+				<div class="modal-body">
+					<p>This order will be tag as UNPAID. <br />Do you want to continue?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" id="cancel_unpaid">No</button>
+					<button type="button" class="btn btn-success" id="confirm_unpaid">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Modal -->
 	<div class="modal fade" id="void_detail_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog" role="document">
@@ -205,12 +330,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div><!-- modal -->
 </div>
 
+<div id="paid_stamp" class="<?php echo $paidClass; ?>">
+	<span class="stamp is-draft">Paid</span>
+</div>
+
 <form id="report_data" method="post" action="<?php echo base_url(); ?>index.php/report" target="new_window">
 	<input type="hidden" id="trans_id" name="id" />
 </form>
 
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';

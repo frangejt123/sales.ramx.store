@@ -19,36 +19,6 @@ class Main extends CI_Controller {
 		}
 	}
 
-	public function main2() {
-		$this->load->model('modProduct', "", TRUE);
-		$this->load->model('modCustomer', "", TRUE);
-
-		$data["product"] = $this->modProduct->getAll(null)->result_array();
-		$customer = $this->modCustomer->getAll(null)->result_array();
-		$customerarray = array();
-		$nameopt = array();
-		foreach($customer as $ind => $row){
-			$customerarray[$row["id"]] = array();
-			$customerarray[$row["id"]]["name"] = $row["name"];
-			$customerarray[$row["id"]]["fb_name"] = $row["facebook_name"];
-			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
-			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
-			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
-			json_encode($nameopt[$row["id"]] = $row["name"]);
-		}
-
-		$data["customerdetail"] = json_encode($customerarray);
-		$data["namelist"] = json_encode($nameopt);
-
-		session_start();
-		if(isset($_SESSION["username"])) {
-			$this->load->view('main2', $data);
-		}else{
-			$this->load->view('login');
-		}
-	}
-
-
 	public function pos(){
 		$this->load->model('modProduct', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
@@ -209,6 +179,8 @@ class Main extends CI_Controller {
 		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
 		if($param["trans"]["haschanges"] == 1){
 			$param["trans"]["id"] = $param["trans"]["transaction_id"];
+			$param["trans"]["printed"] = 0;
+			$param["trans"]["date_printed"] = null;
 			$result = $this->modTransaction->update($param["trans"]);
 		}else{
 			unset($param["trans"]["transaction_id"]);
@@ -302,8 +274,13 @@ class Main extends CI_Controller {
 	}
 
 	public function updateorder(){
+		date_default_timezone_set("Asia/Manila");
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modTransaction', "", TRUE);
+
+		if(isset($param["print_date"]))
+			$param["date_printed"] = date("Y-m-d H:i:s");
+
 		$res = $this->modTransaction->update($param);
 
 		echo json_encode($res);

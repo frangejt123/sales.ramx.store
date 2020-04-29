@@ -7,7 +7,7 @@ $("document").ready(function(){
 	var croppie;
 	var croppieready = false;
 	var total = 0;
-	
+
 	$('[data-toggle="tooltip"]').tooltip()
 
 	var deviceheight = document.documentElement.clientHeight;
@@ -15,18 +15,18 @@ $("document").ready(function(){
 		height: deviceheight
 	});
 
-	//var whight = $(window).height();
+	var whight = $(window).height();
 	$('#left_panel').slimScroll({
-		height: deviceheight - 100 + "px"
+		height: (whight - 100) + "px"
 	});
 
 	$('#slimscrollcont').slimScroll({
-		height: deviceheight - 300 + "px"
+		height:  whight +"px"
 	});
 
 	var inventorydata = {};
-	
-	$("div#container").on("click", ".product_cont", function(){
+
+	$(".product_cont").click(function(){
 		var id = $(this).attr("id");
 		var description = $(".product_main #"+id).find("div.product_desc").html();
 		var price = $(".product_main #"+id).find("div.product_price").html();
@@ -44,20 +44,20 @@ $("document").ready(function(){
 		if(new_qty < 0 || qty <= 0)
 			return;
 
-		var html = '<div class="row prodsumrow new haschanges" id="'+id+'">'
-					+ '<div class="col-lg-8 summary_desc left_floater">'
-					+ description
-					+ '</div>'
-					+ '<div class="col-lg-2 summary_qty left_floater">'
-					+ qty
-					+ '</div>'
-					+ '<div class="col-lg-2 right_floater">'
-					+ '<button type="button" class="btn btn-danger delbtn" id="delbtn_'+id+'" style="height: 50px;width: 50px;">'
-						+ '<i class="fa fa-trash"></i>'
-					+ '</button>'
-					+ '</div>'
-					+ '<div style="clear:both"></div>'
-					+ '</div>';
+		var html = '<div class="row prodsumrow new haschanges d-flex flex-row mb-2" id="'+id+'">'
+			+ '<div class=" summary_desc mr-auto">'
+			+ description
+			+ '</div>'
+			+ '<div class=" summary_qty mr-5 ">'
+			+ qty
+			+ '</div>'
+			+ '<div class=" mr-2 ">'
+			+ '<button type="button" class="btn btn-danger delbtn" id="delbtn_'+id+'" style="height: 50px;width: 50px;">'
+			+ '<i class="fa fa-trash"></i>'
+			+ '</button>'
+			+ '</div>'
+			+ '<div style="clear:both"></div>'
+			+ '</div>';
 
 		if(!$exist)
 			$("#productsummary").prepend(html);
@@ -116,7 +116,7 @@ $("document").ready(function(){
 			var id = $(row).attr("id");
 			var qty = $(row).find(".summary_qty").html();
 			var price = $(".product_main #"+id).find("div.product_price").html();
-			    total += (parseFloat(qty) * parseFloat(price));
+			total += (parseFloat(qty) * parseFloat(price));
 		});
 
 		$("#totalvalue").html(toCurrency(total));
@@ -124,30 +124,29 @@ $("document").ready(function(){
 	}
 
 	$("#settlebtn").on("click", function(){
+		//var total = parseFloat($("#totalvalue").html());
 
-	  	  var total = parseFloat($("#totalvalue").html());
+		var products = $("#productsummary").find(".row").not(".deleted");
 
-	      var products = $("#productsummary").find(".row").not(".deleted");
-		  
-	      if(products.length < 1){
-	      	alert("Please add product");
+		if(products.length < 1){
+			alert("Please add product");
 			return;
-		  }
-		  
-	      if($("input#customer_name").val() == ""){
-	      	alert("Please add order detail.");
-	      	return;
-		  }
+		}
 
-		  $("#confirmmodal").modal("show");
-	  });
+		if($("input#customer_name").val() == ""){
+			alert("Please add order detail.");
+			return;
+		}
 
-	$("#confirm_noopt").on("click", function(){
-	  	$("#confirmmodal").modal("hide");
+		$("#confirmmodal").modal("show");
 	});
 
+	$("#confirm_noopt").on("click", function(){
+		$("#confirmmodal").modal("hide");
+	});
+	changeprice();
 	$("#confirm_yesopt").on("click", function(){
-	  	var detail = [];
+		var detail = [];
 
 		var customer_id = $("input#customer_id").val();
 		var customer_name = $("input#customer_name").val();
@@ -164,31 +163,31 @@ $("document").ready(function(){
 		if(transaction_id != ""){
 			haschanges = 1;
 		}
-		
-	  	var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0};
-	  	var product = $("#productsummary").find(".row.haschanges");
 
-	  	$.each(product, function(ind, row){
-	  		var product_id = ($(row).attr("id")).replace("_deleted", "");
-	  		var id = $(row).attr("data-id") != undefined ? $(row).attr("data-id") : "";
-	  		var quantity = parseFloat($(row).find(".summary_qty").html());
-	  		var price = $(".product_main #"+product_id).find(".product_price").html();
+		var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0};
+		var product = $("#productsummary").find(".row.haschanges");
 
-	  		var status;
-	  		if($(row).hasClass("new"))
-	  			status = "new";
-	  		else if($(row).hasClass("edited"))
+		$.each(product, function(ind, row){
+			var product_id = ($(row).attr("id")).replace("_deleted", "");
+			var id = $(row).attr("data-id") != undefined ? $(row).attr("data-id") : "";
+			var quantity = parseFloat($(row).find(".summary_qty").html());
+			var price = $(".product_main #"+product_id).find(".product_price").html();
+
+			var status;
+			if($(row).hasClass("new"))
+				status = "new";
+			else if($(row).hasClass("edited"))
 				status = "edited";
-	  		else
+			else
 				status = "deleted";
-			
-	  		var datarow = {product_id, quantity, id, price, status};
-	  		detail.push(datarow);
-	  	});
+
+			var datarow = {product_id, quantity, id, price, status};
+			detail.push(datarow);
+		});
 
 		var locationimg = croppieimg;
 
-	  	var data = {"trans":transdata, "detail": detail, locationimg, inventorydata};
+		var data = {"trans":transdata, "detail": detail, locationimg, inventorydata};
 
 		if(newcustomer !== undefined){
 			data["newcustomer"] = newcustomer;
@@ -219,7 +218,7 @@ $("document").ready(function(){
 				NProgress.start();
 			}
 		});
-	  });
+	});
 
 	$("#customer_name").trigger("changed");
 
@@ -300,7 +299,7 @@ $("document").ready(function(){
 		var cnumber = $("input#cust_contact_number").val();
 		var address = ucwords($("#cust_delivery_address").val());
 		$("#savecustomerdetailmodal").modal("hide");
-	  	namelist["temp_id"] = cname;
+		namelist["temp_id"] = cname;
 
 		customerdetail["temp_id"] = {
 			"name":cname,
@@ -311,21 +310,21 @@ $("document").ready(function(){
 		newcustomer = customerdetail["temp_id"];
 		$("#customer_detail_modal").modal("hide");
 		$("#customer_details_main_btn").text(cname);
-	  	//reinitialize selection
+		//reinitialize selection
 		inputautocomplete();
 	});
 
 	$("button#cancel_order_btn").on("click", function(){
-			var products = $("#productsummary").find(".row.haschanges");
-			if(products.length > 0){
-				$("#confirmcancelmodal").modal("show");
-			}else{
-				NProgress.start();
-				if($("#transaction_id_inp").val() == "")
-					window.location = baseurl;
-				else
-					window.location = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
-			}
+		var products = $("#productsummary").find(".row.haschanges");
+		if(products.length > 0){
+			$("#confirmcancelmodal").modal("show");
+		}else{
+			NProgress.start();
+			if($("#transaction_id_inp").val() == "")
+				window.location = baseurl;
+			else
+				window.location = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
+		}
 	});
 
 	$("#confirm_cancel_transaction").on("click", function(){
@@ -349,62 +348,62 @@ $("document").ready(function(){
 
 	inputautocomplete();
 	function inputautocomplete() {
-		  // Initialize ajax autocomplete:
-		  var customernameArray = $.map(namelist, function (value, key) {
-			  return {value: value, data: key};
-		  });
-		  $('#customer_name').autocomplete({
-			  lookup: customernameArray,
-			  lookupLimit: 5,
-			  lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
-				  var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
-				  return re.test(suggestion.value);
-			  },
-			  onSelect: function (suggestion) {
-				  //$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
-				  var id = suggestion.data;
-				  var contactnumber = customerdetail[id]["contact_number"];
-				  var deliveryaddress = customerdetail[id]["delivery_address"];
-				  var facebookname = customerdetail[id]["fb_name"];
+		// Initialize ajax autocomplete:
+		var customernameArray = $.map(namelist, function (value, key) {
+			return {value: value, data: key};
+		});
+		$('#customer_name').autocomplete({
+			lookup: customernameArray,
+			lookupLimit: 5,
+			lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+				var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+				return re.test(suggestion.value);
+			},
+			onSelect: function (suggestion) {
+				//$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+				var id = suggestion.data;
+				var contactnumber = customerdetail[id]["contact_number"];
+				var deliveryaddress = customerdetail[id]["delivery_address"];
+				var facebookname = customerdetail[id]["fb_name"];
 
-				  $("#cust_contact_number").val(contactnumber);
-				  $("#cust_delivery_address").val(deliveryaddress);
-				  $("#facebook_name").val(facebookname);
-				  $("#customer_id").val(id);
+				$("#cust_contact_number").val(contactnumber);
+				$("#cust_delivery_address").val(deliveryaddress);
+				$("#facebook_name").val(facebookname);
+				$("#customer_id").val(id);
 
-				  var bsurl = baseurl.replace("index.php", "");
+				var bsurl = baseurl.replace("index.php", "");
 
-				  if(customerdetail[id]["cust_location_image"] !== ""){
-						if (!croppieready) {
-							  croppie = $('#map_img_preview').croppie({
-								  "viewport": {
-									  width: $("#map_preview").width() + "px",
-									  height: '200px',
-									  type: 'square'
-								  }
-							  });
-							  croppieready = true;
-						}
-					  imghaschanges = true;
-					  croppie.croppie('bind', {
-						  url: bsurl+"assets/location_image/"+customerdetail[id]["cust_location_image"]
-					  });
-				  }else{
-				  	$(".cr-boundary").remove();
-				  	$(".cr-slider-wrap").remove();
-				  	croppieready = false;
-				  	imghaschanges = false;
-				  }
-			  },
-			  onHint: function (hint) {
-				  $('#name_autocomplete_hint').val(hint);
-			  },
-			  onInvalidateSelection: function () {
-				  $("#cust_contact_number").val("");
-				  $("#cust_delivery_address").val("");
-				  $("#customer_id").val("");
-			  }
-		  });
+				if(customerdetail[id]["cust_location_image"] !== ""){
+					if (!croppieready) {
+						croppie = $('#map_img_preview').croppie({
+							"viewport": {
+								width: $("#map_preview").width() + "px",
+								height: '200px',
+								type: 'square'
+							}
+						});
+						croppieready = true;
+					}
+					imghaschanges = true;
+					croppie.croppie('bind', {
+						url: bsurl+"assets/location_image/"+customerdetail[id]["cust_location_image"]
+					});
+				}else{
+					$(".cr-boundary").remove();
+					$(".cr-slider-wrap").remove();
+					croppieready = false;
+					imghaschanges = false;
+				}
+			},
+			onHint: function (hint) {
+				$('#name_autocomplete_hint').val(hint);
+			},
+			onInvalidateSelection: function () {
+				$("#cust_contact_number").val("");
+				$("#cust_delivery_address").val("");
+				$("#customer_id").val("");
+			}
+		});
 	}
 
 	function ucwords (str) {
@@ -461,17 +460,17 @@ $("document").ready(function(){
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
-	
+
 	function toCurrency(value) {
-        if (isNaN(value)) {
-            return "--";
-        } else {
-            return new Intl.NumberFormat("en-PH", {
-                style: "currency",
-                currency: "PHP"
-            }).format(value);
-        }
-    }
+		if (isNaN(value)) {
+			return "--";
+		} else {
+			return new Intl.NumberFormat("en-PH", {
+				style: "currency",
+				currency: "PHP"
+			}).format(value);
+		}
+	}
 
 	function copytoclipboard(){
 		/*Name:
@@ -481,41 +480,42 @@ $("document").ready(function(){
 		Mode of Payment:
 		Orders:
 		Remarks:*/
-		var clipboardtotal = 0;
+
 		var modeofpaymentarray = ["Cash on Delivery", "Bank Transfer", "GCash"];
 		var name = $("#customer_name").val();
-		var fb_name = $("#facebook_name").val();
 		var cust_address = $("#cust_delivery_address").val();
 		var deliver_date = $("#delivery_date").val();
 		var contact_number = $("#cust_contact_number").val();
 		var mop = modeofpaymentarray[$("#payment_method").val()];
 		var remarks = $("#trans_remarks").val();
-		
+		var fbname = $("#facebook_name").val();
+
 		var products = $("#productsummary").find(".prodsumrow").not(".deleted");
 		var ordershtml = "";
+		var ordertotal = 0;
 		$.each(products, function(ind, row){
 			var id = $(row).attr("id");
 			var pdesc = $(row).find(".summary_desc").html();
 			var qty = $(row).find(".summary_qty").html();
 			var price = $(".product_main #"+id).find("div.product_price").html();
 			ordershtml += "\n"+qty +" - "+pdesc+" @ "+toCurrency(price * qty);
-			clipboardtotal += (price * qty);
+			ordertotal += price * qty;
 		});
-		
+
 		var clipboardtext = "Name: "+name+"\n"
-						+"Facebook Name: "+fb_name+"\n"
-						+"Address: "+cust_address+"\n"
-						+"Delivery Date: "+deliver_date+"\n"
-						+"Contact #: "+contact_number+"\n"
-						+"Mode of Payment: "+mop+"\n"
-						+"Orders: "+ordershtml+"\n"
-						+"Total: "+toCurrency(clipboardtotal)+"\n"
-						+"Remarks: "+remarks;
-						
+			+"Facebook Name: "+fbname+"\n"
+			+"Address: "+cust_address+"\n"
+			+"Delivery Date: "+deliver_date+"\n"
+			+"Contact #: "+contact_number+"\n"
+			+"Mode of Payment: "+mop+"\n"
+			+"Orders: "+ordershtml+"\n"
+			+"Total: "+toCurrency(ordertotal)+"\n"
+			+"Remarks: "+remarks;
+
 		$("textarea#clipboard").val(clipboardtext);
-		
+
 		var copyText = document.getElementById("clipboard");
-		
+
 		/* Select the text field */
 		copyText.select();
 		copyText.setSelectionRange(0, 99999); /*For mobile devices*/
