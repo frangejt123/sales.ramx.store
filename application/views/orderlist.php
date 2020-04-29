@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</button>
 
 	<?php if($_SESSION["access_level"] != 0) { ?>
-	<button id="create_order_btn" class="btn-warning pull-right">
+	<button id="create_order_btn" class="btn-dark pull-right">
 		<i class="fa fa-plus"></i> &nbsp; Create Order
 	</button>
 	<?php } else{ ?>
