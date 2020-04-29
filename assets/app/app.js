@@ -83,10 +83,10 @@ $("document").ready(function(){
 		changeprice();
 	});
 
-	$("div#container").on("click", ".delbtn", function(){
+	$("div#productsummary").on("click", ".delbtn", function(){
 		var id = $(this).attr("id").split("_")[1];
-		var row = $("div#container").find(".prodsumrow#"+id);
-
+		var row = $("div#productsummary").find(".prodsumrow#"+id);
+		console.log(row);
 		var availqty = parseFloat($(".product_main #qty_"+id+" span").html());
 		var inputqty = parseFloat($("div.prodsumrow#"+id+" div.summary_qty").text());
 
@@ -206,16 +206,18 @@ $("document").ready(function(){
 					alert("Transaction Successfully Settled!");
 					location.reload();
 				}else{
+					$("#confirm_yesopt").removeAttr("disabled");
 					alert(res["error"] + "\n" + res["product"]);
 				}
 			},
 			error: function(xhr, status, error){
-
+				$("#confirm_yesopt").removeAttr("disabled");
 				NProgress.done();
 				alert("Oppss!. Something went wrong!.")
 			},
 			beforeSend: function(){
 				NProgress.start();
+				$("#confirm_yesopt").attr("disabled", "disabled");
 			}
 		});
 	});

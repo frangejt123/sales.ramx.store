@@ -66,7 +66,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<th>Transaction Date</th>
 						<th>Delivery Date</th>
 						<th>Customer Name</th>
-						<th></th>
+						<th>Paid Status</th>
+						<th>Printed Status</th>
 						<th>Status</th>
 					</tr>
 					</thead>
@@ -77,17 +78,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						foreach($transaction as $ind => $row){
 							$paidclass = "";
 							$paid = "";
+							$printed = "";
+							$printCls = "";
 							$transdate = date("mdY", strtotime($row["datetime"]));
 							if($row["paid"] == 1){
 								$paid = "Paid";
 								$paidclass = "text-success";
 							}
+							if($row["printed"] == 1){
+								$printed = "Printed";
+								$printCls = "text-success";
+							}
 							echo '<tr id="tr_'.$row["id"].'">';
 								echo '<td>'.$transdate.'-'.sprintf("%04s", $row["id"]).'</td>';
 								echo '<td>'.date("m/d/Y H:i:s", strtotime($row["datetime"])).'</td>';
 								echo '<td>'.date("m/d/Y", strtotime($row["delivery_date"])).'</td>';
-								echo '<td>'.$row["name"].'</td>';
+								echo '<td width="25%">'.$row["name"].'</td>';
 								echo '<td class="'.$paidclass.'">'.$paid.'</td>';
+								echo '<td class="'.$printCls.'">'.$printed.'</td>';
 								echo '<td class="'.$tdclass[$row["status"]].'">'.$statusarray[$row["status"]].'</td>';
 							echo '</tr>';
 						}

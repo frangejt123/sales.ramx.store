@@ -76,6 +76,12 @@ class Main extends CI_Controller {
 			$newlastid = $this->modTransaction->getLastTransactionID(null)->row_array();
 			if($newlastid["id"] != $lastid){
 				$data["transaction"]["orders"] = $this->modTransaction->getNewTrasaction($lastid)->result_array();
+				foreach($data["transaction"]["orders"] as $ind => $row){
+					$transdate = date("mdY", strtotime($row["datetime"]));
+					$formatID = $transdate.'-'.sprintf("%04s", $row["id"]);
+					$data["transaction"]["orders"][$ind]["formatid"] = $formatID;
+					$data["transaction"]["orders"][$ind]["datetime"] = date("m/d/Y H:i:s", strtotime($row["datetime"]));
+				}
 				$data["transaction"]["lastid"] = $newlastid["id"];
 				echo json_encode($data["transaction"]);
 				break;

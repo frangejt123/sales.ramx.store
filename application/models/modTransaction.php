@@ -143,8 +143,11 @@ class ModTransaction extends CI_Model {
     }
 
     function getNewTrasaction($id){
-		$sql = "SELECT transaction.*, 
-					DATE_FORMAT(transaction.datetime, '%m/%d/%Y %H:%i:%s') as datetime, 
+		$sql = "SELECT transaction.id,
+					transaction.datetime,
+					transaction.paid,
+					transaction.printed,
+					transaction.status,
 					DATE_FORMAT(transaction.delivery_date, '%m/%d/%Y') as delivery_date,
 					customer.name from transaction 
 					INNER JOIN customer ON customer.customer_id = transaction.customer_id
