@@ -390,3 +390,11 @@ input[type='file']#customer_location{
 .dd-item{
 	padding: 15px 35px 15px 35px;
 }
+
+.sortable {
+	cursor: pointer;
+}
+
+.sortable i {
+	margin-top: 4px;
+}

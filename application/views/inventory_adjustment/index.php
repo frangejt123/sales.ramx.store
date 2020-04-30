@@ -34,10 +34,10 @@
 					<table class="table table-striped table-hover mb-0" id="inventory_adjustment_tbl">
 						<thead>
 							<tr>
-								<th class="border-top-0">Inv. Adj. #</th>
-								<th class="border-top-0">Date</th>
-								<th class="border-top-0">Type</th>
-								<th class="border-top-0">Status</th>
+								<th class="border-top-0 sortable">Inv. Adj. # <i class="fa fa-sort float-right"></i></th>
+								<th class="border-top-0 sortable">Date <i class="fa fa-sort float-right"></i></th>
+								<th class="border-top-0 sortable">Type <i class="fa fa-sort float-right"></i></th>
+								<th class="border-top-0 sortable">Status <i class="fa fa-sort float-right"></i></th>
 							</tr>
 						</thead>
 						<tbody>
