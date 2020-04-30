@@ -13,6 +13,9 @@
 	if(isset($transactions)) {
 		$hasTransactions = count($transactions) > 0;
 	}
+
+	$paid = ["Unpaid", "Paid"];
+	$paid_class = ["danger", "success"];
 ?>
 
 <div id="container">
@@ -119,7 +122,8 @@
 						<th class="border-top-0">Datetime</th>
 						<th class="border-top-0">Delivery Date</th>
 						<th class="border-top-0">Payment Method</th>
-						<th class="border-top-0">Total</th>
+						<th class="border-top-0 text-center">Total</th>
+						<th class="border-top-0 text-center">Paid</th>
 						<th class="border-top-0 text-center">Status</th>
 					</tr>
 					</thead>
@@ -134,6 +138,7 @@
 							<td><?= date('m/d/Y', strtotime($row["delivery_date"])) ?></td>
 							<td><?= $payment_method[$row["payment_method"]] ?></td>
 							<td class="text-right"><?= number_format($row["total"], 2) ?></td>
+							<td class="text-center"><span class="badge badge-pill badge-<?= $paid_class[$row['paid']] ?>"><?= $paid[$row["paid"]] ?></span></td>
 							<td class="text-center"><span class="badge badge-pill badge-<?= $status_class[$row['status']] ?>"><?= $status[$row["status"]] ?></span></td>
 						</tr>
 

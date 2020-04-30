@@ -33,11 +33,11 @@
 				<table class="table table-striped table-hover mb-0" id="customer_tbl">
 					<thead>
 						<tr>
-							<th  class="border-top-0">ID</th>
-							<th class="border-top-0">Name</th>
-							<th class="border-top-0">Facebook Name</th>
-							<th class="border-top-0">Contact Number</th>
-							<th class="border-top-0">Delivery Address</th>
+							<th  class="border-top-0 sortable">ID <i class="fa fa-sort float-right"></i></th>
+							<th class="border-top-0 sortable">Name <i class="fa fa-sort float-right"></i></th>
+							<th class="border-top-0 sortable">Facebook Name <i class="fa fa-sort float-right"></i></th>
+							<th class="border-top-0 sortable">Contact Number <i class="fa fa-sort float-right"></i></th>
+							<th class="border-top-0 sortable">Delivery Address <i class="fa fa-sort float-right"></i></th>
 						</tr>
 					</thead>
 					<tbody>

@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'dssc.cae0awknguro.ap-northeast-1.rds.amazonaws.com',
-	'username' => 'ramx_sales_orders',
-	'password' => 'FlmIcm6s6EK0m3zp',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => 'admin',
 	'database' => 'ramx_sales_orders',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
