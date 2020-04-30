@@ -7,7 +7,11 @@ $(document).ready(function(){
 		input = document.getElementById("search_customer_name");
 		filter = input.value.toUpperCase();
 		table = document.getElementById("orderlist_table");
-		tr = table.getElementsByTagName("tr");
+		var isfiltered = $("#clear_filter_btn").is(":visible");
+		if(isfiltered)
+			tr = $(table).find("tr.filtered");
+		else
+			tr = $(table).find("tr");
 
 		// Loop through all table rows, and hide those who don't match the search query
 		for (i = 0; i < tr.length; i++) {
@@ -15,7 +19,6 @@ $(document).ready(function(){
 			if (td) {
 				txtValue = td.textContent || td.innerText;
 				if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					if($(tr[i]).hasClass("filtered"))
 						tr[i].style.display = "";
 				} else {
 					tr[i].style.display = "none";
@@ -29,7 +32,6 @@ $(document).ready(function(){
 		window.location = baseurl + "/main/pos";
 	});
 
-		
 	$("#inventory_adjustment_btn").on("click", function(){
 		NProgress.start();
 		window.location = baseurl + "/inventory/adjustment";
@@ -40,7 +42,10 @@ $(document).ready(function(){
 		window.location = baseurl + "/customer";
 	});
 
-
+	$("#user_list_btn").on("click", function(){
+		NProgress.start();
+		window.location = baseurl + "/user";
+	});
 
 	$("table#orderlist_table").on("click", "tr", function(){
 		var id = $(this).attr("id").split("_")[1];

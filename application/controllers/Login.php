@@ -36,7 +36,6 @@ class Login extends CI_Controller {
 		}
 
 		echo $count;
-
 	}
 
 	function logout(){
