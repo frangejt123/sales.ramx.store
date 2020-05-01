@@ -58,93 +58,129 @@ if(isset($transaction)){
 
 <div class="d-flex" id="wrapper">
 
-	<div class="container">
-		<div class="content pt-4">
-			<div class="row">
-				<div class="col">
-					<input type="text" id="transaction_id_inp" hidden value="<?php echo isset($transaction) ? $transaction["id"] : "" ?>">
-					<button id="cancel_order_btn" class="btn-danger">
-						<i class="fa fa-arrow-left"></i> &nbsp; Back
-					</button>
-					<button id="copy_details" class="btn-secondary pull-right" data-toggle="tooltip" data-placement="bottom" title="Copy details to clipboard">
-						<i class="fa fa-copy"></i>
-					</button>
-				</div>
-			</div>
-
-
-			<div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4" id="left_panel">
-				<?php
-				foreach($product as $ind => $row){
-
-					$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
-					echo '<div class="col mb-4">';
-					echo '<div class="product_main">';
-					echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
-					echo '<div class="product_desc">'.$row["description"].'</div>';
-					echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
-					echo '</div>';//product_cont
-					echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
-							$availableqty
-							.'</span></div>';//product_cont
-					echo '<div class="product_qty">';
-					echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
-					echo '</div>';//product_qty
-					echo '</div>';//product_main
-					echo '</div>';//col
-
-				}
-				?>
-
-			</div>
-
+	<div class="container" style="max-width: 100%; padding: 0px !important;">
+		<div class="content">
+			<div class="row"><!-- button row -->
+				<div class="col-2 pl-0 pr-0"><!-- left column -->
+					<div class="bg-light pt-2 pl-4">
+						<input type="text" id="transaction_id_inp" hidden value="<?php echo isset($transaction) ? $transaction["id"] : "" ?>">
+						<button id="cancel_order_btn" class="btn-danger">
+							<i class="fa fa-arrow-left"></i> &nbsp; Back
+						</button>
+					</div>
+				</div><!-- left column -->
+				<div class="col-7 pl-0 pr-0">
+					<div class="bg-light pt-2 pl-4 w-100 h-100">
+						<div class="row">
+							<div class="col-12">
+								<button id="copy_details" class="btn-secondary pull-right" data-toggle="tooltip" data-placement="bottom" title="Copy details to clipboard">
+									<i class="fa fa-copy"></i>
+								</button>
+							</div>
+						</div><!-- row -->
+					</div>
+				</div><!-- center column -->
+				<div class="col-3 pl-0 pr-0">
+					<div class="bg-light pt-2 pr-4">
+						<div class="row">
+							<div class="col-1">
+							</div>
+							<div class="col-11">
+								<button id="customer_details_main_btn" class="btn-primary">
+									<?php echo $name == "" ? "Order Details" : $name; ?>
+								</button>
+							</div>
+						</div><!-- row -->
+					</div>
+				</div><!-- right column -->
+			</div><!-- button row -->
 		</div>
-	</div>
-	<!-- /#page-content-wrapper -->
+		<div class="row"><!-- main row -->
+			<div class="col-2 pl-0 pr-0"><!-- left column -->
+				<div class="bg-light border-right">
+					<div class="pb-4">
+						<div class="mb-auto slimscrollcont2">
+							<ul class="list-group">
+								<?php
+									$first = 0;
+									foreach($category as $ind => $row){
+										$class = 'category_li list-group-item list-group-item-action rounded-0 border-right-0 pl-lg-4 ';
+										if($first < 1)
+											$class .= ' active';
+										echo '<a href="javascript:void(0)" class="'.$class.'" id="cat_'.$row["id"].'">'.$row["name"].'</a>';
+										$first++;
+									}
+								?></ul>
+						</div>
+					</div>
+				</div>
+			</div><!-- left column -->
+			<div class="col-7 pl-4 pr-4 pt-4 border-top">
+				<div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4" id="left_panel">
+					<?php
+					foreach($product as $ind => $row){
 
+						$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
+						echo '<div class="col mb-4 main_product prodcat_'.$row["category_id"].'">';
+						echo '<div class="product_main">';
+						echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
+						echo '<div class="product_desc">'.$row["description"].'</div>';
+						echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
+						echo '</div>';//product_cont
+						echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
+								$availableqty
+								.'</span></div>';//product_cont
+						echo '<div class="product_qty">';
+						echo '<input type="text" class="form-control inpqty" value="1" id="inpqty'.$row["id"].'">';
+						echo '</div>';//product_qty
+						echo '</div>';//product_main
+						echo '</div>';//col
 
-	<!-- Sidebar -->
-	<div class=" d-flex flex-column bg-light border-right px-2 pt-4" id="sidebar-wrapper">
-
-		<button id="customer_details_main_btn" class="btn-primary pull-right">
-			<?php echo $name == "" ? "Order Details" : $name; ?>
-		</button>
-
-		<div id="slimscrollcont" class="mb-auto">
-			<div class="d-flex flex-column" id="productsummary">
-				<?php
-				if(isset($transactiondetail)){
-					foreach($transactiondetail as $ind => $row){
-						echo '<div class="row prodsumrow existing" data-id="'.$row["id"].'" id="'.$row["product_id"].'">';
-						echo '<div class="summary_desc mr-auto">'.$row["description"].'</div>';
-						echo '<div class=" summary_qty mr-5">'.$row["quantity"].'</div>';
-						echo '<div class="mr-2">';
-						echo '<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" style="height: 50px;width: 50px;">';
-						echo '<i class="fa fa-trash"></i>';
-						echo '</button>';
-						echo '</div>';
-						echo '<div style="clear:both"></div>';
-						echo '</div>';
 					}
-				}
-				?>
-			</div><!-- row wrapper product_summary -->
-		</div><!-- slimscroll container -->
-		<div class="px-2">
-			<div class="row total_summary">
-				<div class="col-lg text-center">
-					TOTAL <span id="totalvalue"><?php echo $total == "" ? "0.00" : number_format($total, 2); ?></span>
+					?>
 				</div>
-			</div>
-			<br/>
-			<div class="row px-2 pb-3">
-				<button type="button" class="btn btn-success" id="settlebtn" style="height: 50px;width: 98%; font-size: 20px;">
-					<i class="fa fa-check"></i>&nbsp; &nbsp; PLACE ORDER
-				</button>
-			</div>
-		</div>
+			</div><!-- center column -->
+			<div class="col pl-0">
+				<div class="bg-light border-left px-2 pt-2">
+					<div class="pt-2 pb-4">
+						<div class="mb-auto slimscrollcont">
+							<div class="d-flex flex-column pl-2" id="productsummary">
+								<?php
+								if(isset($transactiondetail)){
+									foreach($transactiondetail as $ind => $row){
+										echo '<div class="row prodsumrow existing" data-id="'.$row["id"].'" id="'.$row["product_id"].'">';
+										echo '<div class="summary_desc mr-auto">'.$row["description"].'</div>';
+										echo '<div class=" summary_qty mr-5">'.$row["quantity"].'</div>';
+										echo '<div class="mr-2">';
+										echo '<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" style="height: 50px;width: 50px;">';
+										echo '<i class="fa fa-trash"></i>';
+										echo '</button>';
+										echo '</div>';
+										echo '<div style="clear:both"></div>';
+										echo '</div>';
+									}
+								}
+								?>
+							</div><!-- row wrapper product_summary -->
+						</div><!-- slimscroll container -->
+					</div>
+					<div class="px-2">
+						<div class="row total_summary">
+							<div class="col-lg text-center">
+								TOTAL: <span id="totalvalue"><?php echo $total == "" ? "0.00" : number_format($total, 2); ?></span>
+							</div>
+						</div>
+						<br/>
+						<div class="row px-2 pb-3">
+							<button type="button" class="btn btn-success" id="settlebtn" style="height: 50px;width: 98%; font-size: 20px;">
+								<i class="fa fa-check"></i>&nbsp; &nbsp; PLACE ORDER
+							</button>
+						</div>
+					</div>
+				</div>
+			</div><!-- right column -->
+		</div><!-- main row -->
 	</div>
-	<!-- /#sidebar-wrapper -->
 
 </div>
 <!-- /#wrapper -->

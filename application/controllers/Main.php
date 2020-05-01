@@ -28,7 +28,9 @@ class Main extends CI_Controller {
 	public function pos(){
 		$this->load->model('modProduct', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
+		$this->load->model('modCategory', "", TRUE);
 
+		$data["category"] = $this->modCategory->getAll(null)->result_array();
 		$data["product"] = $this->modProduct->getAll(null)->result_array();
 		$customer = $this->modCustomer->getAll(null)->result_array();
 		$customerarray = array();
@@ -221,7 +223,9 @@ class Main extends CI_Controller {
 
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
+		$this->load->model('modCategory', "", TRUE);
 
+		$data["category"] = $this->modCategory->getAll(null)->result_array();
 		$data["product"] = $this->modProduct->getAll(null)->result_array();
 		$customer = $this->modCustomer->getAll(null)->result_array();
 
@@ -311,47 +315,6 @@ class Main extends CI_Controller {
 	public function completetrans($id){
 		$this->load->model('modTransaction', "", TRUE);
 		$this->modTransaction->complete($id);
-	}
-
-	public function productlist(){
-		$this->load->model('modProduct', "", TRUE);
-		$product = $this->modProduct->getAll(null)->result_array();
-
-		echo json_encode($product);
-	}
-
-	public function saveproductchanges(){
-		$param = $this->input->post(NULL, "true");
-		$this->load->model('modProduct', "", TRUE);
-
-		$error = 0;
-		foreach($param["data"] as $ind => $row){
-			if($row["status"] == "new"){
-				$res = $this->modProduct->insert($row);
-				if(!$res)
-					$error++;
-			}
-			if($row["status"] == "edit"){
-				$res = $this->modProduct->update($row);
-				if(!$res)
-					$error++;
-			}
-			if($row["status"] == "delete"){
-				$res = $this->modProduct->delete($row);
-				if(!$res)
-					$error++;
-			}
-		}
-
-		if($error == 0)
-			echo "success";
-		else
-			echo "failed";
-
-		//$res = $this->modTransaction->update($param);
-
-		//echo json_encode($res);
-
 	}
 
 	/*public function printtest(){

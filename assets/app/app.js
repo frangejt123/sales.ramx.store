@@ -20,8 +20,12 @@ $("document").ready(function(){
 		height: (whight - 100) + "px"
 	});
 
-	$('#slimscrollcont').slimScroll({
-		height:  whight +"px"
+	$('.slimscrollcont').slimScroll({
+		height:  (whight - 240) +"px"
+	});
+
+	$('.slimscrollcont2').slimScroll({
+		height:  (whight - 90) +"px"
 	});
 
 	var inventorydata = {};
@@ -145,6 +149,7 @@ $("document").ready(function(){
 		$("#confirmmodal").modal("hide");
 	});
 	changeprice();
+
 	$("#confirm_yesopt").on("click", function(){
 		var detail = [];
 
@@ -346,6 +351,19 @@ $("document").ready(function(){
 
 	$("#copy_details").on("click", function(){
 		copytoclipboard();
+	});
+
+	setTimeout(function(){
+		$("a.active").trigger("click");
+	}, 100);
+
+	$(".category_li").on("click", function(){
+		var id = $(this).attr("id").split("_")[1];
+		$(".category_li").removeClass("active");
+		$(".main_product").hide();
+		$(".main_product.prodcat_"+id).show();
+
+		$(this).addClass("active");
 	});
 
 	inputautocomplete();

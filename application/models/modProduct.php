@@ -10,7 +10,9 @@ class ModProduct extends CI_Model {
             $FIELDS = array(
                 "id" => "product.id",
                 "description" => "product.description",
-                "price" => "product.price"
+                "price" => "product.price",
+				"uom" => "product.uom",
+				"category_id" => "product.category_id"
     );
 
     function __construct() {
@@ -21,6 +23,8 @@ class ModProduct extends CI_Model {
     function getAll($param) {
         $tablefield = "";
 		$this->FIELDS["avail_qty"] = "inventory.qty";
+		$this->FIELDS["category"] = "product_category.name";
+
         foreach ($this->FIELDS as $alias => $field) {
             if ($tablefield != "") {
                 $tablefield .= ",";
@@ -36,6 +40,7 @@ class ModProduct extends CI_Model {
         $this->db->select($tablefield);
         $this->db->from("product");
 		$this->db->join('inventory', 'product.id = inventory.product_id', 'left');
+		$this->db->join('product_category', 'product.category_id = product_category.id', 'left');
         $this->db->order_by('product.description', 'ASC');
 
         $query = $this->db->get();
