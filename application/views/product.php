@@ -101,7 +101,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 
 					<div class="form-group">
-						<label>Access Level</label>
+						<label>Category</label>
 						<select class="form-control" id="category">
 							<?php
 								foreach($category as $ind => $row){
@@ -136,7 +136,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-info" data-dismiss="modal">No</button>
-					<button type="button" class="btn btn-success" id="confirm_delete_user">Yes</button>
+					<button type="button" class="btn btn-success" id="confirm_delete_product">Yes</button>
 				</div>
 			</div>
 		</div>

@@ -62,7 +62,7 @@ $(document).ready(function(){
 		}
 
 		var description = $("#description").val();
-		var uom = $("#uom").val();
+		var uom = ($("#uom").val()).toUpperCase();
 		var price = $("#price").val();
 		var category_id = $("select#category").val();
 		var url = baseurl + '/product/addProduct';
@@ -105,7 +105,7 @@ $(document).ready(function(){
 		$("#delete_product_modal").modal("show");
 	});
 
-	$("#confirm_delete_user").on("click", function(){
+	$("#confirm_delete_product").on("click", function(){
 		var id = $("#product_id").val();
 		$.ajax({
 			method: 'POST',
@@ -118,19 +118,18 @@ $(document).ready(function(){
 					alert("Changes successfully saved.");
 					location.reload();
 				}
-				$("#confirm_delete_user").removeAttr("disabled");
+				$("#confirm_delete_product").removeAttr("disabled");
 			},
 			error: function (xhr, status, error) {
 				NProgress.done();
-				$("#confirm_delete_user").removeAttr("disabled");
+				$("#confirm_delete_product").removeAttr("disabled");
 			},
 			beforeSend: function(){
 				NProgress.start();
-				$("#confirm_delete_user").attr("disabled", "disabled");
+				$("#confirm_delete_product").attr("disabled", "disabled");
 			}
 		});
 	});
-
 
 	/* CATEGORY */
 	var deviceheight = document.documentElement.clientHeight;
@@ -286,7 +285,8 @@ $(document).ready(function(){
 				NProgress.done();
 				if(res == "success"){
 					alert("Change save successfully");
-					$("#category_list_modal").modal("hide");
+					location.reload();
+					//$("#category_list_modal").modal("hide");
 				}
 			},
 			error: function (xhr, status, error) {

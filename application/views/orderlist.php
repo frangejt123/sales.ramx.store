@@ -49,8 +49,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<i class="fa fa-file-text-o"></i> &nbsp;Report
 			</button>
 			<div class="dropdown-menu">
-				<a class="dropdown-item dd-item" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
-				<a class="dropdown-item dd-item" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
+				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
+				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
 			</div>
 		</div>
 	<?php } ?>

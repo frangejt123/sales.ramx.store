@@ -71,7 +71,7 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#item_summary_rpt").on("click", function(){
+	$(".rpt_btn").on("click", function(){
 		var title = $(this).html();
 		var id = $(this).attr("id");
 		$("#report_param_modal #reportModalLabel").html(title);
