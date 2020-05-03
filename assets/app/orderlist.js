@@ -71,6 +71,28 @@ $(document).ready(function(){
 		});
 	});
 
+	$("#item_summary_rpt").on("click", function(){
+		var title = $(this).html();
+		var id = $(this).attr("id");
+		$("#report_param_modal #reportModalLabel").html(title);
+		$("#report_param_modal").data("rpt_name", id).modal("show");
+	});
+
+	$("#print_report").on("click", function(){
+		var deliverydate = $("#rpt_delivery_date").val();
+
+		if(deliverydate == "")
+			return;
+
+		$("form#report_data input#dlvrydate").val(deliverydate)
+		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');;
+
+		$('#report_data').attr("action", baseurl+"/"+rpt_name);
+
+		window.open('', 'new_window');
+		document.getElementById('report_data').submit();
+	});
+
 	/* AJAX LONG pollING */
 
 	setTimeout(function(){

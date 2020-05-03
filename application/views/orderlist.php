@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 
 <div id="container">
-	<input type="text" id="order_last_id" value="<?php echo $lastid["id"]; ?>" hidden>
+	<input type="text" id="order_last_id" value="<?php echo isset($lastid["id"]) ? $lastid["id"] : ""; ?>" hidden>
 	<button id="logout_btn" class="btn-danger">
 		<i class="fa fa-sign-out fa-flip-horizontal"></i> &nbsp;Logout
 	</button>
@@ -49,8 +49,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<i class="fa fa-file-text-o"></i> &nbsp;Report
 			</button>
 			<div class="dropdown-menu">
-				<a class="dropdown-item dd-item" href="#"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
-				<a class="dropdown-item dd-item" href="#"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
+				<a class="dropdown-item dd-item" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
+				<a class="dropdown-item dd-item" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
 			</div>
 		</div>
 	<?php } ?>
@@ -170,9 +170,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</div>
 
+	<div class="modal fade" id="report_param_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="reportModalLabel"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Delivery Date</label>
+						<input type="date" class="form-control" id="rpt_delivery_date">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="print_report">Print</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 </div>
-
+<form id="report_data" method="post" action="" target="new_window">
+	<input type="hidden" id="dlvrydate" name="deliverydate" />
+</form>
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>

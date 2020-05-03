@@ -193,6 +193,9 @@ $(document).ready(function(){
 	});
 
 	$("#paid_order_btn").on("click", function(){
+		$("select#mode_of_payment").val(transmop);
+		$("#payment_confirmation_detail").val(transpcd);
+		$("#paid_amount").val($("#balance").val());
 		$("#tag_as_paid_modal").modal("show");
 	});
 
@@ -201,15 +204,19 @@ $(document).ready(function(){
 	});
 
 	$("#confirm_tag_as_paid").on("click", function(){
+		var amount = $("#paid_amount").val();
 		var payment_method = $("#mode_of_payment").val();
 		var payment_confirmation_detail = $("#payment_confirmation_detail").val();
 
+		var balance = $("#balance").val();
+
 		$.ajax({
 			method: 'POST',
-			data: {"id":selectedorder, "paid":"1", payment_method, payment_confirmation_detail},
-			url: baseurl + '/main/updateorder',
+			data: {"transaction_id":selectedorder, payment_method, payment_confirmation_detail, amount, balance},
+			url: baseurl + '/main/insertpayment',
 			success: function (res) {
 				var res = JSON.parse(res);
+				alert("Changes successfully saved!");
 				NProgress.done();
 				location.reload();
 			},
@@ -249,6 +256,10 @@ $(document).ready(function(){
 
 	$("#cancel_unpaid").on("click", function(){
 		$("#unpaid_modal").modal("hide");
+	});
+
+	$("#payment_method_td").on("click", function(){
+		$("#payment_history_modal").modal("show");
 	});
 
 	function changeorderstatus(status){

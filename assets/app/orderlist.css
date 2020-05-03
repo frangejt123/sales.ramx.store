@@ -402,3 +402,7 @@ input[type='file']#customer_location{
 .sortable i {
 	margin-top: 4px;
 }
+
+td#payment_method_td{
+	cursor: pointer;
+}

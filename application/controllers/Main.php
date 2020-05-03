@@ -60,13 +60,17 @@ class Main extends CI_Controller {
 		$orderid = base64_decode($orderid);
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
+		$this->load->model('modPayment', "", TRUE);
 		$param["id"] = $orderid;
 		$detailparam["transaction_id"] = $orderid;
 		$transaction = $this->modTransaction->getAll($param)->row_array();
 		$transactiondetail = $this->modTransactionDetail->getAll($detailparam)->result_array();
+		$paymentparam["transaction_id"] = $orderid;
+		$payment = $this->modPayment->getAll($paymentparam)->result_array();
 
 		$data["transaction"] = $transaction;
 		$data["transactiondetail"] = $transactiondetail;
+		$data["paymenthistory"] = $payment;
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->view('orderdetail', $data);
@@ -298,6 +302,22 @@ class Main extends CI_Controller {
 			$param["date_printed"] = date("Y-m-d H:i:s");
 
 		$res = $this->modTransaction->update($param);
+
+		echo json_encode($res);
+	}
+
+	public function insertpayment(){
+		$param = $this->input->post(NULL, "true");
+
+		$this->load->model('modPayment', "", TRUE);
+		$this->load->model('modTransaction', "", TRUE);
+		$param["payment_date"] = date("Y-m-d");
+		$res = $this->modPayment->insert($param);
+		if($param["amount"] >= $param["balance"]){
+			$transparam["paid"] = "1";
+			$transparam["id"] = $param["transaction_id"];
+			$this->modTransaction->update($transparam);
+		}
 
 		echo json_encode($res);
 	}

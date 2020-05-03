@@ -93,11 +93,12 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			$paidClass = "hidden";
 
 		if($_SESSION["access_level"] == 1) { // sales agent
-			if (($transaction["status"] == 0 && $_SESSION["id"] == $transaction["user_id"]) && $transaction["paid"] == "0") {
+			if (($transaction["status"] == 0 && $_SESSION["id"] == $transaction["user_id"]) && $transaction["paid"] == "0" && $transaction["status"] != "3") {
 				echo $btnvoid;
 				echo $btnpaid;
 				echo $btnupdate;
 			}//if logged-in agent = agent created the order && order is not paid
+
 		}// access level = 1;
 
 		if($_SESSION["access_level"] == 0) { //admin
@@ -120,7 +121,15 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				echo $btnupdate;
 			}//if status is Pending
 		}
+
+		$total_payment = 0;
+		foreach($paymenthistory as $ind => $row){
+			$total_payment += $row["amount"];
+		}
+		$balance = $transaction["total"] - $total_payment;
 	?>
+
+	<input type="text" hidden id="balance" value="<?php echo $balance; ?>">
 	<div style="clear:both"></div>
 
 	<div class="void_notif">
@@ -140,7 +149,9 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				<?php
 					$paymentmethodarray = array("Cash on Delivery (COD)", "Bank Transfer", "GCash");
 				?>
-				<td>Payment Method : <?php echo $paymentmethodarray[$transaction["payment_method"]]; ?></td>
+				<td id="payment_method_td">
+					Payment Method : <?php echo $paymentmethodarray[$transaction["payment_method"]]; ?>
+				</td>
 			</tr>
 			<tr>
 				<td>Contact Number : <?php echo $transaction["contact_number"]; ?></td>
@@ -215,6 +226,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 					<p id="voidreason">Reason: <?php echo $transaction["void_reason"]; ?></p>
 				</div>
 				<div class="modal-footer">
+					<button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-success" id="close_void_detail">OK</button>
 				</div>
 			</div>
@@ -250,7 +262,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<h4 class="modal-title">TAG AS PAID</h4>
-				<div class="modal-body">
+				<div class="modal-body" style="text-align: left">
 					<div class="form-group">
 						<label>Mode of Payment</label>
 						<select class="form-control" id="mode_of_payment">
@@ -262,10 +274,15 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 					</div>
 
 					<div class="form-group">
+						<label>Amount</label>
+						<input type="text" class="form-control" id="paid_amount" value="<?php echo $balance; ?>">
+					</div>
+
+					<div class="form-group">
 						<label>Payment Confirmation Detail</label>
 						<textarea class="form-control" rows="2" id="payment_confirmation_detail"><?php echo $pm = $transaction["payment_confirmation_detail"]; ?></textarea>
 					</div>
-					<p>This order will be tag as PAID. <br />Do you want to continue?</p>
+					<p style="text-align: center">This order will be tag as PAID. <br />Do you want to continue?</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-info" id="cancel_tag_as_paid">No</button>
@@ -295,6 +312,50 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="payment_history_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="exampleModalLabel">PAYMENT HISTORY</h4>
+				</div>
+				<div class="modal-body">
+					<div class="box">
+						<div class="box-body no-padding">
+							<table class="table table-striped table-hover" id="paymenthistory_table">
+								<thead>
+								<tr>
+									<th>Date</th>
+									<th>Payment Method</th>
+									<th>Amount</th>
+									<th>Payment Confirmation Detail</th>
+								</tr>
+								</thead>
+								<tbody>
+								<?php
+								foreach($paymenthistory as $ind => $row){
+									echo '<tr id="tr_'.$row["id"].'">';
+									echo '<td>'.date("m/d/Y", strtotime($row["payment_date"])).'</td>';
+									echo '<td>'.$paymentmethodarray[$row["payment_method"]].'</td>';
+									echo '<td>'.number_format($row["amount"], 2).'</td>';
+									echo '<td>'.$row["payment_confirmation_detail"].'</td>';
+									echo '</tr>';
+								}
+								?>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.box-body -->
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<i class="fa fa-remove"></i> &nbsp;Close
+					</button>
+				</div>
+			</div>
+		</div>
+	</div><!-- modal -->
 
 	<!-- Modal -->
 	<div class="modal fade" id="void_detail_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -345,6 +406,8 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
+	var transmop = '<?php echo $transaction["payment_method"]; ?>';
+	var transpcd = '<?php echo $transaction["payment_confirmation_detail"]; ?>';
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
