@@ -87,7 +87,7 @@ $(document).ready(function(){
 		$("form#report_data input#dlvrydate").val(deliverydate)
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');;
 
-		$('#report_data').attr("action", baseurl+"/"+rpt_name);
+		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);
 
 		window.open('', 'new_window');
 		document.getElementById('report_data').submit();
