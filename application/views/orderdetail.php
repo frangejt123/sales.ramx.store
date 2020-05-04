@@ -4,8 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $btnvoid = '<span class="pull-right span_seperator"></span><button id="void_order_btn" class="btn-warning pull-right">'.
 				'<i class="fa fa-trash"></i> &nbsp; Void Order</button>';
 
-$btnprint = '<span class="pull-right span_seperator"></span><button id="print_order_btn" class="btn-secondary pull-right">'.
-				'<i class="fa fa-print"></i> &nbsp; Print</button>';
+/*$btnprint = '<span class="pull-right span_seperator"></span><button id="print_order_btn" class="btn-secondary pull-right">'.
+				'<i class="fa fa-print"></i> &nbsp; Print</button>';*/
 
 $btnpaid = '<span class="pull-right span_seperator"></span><button id="paid_order_btn" class="btn-dark pull-right">'.
 				'<i class="fa fa-credit-card"></i> &nbsp; <span>Paid</span></button>';
@@ -15,6 +15,16 @@ $btnunpaid = '<span class="pull-right span_seperator"></span><button id="unpaid_
 
 $btnupdate = '<span class="pull-right span_seperator"></span><button id="update_order_btn" class="btn-info pull-right">'.
 				'<i class="fa fa-pencil"></i> &nbsp; Update</button>';
+
+$btnmoreaction = '<span class="pull-right span_seperator"></span>'.
+					'<div class="dropdown pull-right">'.
+					'<button class="btn-secondary" data-toggle="dropdown" id="dropdown_btn"><i class="fa fa-bars"></i></button>'.
+					'<div class="dropdown-menu">'.
+						'<a class="dropdown-item dd-item text-primary" href="#" id="order_history"><i class="fa fa-clock-o"></i> &nbsp; Order History</a>'.
+						'<a class="dropdown-item dd-item text-warning" href="#" id="payment_history_btn"><i class="fa fa-dollar"></i> &nbsp; Payment History</a>'.
+						'<a class="dropdown-item dd-item text-success" href="#" id="print_order_btn"><i class="fa fa-print"></i> &nbsp; Print</a>'.
+					'</div>'.
+					'</div>';
 
 $paidClass = "visible";
 
@@ -93,7 +103,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			$paidClass = "hidden";
 
 		if($_SESSION["access_level"] == 1) { // sales agent
-			if (($transaction["status"] == 0 && $_SESSION["id"] == $transaction["user_id"]) && $transaction["paid"] == "0" && $transaction["status"] != "3") {
+			if (($transaction["status"] == 0) && $transaction["paid"] == "0") {// && $_SESSION["id"] == $transaction["user_id"]
 				echo $btnvoid;
 				echo $btnpaid;
 				echo $btnupdate;
@@ -105,7 +115,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 
 			if ($transaction["status"] != "3") {
 
-				echo $btnprint;
+				echo $btnmoreaction;//$btnprint;
 
 				if ($transaction["paid"] == "0") {
 					echo $btnpaid;
@@ -149,7 +159,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				<?php
 					$paymentmethodarray = array("Cash on Delivery (COD)", "Bank Transfer", "GCash");
 				?>
-				<td id="payment_method_td">
+				<td>
 					Payment Method : <?php echo $paymentmethodarray[$transaction["payment_method"]]; ?>
 				</td>
 			</tr>
@@ -173,11 +183,16 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 
 	<div class="grid_container">
 		<div id="date_printed" class="pull-left" style="padding-top: 15px;">
-			<span class="text-primary">
 				<?php if($transaction["printed"] == 1){ ?>
-					<i class="fa fa-print"></i> &nbsp;Printed &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_printed"])); ?>
+					<span class="text-primary">
+							<i class="fa fa-print"></i> &nbsp;Printed &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_printed"])); ?>
+					</span>
+				<?php
+				}else if($transaction["printed"] == 2){//revised ?>
+					<span class="text-warning">
+						<i class="fa fa-undo"></i> &nbsp;Revised &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_printed"])); ?>
+					</span>
 				<?php } ?>
-			</span>
 		</div>
 		<div class="detail_grand_total pull-right">
 			TOTAL : <?php echo number_format($transaction["total"], 2); ?>

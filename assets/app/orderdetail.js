@@ -26,7 +26,7 @@ $(document).ready(function(){
 			success: function (res) {
 				var res = JSON.parse(res);
 				NProgress.done();
-				$(".grid_container #date_printed span").html("<i class='fa fa-print'></i> &nbsp;Printed &mdash; "+res["param"]["date_printed"]);
+				$(".grid_container #date_printed").html("<span class='text-primary'><i class='fa fa-print'></i> &nbsp;Printed &mdash; "+res["param"]["date_printed"]+"</span>");
 
 				window.open('', 'new_window');
 				document.getElementById('report_data').submit();
@@ -258,7 +258,7 @@ $(document).ready(function(){
 		$("#unpaid_modal").modal("hide");
 	});
 
-	$("#payment_method_td").on("click", function(){
+	$("#payment_history_btn").on("click", function(){
 		$("#payment_history_modal").modal("show");
 	});
 

@@ -196,8 +196,8 @@ class Main extends CI_Controller {
 		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
 		if($param["trans"]["haschanges"] == 1){
 			$param["trans"]["id"] = $param["trans"]["transaction_id"];
-			$param["trans"]["printed"] = 0;
-			$param["trans"]["date_printed"] = null;
+			$param["trans"]["printed"] = 2;
+			$param["trans"]["date_printed"] = date("Y-m-d H:i:s");
 			$result = $this->modTransaction->update($param["trans"]);
 		}else{
 			unset($param["trans"]["transaction_id"]);
