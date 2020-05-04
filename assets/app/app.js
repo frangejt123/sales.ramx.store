@@ -212,7 +212,7 @@ $("document").ready(function(){
 					alert("Transaction Successfully Settled!");
 					new_transaction_id = res["transaction_id"];
 					$("#confirmmodal").modal("hide");
-					$("#productsummary").find(".row").removeClass("haschanges");
+					$("#productsummary").find(".row").addClass("saved");
 					//location.reload();
 				}else{
 					alert(res["error"] + "\n" + res["product"]);
@@ -233,8 +233,17 @@ $("document").ready(function(){
 
 	$("#new_order_btn").on("click", function(){
 		var products = $("#productsummary").find(".row.haschanges");
+		var saved = 0;
+		$.each(products, function(i, r){
+			if($(r).hasClass("saved"))
+				saved++;
+		});
+
 		if(products.length > 0){
-			$("#confirmcancelmodal").modal("show");
+			if(saved == 0)
+				$("#confirmcancelmodal").modal("show").data("mode", "new");
+			else
+				location.reload();
 		}else{
 			location.reload();
 		}
@@ -336,22 +345,40 @@ $("document").ready(function(){
 
 	$("button#cancel_order_btn").on("click", function(){
 		var products = $("#productsummary").find(".row.haschanges");
+		var saved = 0;
+		var url = baseurl;
+
+		if($("#transaction_id_inp").val() != "")
+			url = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
+
+		$.each(products, function(i, r){
+			if($(r).hasClass("saved"))
+				saved++;
+		});
+
 		if(products.length > 0){
-			$("#confirmcancelmodal").modal("show");
+			if(saved == 0)
+				$("#confirmcancelmodal").modal("show");
+			else{
+				NProgress.start();
+				window.location = url;
+			}
 		}else{
 			NProgress.start();
+			window.location = url;
+		}
+	});
+
+	$("#confirm_cancel_transaction").on("click", function(){
+		if($("#confirmcancelmodal").data("mode") == "new")
+			location.reload();
+		else{
 			if($("#transaction_id_inp").val() == "")
 				window.location = baseurl;
 			else
 				window.location = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
 		}
-	});
 
-	$("#confirm_cancel_transaction").on("click", function(){
-		if($("#transaction_id_inp").val() == "")
-			window.location = baseurl;
-		else
-			window.location = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
 	});
 
 	$("#cancel_save_new_customer").on("click", function(){

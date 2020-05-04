@@ -255,6 +255,7 @@ class Main extends CI_Controller {
 
 		$data["customerdetail"] = json_encode($customerarray);
 		$data["namelist"] = json_encode($nameopt);
+		$data["update"] = true;
 
 		session_start();
 		if(isset($_SESSION["username"])) {

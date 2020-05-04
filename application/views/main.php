@@ -68,9 +68,11 @@ if(isset($transaction)){
 							<i class="fa fa-arrow-left"></i> &nbsp; Back
 						</button>
 						&nbsp; &nbsp;
-						<button id="new_order_btn" class="btn-info">
-							<i class="fa fa-undo"></i> &nbsp; New Order
-						</button>
+						<?php if(!isset($update)) { ?>
+							<button id = "new_order_btn" class="btn-info" >
+							<i class="fa fa-undo" ></i > &nbsp; New Order
+							</button >
+						<?php } ?>
 					</div>
 				</div><!-- left column -->
 				<div class="col-6 pl-0 pr-0">
