@@ -359,7 +359,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 									echo '<td>'.$paymentmethodarray[$row["payment_method"]].'</td>';
 									echo '<td>'.number_format($row["amount"], 2).'</td>';
 									echo '<td>'.$row["payment_confirmation_detail"].'</td>';
-									echo '<td><button id="edit_'.$row["id"].'" type="button" class="btn btn-secondary grid-btn edit_payment">
+									echo '<td width="120px"><button id="edit_'.$row["id"].'" type="button" class="btn btn-secondary grid-btn edit_payment">
 													<i class="fa fa-pencil"></i>
 												</button> &nbsp; 
 												<button id="delete_'.$row["id"].'" type="button" class="btn btn-danger grid-btn delete_payment">
