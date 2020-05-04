@@ -197,7 +197,7 @@ class Main extends CI_Controller {
 		if($param["trans"]["haschanges"] == 1){
 			$param["trans"]["id"] = $param["trans"]["transaction_id"];
 			$param["trans"]["printed"] = 2;
-			$param["trans"]["date_printed"] = date("Y-m-d H:i:s");
+			$param["trans"]["date_revised"] = date("Y-m-d H:i:s");
 			$result = $this->modTransaction->update($param["trans"]);
 		}else{
 			unset($param["trans"]["transaction_id"]);

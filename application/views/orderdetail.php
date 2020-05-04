@@ -190,7 +190,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				<?php
 				}else if($transaction["printed"] == 2){//revised ?>
 					<span class="text-warning">
-						<i class="fa fa-undo"></i> &nbsp;Revised &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_printed"])); ?>
+						<i class="fa fa-undo"></i> &nbsp;Revised &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_revised"])); ?>
 					</span>
 				<?php } ?>
 		</div>

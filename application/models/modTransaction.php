@@ -24,7 +24,8 @@ class ModTransaction extends CI_Model {
 				"haschanges" => "transaction.haschanges",
 				"location_image" => "transaction.location_image",
 				"printed" => "transaction.printed",
-				"date_printed" => "transaction.date_printed"
+				"date_printed" => "transaction.date_printed",
+				"date_revised" => "transaction.date_revised"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void");
 	public $PAYMENT_METHOD = array("COD", "GCASH", "Bank Transfer");
