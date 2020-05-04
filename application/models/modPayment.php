@@ -38,7 +38,7 @@ class ModPayment extends CI_Model {
 
 		$this->db->select($tablefield);
 		$this->db->from("payment");
-		$this->db->order_by('payment.payment_date', 'DESC');
+		$this->db->order_by('payment.id', 'DESC');
 
 		$query = $this->db->get();
 		return $query;
@@ -107,6 +107,11 @@ class ModPayment extends CI_Model {
 
 	function updateInventory($param){
 		$sql = "UPDATE `inventory` SET `qty` = `qty` + ".$param["qty"]." WHERE `payment_id` = '".$param["id"]."'";
+		$this->db->query($sql);
+	}
+
+	function getrecent($param){
+		$sql = "SELECT `payment`.`payment_method` FROM `payment` WHERE `payment`.`transaction_id` = '".$param["transaction_id"]."' ORDER BY `payment`.`payment_date` DESC LIMIT 1";
 		$this->db->query($sql);
 	}
 

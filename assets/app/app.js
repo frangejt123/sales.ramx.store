@@ -514,7 +514,7 @@ $("document").ready(function(){
 		Orders:
 		Remarks:*/
 
-		var modeofpaymentarray = ["Cash on Delivery", "Bank Transfer", "GCash"];
+		var modeofpaymentarray = ["Cash on Delivery", "Bank Transfer  - BPI", "GCash", "Bank Transfer  - Metrobank"];
 		var name = $("#customer_name").val();
 		var cust_address = $("#cust_delivery_address").val();
 		var deliver_date = $("#delivery_date").val();

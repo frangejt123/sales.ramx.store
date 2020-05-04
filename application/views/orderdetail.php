@@ -285,7 +285,8 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 						<select class="form-control" id="mode_of_payment">
 							<?php $pm = $transaction["payment_method"]; ?>
 							<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash On Delivery (COD)</option>
-							<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer</option>
+							<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer - BPI</option>
+							<option value="3" <?php echo $pm == 3 ? 'selected="selected"' : ''; ?>>Bank Transfer - Metrobank</option>
 							<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
 						</select>
 					</div>
@@ -433,7 +434,8 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 						<label>Mode of Payment</label>
 						<select class="form-control" id="update_mode_of_payment">
 							<option value="0">Cash On Delivery (COD)</option>
-							<option value="1">Bank Transfer</option>
+							<option value="1">Bank Transfer - BPI</option>
+							<option value="3">Bank Transfer - Metrobank</option>
 							<option value="2">GCash</option>
 						</select>
 					</div>

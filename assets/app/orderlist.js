@@ -338,6 +338,9 @@ $(document).ready(function(){
 		var status = ($("#filter_status  option:selected").text()).toUpperCase();
 		var paid = $("#filter_paid").prop('checked') ? "PAID" : "";
 		var printed = $("#filter_printed").prop('checked') ? "PRINTED" : "";
+		var revised = $("#filter_revised").prop('checked') ? "REVISED" : "";
+		var orderid = $("#order_id_filter").val();
+		var mop = $("#filter_mop").val();
 
 		for (var i = 0; i < rows.length; i++) {
 			$(rows[i]).removeClass("filtered");
@@ -345,17 +348,26 @@ $(document).ready(function(){
 			var statustd = (rows[i].cells[6].textContent).toUpperCase();
 			var paidtd = (rows[i].cells[4].textContent).toUpperCase();
 			var printedtd = (rows[i].cells[5].textContent).toUpperCase();
+			var revisedtd = (rows[i].cells[5].textContent).toUpperCase();
+			var orderidtd = (rows[i].cells[0].textContent).toUpperCase();
+			var moptd = (rows[i].cells[8].textContent).toUpperCase();
 			var filterarray = {
 				"delivery_date": deliverydatetd,
 				"status": statustd,
 				"paid": paidtd,
 				"printed": printedtd,
+				"revised": revisedtd,
+				"orderid": orderidtd,
+				"mop": moptd
 			}
 			
 			if(filterarray["delivery_date"].includes(deliverydate)
 				&& (filterarray["status"].includes(status))
 				&& (filterarray["paid"].includes(paid))
-				&& (filterarray["printed"].includes(printed))){
+				&& filterarray["printed"].includes(printed)
+				&& filterarray["revised"].includes(revised)
+				&& filterarray["orderid"].includes(orderid)
+				&& filterarray["mop"].includes(mop)){
 				$(rows[i]).addClass("filtered");
 				rows[i].style.display = "";
 			}else{
@@ -363,7 +375,8 @@ $(document).ready(function(){
 			}
 		}
 
-		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")){
+		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
+			&& (revised == "") && (orderid == "") && (mop == "")){
 			$("#clear_filter_btn").hide();
 		}else{
 			$("#clear_filter_btn").show();
@@ -377,9 +390,45 @@ $(document).ready(function(){
 		$("#filter_status").val("");
 		$("#filter_paid").iCheck('uncheck');
 		$("#filter_printed").iCheck('uncheck');
+		$("#filter_revised").iCheck('uncheck');
+		$("#order_id_filter").val("");
+		$("#filter_mop").val("");
 
 		$("#confirm_filter").trigger("click");
 	});
+
+	$("#filter_printed").on('ifChecked', function(event){
+		$("#filter_revised").iCheck("uncheck");
+	});
+
+	$("#filter_revised").on('ifChecked', function(event){
+		$("#filter_printed").iCheck("uncheck");
+	});
+
+	inputautocomplete();
+	function inputautocomplete() {
+		// Initialize ajax autocomplete:
+		var orderidArray = $.map(orderids, function (value, key) {
+			return {value: value, data: key};
+		});
+		$('#order_id_filter').autocomplete({
+			lookup: orderidArray,
+			lookupLimit: 5,
+			lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+				var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+				return re.test(suggestion.value);
+			},
+			onSelect: function (suggestion) {
+				//$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+				var id = suggestion.data;
+			},
+			onHint: function (hint) {
+				$('#orderid_autocomplete_hint').val(hint);
+			},
+			onInvalidateSelection: function () {
+			}
+		});
+	}
 
 	function validate(s) {
 		var rgx = /^[0-9]*\.?[0-9]*$/;

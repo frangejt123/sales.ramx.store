@@ -74,13 +74,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<table class="table table-striped table-hover" id="orderlist_table">
 					<thead>
 					<tr>
-						<th>Transaction #</th>
-						<th>Transaction Date</th>
+						<th>Order #</th>
+						<th>Order Date</th>
 						<th>Delivery Date</th>
 						<th>Customer Name</th>
 						<th>Paid Status</th>
 						<th>Print Status</th>
 						<th>Status</th>
+						<th hidden></th><!-- filter -->
 						<th hidden></th><!-- filter -->
 					</tr>
 					</thead>
@@ -88,6 +89,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<?php
 						$statusarray = array("Pending", "For Delivery", "Complete", "Voided");
 						$tdclass = array("text-success", "text-warning", "text-primary", "text-danger");
+						$order = array();
 						foreach($transaction as $ind => $row){
 							$paidclass = "";
 							$paid = "";
@@ -101,6 +103,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							if($row["printed"] == 1){
 								$printed = "Printed";
 								$printCls = "text-success";
+							}else if($row["printed"] == 2){
+								$printed = "Revised";
+								$printCls = "text-warning";
 							}
 							echo '<tr id="tr_'.$row["id"].'">';
 								echo '<td>'.$transdate.'-'.sprintf("%04s", $row["id"]).'</td>';
@@ -111,8 +116,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								echo '<td class="'.$printCls.'">'.$printed.'</td>';
 								echo '<td class="'.$tdclass[$row["status"]].'">'.$statusarray[$row["status"]].'</td>';
 								echo '<td hidden>'.$row["delivery_date"].'</td>';
+								echo '<td hidden>'.$row["payment_method"].'</td>';
 							echo '</tr>';
+
+							json_encode($order[$row["id"]] = $transdate.'-'.sprintf("%04s", $row["id"]));
 						}
+
+						$orderids = json_encode($order);
 					?>
 					</tbody>
 				</table>
@@ -129,8 +139,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
+						<label>Order #</label>
+						<div style="position: relative; height: 34px;">
+							<input type="text" class="form-control" id="order_id_filter" style="position: absolute; z-index: 2; background: transparent;">
+							<input type="text" class="form-control" id="orderid_autocomplete_hint"  disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
+						</div>
+					</div>
+
+					<div class="form-group">
 						<label>Delivery Date</label>
 						<input type="date" class="form-control" id="filter_delivery_date">
+					</div>
+
+					<div class="form-group">
+						<label>Payment Method</label>
+						<select class="form-control" id="filter_mop">
+							<option value=""></option>
+							<option value="0">Cash on Delivery</option>
+							<option value="1">Bank Transfer - BPI</option>
+							<option value="3">Bank Transfer - Metrobank</option>
+							<option value="2">GCash</option>
+						</select>
 					</div>
 
 					<div class="form-group">
@@ -158,6 +187,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<div class="checkbox icheck">
 							<label>
 								<input type="checkbox" id="filter_printed"> &nbsp; Printed
+							</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="checkbox icheck">
+							<label>
+								<input type="checkbox" id="filter_revised"> &nbsp; Revised
 							</label>
 						</div>
 					</div>
@@ -196,6 +233,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </form>
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/jquery.autocomplete.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 <!-- iCheck -->
@@ -203,6 +241,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
+	var orderids = JSON.parse('<?php print_r($orderids); ?>');
 	$(function () {
 		$('input').iCheck({
 			checkboxClass: 'icheckbox_square-blue',

@@ -301,7 +301,8 @@ if(isset($transaction)){
 								<label>Payment Method</label>
 								<select class="form-control" id="payment_method">
 									<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash on Delivery (COD)</option>
-									<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer</option>
+									<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer - BPI</option>
+									<option value="3" <?php echo $pm == 3 ? 'selected="selected"' : ''; ?>>Bank Transfer - Metrobank</option>
 									<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
 								</select>
 							</div>

@@ -326,11 +326,14 @@ class Main extends CI_Controller {
 		$this->load->model('modTransaction', "", TRUE);
 		$param["payment_date"] = date("Y-m-d");
 		$res = $this->modPayment->insert($param);
+		$transparam["id"] = $param["transaction_id"];
+		$transparam["payment_method"] = $param["payment_method"];
+		$transparam["payment_confirmation_detail"] = $param["payment_confirmation_detail"];
 		if($param["amount"] >= $param["balance"]){
 			$transparam["paid"] = "1";
-			$transparam["id"] = $param["transaction_id"];
-			$this->modTransaction->update($transparam);
 		}
+		$this->modTransaction->update($transparam);
+
 
 		echo json_encode($res);
 	}
@@ -353,12 +356,16 @@ class Main extends CI_Controller {
 		$this->load->model('modTransaction', "", TRUE);
 		$res = $this->modPayment->update($param);
 		$paidparam["id"] = $param["transaction_id"];
+		$transparam["transaction_id"]  = $param["transaction_id"];
 		if($param["newbalance"] == 0)
 			$paidparam["paid"] = "1";
 		else
 			$paidparam["paid"] = "0";
 
+		$recentpayment = $this->modPayment->getAll($transparam)->row_array();
+		$paidparam["payment_method"] = $recentpayment["payment_method"];
 		$this->modTransaction->update($paidparam);
+		$res["payment_method"] = $recentpayment["payment_method"];
 
 		echo json_encode($res);
 	}
