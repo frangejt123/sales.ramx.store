@@ -262,6 +262,91 @@ $(document).ready(function(){
 		$("#payment_history_modal").modal("show");
 	});
 
+	$(".payment_history_tr").on("mouseover", function(){
+		$(".grid-btn").hide();
+		$(this).find(".grid-btn").show();
+	});
+
+	$(".delete_payment").on("click", function(){
+		var id = $(this).attr("id").split("_")[1];
+		var amount = $("#paymenthistory_table tr#tr_"+id).find("td")[2];
+		$("#delete_payment_modal").modal("show").data({"payment_id": id, "amount":amount.innerText});
+	});
+
+	$("#confirm_delete_payment").on("click", function(){
+		var id = $("#delete_payment_modal").data("payment_id");
+		var amount = $("#delete_payment_modal").data("amount");
+		var transaction_id = selectedorder;
+		$.ajax({
+			method: 'POST',
+			data: {id, transaction_id},
+			url: baseurl + '/main/deletepayment',
+			success: function (res) {
+				var res = JSON.parse(res);
+				$("#delete_payment_modal").modal("hide");
+				alert("Changes successfully saved");
+				location.reload();
+				NProgress.done();
+			},
+			error: function (xhr, status, error) {
+				NProgress.done();
+				alert("Oppss! Something went wrong.");
+			},
+			beforeSend: function(){
+				NProgress.start();
+			}
+		});
+	});
+
+	$(".edit_payment").on("click", function(){
+		var id = $(this).attr("id").split("_")[1];
+		var td = $("#paymenthistory_table tr#tr_"+id).find("td");
+		var amount = td[2].innerText;
+		var mop = td[5].innerText;
+		var pcd = td[3].innerText;
+		$("#update_mode_of_payment").val(mop);
+		$("#update_paid_amount").val(parseFloat(amount));
+		$("#update_payment_confirmation_detail").val(pcd);
+		$("#update_payment_modal").modal("show").data("payment_id", id);
+	});
+
+	$("#confirm_updatepayment").on("click", function(){
+		var id = $("#update_payment_modal").data("payment_id");
+		var td = $("#paymenthistory_table tr#tr_"+id).find("td");
+		var transaction_id = selectedorder;
+		var oldamount = td[2].innerText;
+		var amount = $("#update_paid_amount").val();
+		var payment_method = $("#update_mode_of_payment").val();
+		var moptext = $("#update_mode_of_payment option:selected").text();
+		var payment_confirmation_detail = $("#update_payment_confirmation_detail").val();
+
+		var balanceval = $("input#balance").val();
+		var oldbalance = (parseFloat(balanceval) + parseFloat(oldamount))
+		var newbalance = oldbalance - parseFloat(amount);
+		$("input#balance").val(newbalance);
+
+		$.ajax({
+			method: 'POST',
+			data: {id, amount, payment_method, payment_confirmation_detail, newbalance, transaction_id},
+			url: baseurl + '/main/updatepayment',
+			success: function (res) {
+				var res = JSON.parse(res);
+				$("#update_payment_modal").modal("hide");
+				alert("Changes successfully saved");
+				location.reload();
+				NProgress.done();
+			},
+			error: function (xhr, status, error) {
+				NProgress.done();
+				alert("Oppss! Something went wrong.");
+			},
+			beforeSend: function(){
+				NProgress.start();
+			}
+		});
+
+	});
+
 	function changeorderstatus(status){
 		$.ajax({
 			method: 'POST',

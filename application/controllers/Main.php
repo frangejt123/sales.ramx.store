@@ -322,6 +322,34 @@ class Main extends CI_Controller {
 		echo json_encode($res);
 	}
 
+	public function deletepayment(){
+		$param = $this->input->post(NULL, "true");
+		$this->load->model('modPayment', "", TRUE);
+		$this->load->model('modTransaction', "", TRUE);
+		$res = $this->modPayment->delete($param);
+		$paidparam["id"] = $param["transaction_id"];
+		$paidparam["paid"] = "0";
+		$this->modTransaction->update($paidparam);
+
+		echo json_encode($res);
+	}
+
+	public function updatepayment(){
+		$param = $this->input->post(NULL, "true");
+		$this->load->model('modPayment', "", TRUE);
+		$this->load->model('modTransaction', "", TRUE);
+		$res = $this->modPayment->update($param);
+		$paidparam["id"] = $param["transaction_id"];
+		if($param["newbalance"] == 0)
+			$paidparam["paid"] = "1";
+		else
+			$paidparam["paid"] = "0";
+
+		$this->modTransaction->update($paidparam);
+
+		echo json_encode($res);
+	}
+
 	public function minusQty($id){
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->modTransactionDetail->minusQty($id);

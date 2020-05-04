@@ -8,10 +8,10 @@ $btnprint = '<span class="pull-right span_seperator"></span><button id="print_or
 				'<i class="fa fa-print"></i> &nbsp; Print</button>';
 
 $btnpaid = '<span class="pull-right span_seperator"></span><button id="paid_order_btn" class="btn-dark pull-right">'.
-				'<i class="fa fa-credit-card"></i> &nbsp; Paid</button>';
+				'<i class="fa fa-credit-card"></i> &nbsp; <span>Paid</span></button>';
 
 $btnunpaid = '<span class="pull-right span_seperator"></span><button id="unpaid_order_btn" class="btn-danger pull-right">'.
-		'<i class="fa fa-credit-card"></i> &nbsp; Unpaid</button>';
+		'<i class="fa fa-credit-card"></i> &nbsp; <span>Unpaid</span></button>';
 
 $btnupdate = '<span class="pull-right span_seperator"></span><button id="update_order_btn" class="btn-info pull-right">'.
 				'<i class="fa fa-pencil"></i> &nbsp; Update</button>';
@@ -329,16 +329,26 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 									<th>Payment Method</th>
 									<th>Amount</th>
 									<th>Payment Confirmation Detail</th>
+									<th></th>
+									<th hidden></th>
 								</tr>
 								</thead>
 								<tbody>
 								<?php
 								foreach($paymenthistory as $ind => $row){
-									echo '<tr id="tr_'.$row["id"].'">';
+									echo '<tr id="tr_'.$row["id"].'" class="payment_history_tr">';
 									echo '<td>'.date("m/d/Y", strtotime($row["payment_date"])).'</td>';
 									echo '<td>'.$paymentmethodarray[$row["payment_method"]].'</td>';
 									echo '<td>'.number_format($row["amount"], 2).'</td>';
 									echo '<td>'.$row["payment_confirmation_detail"].'</td>';
+									echo '<td><button id="edit_'.$row["id"].'" type="button" class="btn btn-secondary grid-btn edit_payment">
+													<i class="fa fa-pencil"></i>
+												</button> &nbsp; 
+												<button id="delete_'.$row["id"].'" type="button" class="btn btn-danger grid-btn delete_payment">
+													<i class="fa fa-trash-o"></i>
+												</button>
+											</td>';
+									echo '<td hidden>'.$row["payment_method"].'</td>';
 									echo '</tr>';
 								}
 								?>
@@ -390,6 +400,65 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			</div>
 		</div>
 	</div><!-- modal -->
+
+	<div id="update_payment_modal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="icon-box" style="border: 3px solid #104675;color: #286090">
+						<i class="fa fa-dollar"></i>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<h4 class="modal-title">UPDATE PAYMENT</h4>
+				<div class="modal-body" style="text-align: left">
+					<div class="form-group">
+						<label>Mode of Payment</label>
+						<select class="form-control" id="update_mode_of_payment">
+							<option value="0">Cash On Delivery (COD)</option>
+							<option value="1">Bank Transfer</option>
+							<option value="2">GCash</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Amount</label>
+						<input type="text" class="form-control" id="update_paid_amount" value="">
+					</div>
+
+					<div class="form-group">
+						<label>Payment Confirmation Detail</label>
+						<textarea class="form-control" rows="2" id="update_payment_confirmation_detail"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-success" id="confirm_updatepayment">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="delete_payment_modal" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="icon-box" style="border: 3px solid #d82121;color: #f74242">
+						<i class="fa fa-trash-o"></i>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<h4 class="modal-title">DELETE PAYEMENT</h4>
+				<div class="modal-body">
+					<p>Are you sure you want to delete this payment?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" data-dismiss="modal">No</button>
+					<button type="button" class="btn btn-success" id="confirm_delete_payment">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div id="paid_stamp" class="<?php echo $paidClass; ?>">

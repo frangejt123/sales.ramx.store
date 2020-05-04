@@ -406,3 +406,11 @@ input[type='file']#customer_location{
 td#payment_method_td{
 	cursor: pointer;
 }
+
+.grid-btn{
+	display: none;
+}
+
+.payment_history_tr{
+	line-height: 44px;
+}
