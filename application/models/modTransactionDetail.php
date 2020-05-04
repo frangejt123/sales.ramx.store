@@ -23,6 +23,7 @@ class ModTransactionDetail extends CI_Model {
     function getAll($param) {
         $this->FIELDS["description"] = "product.description";
 		$this->FIELDS["price"] = "product.price";
+		$this->FIELDS["uom"] = "product.uom";
         $tablefield = "";
 
         foreach ($this->FIELDS as $alias => $field) {

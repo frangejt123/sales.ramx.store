@@ -204,6 +204,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 					<thead>
 					<tr>
 						<th>Product Name</th>
+						<th>UoM</th>
 						<th>Quantity</th>
 						<th>Price</th>
 						<th>Line Total</th>
@@ -214,6 +215,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 					foreach($transactiondetail as $ind => $row){
 						echo '<tr id="tr_'.$row["id"].'">';
 						echo '<td>'.$row["description"].'</td>';
+						echo '<td>'.$row["uom"].'</td>';
 						echo '<td>'.$row["quantity"].'</td>';
 						echo '<td>'.number_format($row["price"], 2).'</td>';
 						echo '<td>'.number_format(($row["price"] * $row["quantity"]), 2).'</td>';
