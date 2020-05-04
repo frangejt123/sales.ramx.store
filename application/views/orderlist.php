@@ -190,7 +190,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</div>
 
-
 </div>
 <form id="report_data" method="post" action="" target="new_window">
 	<input type="hidden" id="dlvrydate" name="deliverydate" />

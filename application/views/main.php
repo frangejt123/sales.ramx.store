@@ -61,15 +61,19 @@ if(isset($transaction)){
 	<div class="container" style="max-width: 100%; padding: 0px !important;">
 		<div class="content">
 			<div class="row"><!-- button row -->
-				<div class="col-2 pl-0 pr-0"><!-- left column -->
+				<div class="col-3 pl-0 pr-0"><!-- left column -->
 					<div class="bg-light pt-2 pl-4">
 						<input type="text" id="transaction_id_inp" hidden value="<?php echo isset($transaction) ? $transaction["id"] : "" ?>">
 						<button id="cancel_order_btn" class="btn-danger">
 							<i class="fa fa-arrow-left"></i> &nbsp; Back
 						</button>
+						&nbsp; &nbsp;
+						<button id="new_order_btn" class="btn-info">
+							<i class="fa fa-undo"></i> &nbsp; New Order
+						</button>
 					</div>
 				</div><!-- left column -->
-				<div class="col-7 pl-0 pr-0">
+				<div class="col-6 pl-0 pr-0">
 					<div class="bg-light pt-2 pl-4 w-100 h-100">
 						<div class="row">
 							<div class="col-12">
@@ -206,7 +210,6 @@ if(isset($transaction)){
 		</div>
 	</div>
 </div>
-
 
 <div id="savecustomerdetailmodal" class="modal fade">
 	<div class="modal-dialog modal-confirm">

@@ -7,6 +7,7 @@ $("document").ready(function(){
 	var croppie;
 	var croppieready = false;
 	var total = 0;
+	var new_transaction_id = "";
 
 	$('[data-toggle="tooltip"]').tooltip()
 
@@ -209,11 +210,14 @@ $("document").ready(function(){
 				NProgress.done();
 				if(res["success"]){
 					alert("Transaction Successfully Settled!");
-					location.reload();
+					new_transaction_id = res["transaction_id"];
+					$("#confirmmodal").modal("hide");
+					$("#productsummary").find(".row").removeClass("haschanges");
+					//location.reload();
 				}else{
-					$("#confirm_yesopt").removeAttr("disabled");
 					alert(res["error"] + "\n" + res["product"]);
 				}
+				$("#confirm_yesopt").removeAttr("disabled");
 			},
 			error: function(xhr, status, error){
 				$("#confirm_yesopt").removeAttr("disabled");
@@ -225,6 +229,15 @@ $("document").ready(function(){
 				$("#confirm_yesopt").attr("disabled", "disabled");
 			}
 		});
+	});
+
+	$("#new_order_btn").on("click", function(){
+		var products = $("#productsummary").find(".row.haschanges");
+		if(products.length > 0){
+			$("#confirmcancelmodal").modal("show");
+		}else{
+			location.reload();
+		}
 	});
 
 	$("#customer_name").trigger("changed");
@@ -524,6 +537,7 @@ $("document").ready(function(){
 
 		var clipboardtext = "Name: "+name+"\n"
 			+"Facebook Name: "+fbname+"\n"
+			+"Order #: "+new_transaction_id+"\n"
 			+"Address: "+cust_address+"\n"
 			+"Delivery Date: "+deliver_date+"\n"
 			+"Contact #: "+contact_number+"\n"

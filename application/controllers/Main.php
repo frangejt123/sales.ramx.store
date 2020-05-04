@@ -218,6 +218,7 @@ class Main extends CI_Controller {
 			}
 		}
 
+		$result["transaction_id"] = date("mdY")."-".sprintf("%04s", $result["id"]);
 		echo json_encode($result);
 	}
 

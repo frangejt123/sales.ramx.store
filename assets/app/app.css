@@ -44,6 +44,15 @@
 		font-size: 15px;
 	}
 
+	#new_order_btn{
+		margin-bottom: 10px;
+		padding: 10px;
+		border-radius: 10px;
+		border: 1px solid #c1c1c1;
+		width: 180px;
+		font-size: 15px;
+	}
+
 	.total_summary{
 		font-size: 25px;
 	}
@@ -114,6 +123,15 @@
 		border-radius: 10px;
 		border: 1px solid #c1c1c1;
 		width: 150px;
+		font-size: 20px;
+	}
+
+	#new_order_btn{
+		margin-bottom: 10px;
+		padding: 10px;
+		border-radius: 10px;
+		border: 1px solid #c1c1c1;
+		width: 180px;
 		font-size: 20px;
 	}
 
@@ -339,6 +357,12 @@ textarea#clipboard{
 
 .main_product{
 	display: none;
+}
+
+.summary_desc{
+	word-wrap: break-word;
+	width: 65%;
+	white-space: normal;
 }
 
 
