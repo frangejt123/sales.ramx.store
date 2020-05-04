@@ -122,4 +122,10 @@ class ModProduct extends CI_Model {
 		return $result;
 	}
 
+	function getname($id){
+		$sql = "SELECT `product`.`description` FROM `product` WHERE `product`.`id` = '".$id."'";
+		$result = $this->db->query($sql);
+		return $result;
+	}
+
 }

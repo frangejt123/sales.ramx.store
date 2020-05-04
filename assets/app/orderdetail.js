@@ -54,10 +54,14 @@ $(document).ready(function(){
 				if(res["status"] == "3"){
 					$(".transaction_detail_container, .detail_grand_total, table#orderdata_table tbody").addClass("voided");
 					$(".void_notif").show();
+					$(".void_notif span").html(res["void_user"]);
 					$("#voiddetailmodal p#voidreason").text("Reason: "+res["void_reason"]);
 					$("#void_order_btn").hide();
 					$("#process_order_btn").hide();
 					$("#update_order_btn").hide();
+					$("#unpaid_order_btn").hide();
+					$("#paid_order_btn").hide();
+					$(".dropdown").not(".detail_action").hide();
 					$("#statusmodal").modal("hide");
 				}else{
 					alert("Order have been modified. Press OK to reload data.");
@@ -118,9 +122,13 @@ $(document).ready(function(){
 				if(res["success"]){
 					$(".transaction_detail_container, .detail_grand_total, table#orderdata_table tbody").addClass("voided");
 					$(".void_notif").show();
+					$(".void_notif span").html(res["param"]["void_user"]);
 					$("#update_order_btn").hide();
 					$("#process_order_btn").hide();
+					$("#unpaid_order_btn").hide();
+					$("#paid_order_btn").hide();
 					$("#void_order_btn").hide();
+					$(".dropdown").not(".detail_action").hide();
 					$("#void_detail_modal").modal("hide");
 					$("#statusmodal").modal("hide");
 				}
@@ -262,9 +270,25 @@ $(document).ready(function(){
 		$("#payment_history_modal").modal("show");
 	});
 
+	$("#order_history_btn").on("click", function(){
+		$("#order_history_modal").modal("show");
+	});
+
 	$(".payment_history_tr").on("mouseover", function(){
 		$(".grid-btn").hide();
 		$(this).find(".grid-btn").show();
+	});
+
+	$(".order_history_tr").on("mouseover", function(){
+		$(".grid-btn").hide();
+		$(this).find(".grid-btn").show();
+	});
+
+	$(".view_history_detail").on("click", function(){
+		var id = $(this).attr("id").split("_")[1];
+		$("div.history-table").hide();
+		$("div#table_old_"+id+", div#table_new_"+id+", div#table_detail_old_"+id+", div#table_detail_new_"+id).show();
+		$("#history_detail_modal").modal("show");
 	});
 
 	$(".delete_payment").on("click", function(){

@@ -31,6 +31,7 @@ class Login extends CI_Controller {
 		if($count == 1) {
 			session_start();
 			$_SESSION["username"] = $param["username"];
+			$_SESSION["name"] = $res["name"];
 			$_SESSION["id"] = $res["id"];
 			$_SESSION["access_level"] = $res["access_level"];
 		}

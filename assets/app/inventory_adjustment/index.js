@@ -23,10 +23,10 @@ function addPreNew() {
 		_state: "pre_new"
 	};
 
-	
 
-	 $("#adjustment-detail-table tbody").append(row);
-	 window.rows.push(_row);
+
+	$("#adjustment-detail-table tbody").append(row);
+	window.rows.push(_row);
 }
 
 
@@ -46,9 +46,9 @@ function findIndex(array, callback) {
 
 function hasPreNew() {
 	let data = window.rows.filter(r => {
-        return r._state === "pre_new";
-      });
-    return data.length > 0;
+		return r._state === "pre_new";
+	});
+	return data.length > 0;
 }
 
 function *generateId() {
@@ -96,7 +96,7 @@ function setData() {
 		// $("#date").val(window.adjustment.date);
 		for(let i in window.rows) {
 			window.rows[i].tmp_id = window.rows[i].id;
-			window.rows[i]._state = ""; 
+			window.rows[i]._state = "";
 			window.rows[i]._original = Object.assign({}, window.rows[i]);
 		}
 
@@ -111,7 +111,7 @@ function setData() {
 
 function setDisabledPage() {
 	$(".input").attr("disabled", true)
-				.addClass("form-disabled")
+		.addClass("form-disabled")
 	$("#type").addClass("form-readonly").attr("disabled", true);
 	$("#date").addClass("form-readonly").attr("readonly", true);
 	$("#remarks").addClass("form-readonly").attr("readonly", true);
@@ -127,7 +127,7 @@ function showMessage(message) {
 		title: message,
 		showConfirmButton: false,
 		timer: 1500
-	  })
+	})
 
 }
 
@@ -160,49 +160,49 @@ $(document).ready(() => {
 		let ind = findIndex(window.rows, (row) => {
 			return row.tmp_id == tmp_id
 		});
-	
+
 		if(ind > -1) {
 			window.rows[ind][model] = val;
-			
+
 			if(window.rows[ind]._state == "") {
 				window.rows[ind]._state = "edited";
 				$tr.addClass("table-info");
 				$tr.find('.action-btn.undo').removeClass('d-none');
 				$tr.find('.action-btn.delete').addClass('d-none');
 			}
-		
+
 
 
 			if(model == "product_id") {
-					//exists check state	
-					if(!window.rows[ind].id) {
-						window.rows[ind]._state = "new";
-						window.rows[ind].tmp_id = getId.next().value;
-						$tr.data("tmp-id", window.rows[ind].tmp_id)
-						$tr.attr("data-tmp-id", window.rows[ind].tmp_id);
-						$tr.addClass("table-success");
-						$tr.find(".action-btn.undo").removeClass("d-none")
-					} 			
-		
+				//exists check state
+				if(!window.rows[ind].id) {
+					window.rows[ind]._state = "new";
+					window.rows[ind].tmp_id = getId.next().value;
+					$tr.data("tmp-id", window.rows[ind].tmp_id)
+					$tr.attr("data-tmp-id", window.rows[ind].tmp_id);
+					$tr.addClass("table-success");
+					$tr.find(".action-btn.undo").removeClass("d-none")
+				}
+
 
 				if(!hasPreNew()) {
 					addPreNew();
 				}
-								
-			}		
+
+			}
 		}
-		
+
 	});
 
 	$("tbody").delegate(".action-btn", "click", (e) => {
 		let $tr = $(e.currentTarget.parentElement.parentElement);
 		let tmp_id = $tr.data("tmp-id");
 		let action = $(e.currentTarget).data("action");
-	
+
 		let ind = findIndex(window.rows, r => {
 			return r.tmp_id == tmp_id;
 		});
-	
+
 		if(ind > -1) {
 			if(action == "undo") {
 				//remove from window.rows
@@ -228,7 +228,7 @@ $(document).ready(() => {
 					$tr.find('input').val(window.rows[ind].quantity);
 
 				}
-				
+
 			} else if (action == "delete") {
 				window.rows[ind]._state = "deleted";
 				$tr.addClass("table-danger");
@@ -237,10 +237,21 @@ $(document).ready(() => {
 				$tr.find('.input').attr('disabled', true);
 			}
 		}
-		
+
 	});
 
+
+	let sending = false;
 	$("#save-btn").click(e => {
+
+		e.preventDefault();
+
+		if(sending) {
+			return;
+		}
+
+		sending = true;
+
 		let type = $("#type").val();
 		let date = $("#date").val();
 		let remarks = $("#remarks").val();
@@ -256,7 +267,7 @@ $(document).ready(() => {
 
 		let changedData = getChangedData();
 
-		
+
 		let param = {
 			adjustment : {
 				id,
@@ -278,7 +289,7 @@ $(document).ready(() => {
 		if(changedData.length > 0) {
 			param.details = changedData;
 		}
-		
+
 		$.ajax({
 			method: 'POST',
 			url: baseurl + '/inventory/adjustment/save',
@@ -288,7 +299,7 @@ $(document).ready(() => {
 
 				NProgress.done();
 				if(res.adjustment) {
-					
+
 					$("#adjustment_id").val(res.adjustment.id);
 					window.adjustment = res.adjustment;
 					if(res.details) {
@@ -301,7 +312,7 @@ $(document).ready(() => {
 							if(ind > -1) {
 								let state  = window.rows[ind]._state;
 								let $tr = $("tbody").find(`[data-tmp-id='${detail.tmp_id}']`);
-			
+
 								if(state == "deleted") {
 									window.rows.splice(ind, 1);
 									$tr.remove();
@@ -312,21 +323,24 @@ $(document).ready(() => {
 									$tr.removeClass("table-success table-info table-danger");
 									$tr.find('.action-btn.undo').addClass('d-none');
 									$tr.find('.action-btn.delete').removeClass('d-none');
-								}	
+								}
 							} else {
 								console.log("error ind not found")
 							}
 						}
 
-					
+
 					}
 					$("#approve-btn").removeClass("d-none");
 					$("#delete-btn").removeClass("d-none");
 					showMessage("Inventory adjustment has been saved successfuly.")
 				}
+
+				sending = false;
 			},
 			error: function (xhr, status, error) {
 				NProgress.done();
+				sending = false;
 			},
 			beforeSend: function(){
 				NProgress.start();
@@ -334,7 +348,16 @@ $(document).ready(() => {
 		});
 	})
 
+	let approving = false;
+
 	$("#approve-adjustment").click(e => {
+		e.preventDefault();
+
+		if(approving) {
+			return;
+		}
+
+		approving = true;
 
 		let param = {
 			id: window.adjustment.id
@@ -352,8 +375,8 @@ $(document).ready(() => {
 					window.adjustment.status = 2;
 					$("#approved_by").text(res.adjustment.approved_by_name);
 					$("#status-display").text("Approve")
-										.removeClass("text-success")
-										.addClass("text-primary");
+						.removeClass("text-success")
+						.addClass("text-primary");
 					//set inputs to readonly
 					setDisabledPage();
 					showMessage("Inventory adjustment has been approved succesfuly.")
@@ -367,7 +390,7 @@ $(document).ready(() => {
 		let param = {
 			id: window.adjustment.id
 		};
-		
+
 		$.ajax({
 			method: 'POST',
 			url: baseurl + '/inventory/adjustment/delete',
@@ -379,7 +402,7 @@ $(document).ready(() => {
 					showMessage("Inventory adjustment has been deleted succesfuly.")
 					NProgress.start();
 					window.location = baseurl + "/inventory/adjustment";
-				} 
+				}
 			}
 		});
 	});
@@ -391,7 +414,7 @@ $(document).ready(() => {
 		// Declare variables
 		var input, filter, table, tr, td, i, txtValue;
 		input = $(e.currentTarget);
-		
+
 		if(input.val() == "") {
 			$(`#${tbl} tbody tr`).css("display", "");
 			return;
@@ -401,7 +424,7 @@ $(document).ready(() => {
 		table = document.getElementById(tbl);
 		tr = $(`#${tbl} tbody tr`);
 
-	
+
 		// Loop through all table rows, and hide those who don't match the search query
 		for (i = 0; i < tr.length; i++) {
 			let tds = tr[i].getElementsByTagName("td");
@@ -443,10 +466,10 @@ $(document).ready(() => {
 		} else {
 			$(e.currentTarget).find("i").addClass("fa-sort-up");
 		}
-		
+
 		sortTable(ind, tbl);
 	});
-    
+
 });
 
 function sortTable(n, tableId) {
@@ -458,50 +481,50 @@ function sortTable(n, tableId) {
 	/* Make a loop that will continue until
 	no switching has been done: */
 	while (switching) {
-	  // Start by saying: no switching is done:
-	  switching = false;
-	  rows = table.rows;
-	  /* Loop through all table rows (except the
-	  first, which contains table headers): */
-	  for (i = 1; i < (rows.length - 1); i++) {
-		// Start by saying there should be no switching:
-		shouldSwitch = false;
-		/* Get the two elements you want to compare,
-		one from current row and one from the next: */
-		x = rows[i].getElementsByTagName("TD")[n];
-		y = rows[i + 1].getElementsByTagName("TD")[n];
-		/* Check if the two rows should switch place,
-		based on the direction, asc or desc: */
-		if (dir == "asc") {
-		  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-			// If so, mark as a switch and break the loop:
-			shouldSwitch = true;
-			break;
-		  }
-		} else if (dir == "desc") {
-		  if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-			// If so, mark as a switch and break the loop:
-			shouldSwitch = true;
-			break;
-		  }
+		// Start by saying: no switching is done:
+		switching = false;
+		rows = table.rows;
+		/* Loop through all table rows (except the
+		first, which contains table headers): */
+		for (i = 1; i < (rows.length - 1); i++) {
+			// Start by saying there should be no switching:
+			shouldSwitch = false;
+			/* Get the two elements you want to compare,
+			one from current row and one from the next: */
+			x = rows[i].getElementsByTagName("TD")[n];
+			y = rows[i + 1].getElementsByTagName("TD")[n];
+			/* Check if the two rows should switch place,
+			based on the direction, asc or desc: */
+			if (dir == "asc") {
+				if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+					// If so, mark as a switch and break the loop:
+					shouldSwitch = true;
+					break;
+				}
+			} else if (dir == "desc") {
+				if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+					// If so, mark as a switch and break the loop:
+					shouldSwitch = true;
+					break;
+				}
+			}
 		}
-	  }
-	  if (shouldSwitch) {
-		/* If a switch has been marked, make the switch
-		and mark that a switch has been done: */
-		rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-		switching = true;
-		// Each time a switch is done, increase this count by 1:
-		switchcount ++;
-	  } else {
-		/* If no switching has been done AND the direction is "asc",
-		set the direction to "desc" and run the while loop again. */
-		if (switchcount == 0 && dir == "asc") {
-		  dir = "desc";
-		  switching = true;
+		if (shouldSwitch) {
+			/* If a switch has been marked, make the switch
+			and mark that a switch has been done: */
+			rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+			switching = true;
+			// Each time a switch is done, increase this count by 1:
+			switchcount ++;
+		} else {
+			/* If no switching has been done AND the direction is "asc",
+			set the direction to "desc" and run the while loop again. */
+			if (switchcount == 0 && dir == "asc") {
+				dir = "desc";
+				switching = true;
+			}
 		}
-	  }
 	}
-  }
+}
 
 

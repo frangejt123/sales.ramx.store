@@ -411,6 +411,7 @@ td#payment_method_td{
 	display: none;
 }
 
-.payment_history_tr{
+.payment_history_tr, .order_history_tr{
 	line-height: 44px;
 }
+

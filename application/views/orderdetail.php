@@ -16,13 +16,17 @@ $btnunpaid = '<span class="pull-right span_seperator"></span><button id="unpaid_
 $btnupdate = '<span class="pull-right span_seperator"></span><button id="update_order_btn" class="btn-info pull-right">'.
 				'<i class="fa fa-pencil"></i> &nbsp; Update</button>';
 
+$printbtn = '';
+if($_SESSION["access_level"] == 0) //admin
+	$printbtn = '<a class="dropdown-item dd-item text-success" href="#" id="print_order_btn"><i class="fa fa-print"></i> &nbsp; Print</a>';
+
 $btnmoreaction = '<span class="pull-right span_seperator"></span>'.
-					'<div class="dropdown pull-right">'.
+					'<div class="dropdown pull-right detail_action">'.
 					'<button class="btn-secondary" data-toggle="dropdown" id="dropdown_btn"><i class="fa fa-bars"></i></button>'.
 					'<div class="dropdown-menu">'.
-						'<a class="dropdown-item dd-item text-primary" href="#" id="order_history"><i class="fa fa-clock-o"></i> &nbsp; Order History</a>'.
+						'<a class="dropdown-item dd-item text-primary" href="#" id="order_history_btn"><i class="fa fa-clock-o"></i> &nbsp; Order History</a>'.
 						'<a class="dropdown-item dd-item text-warning" href="#" id="payment_history_btn"><i class="fa fa-dollar"></i> &nbsp; Payment History</a>'.
-						'<a class="dropdown-item dd-item text-success" href="#" id="print_order_btn"><i class="fa fa-print"></i> &nbsp; Print</a>'.
+						$printbtn.
 					'</div>'.
 					'</div>';
 
@@ -103,6 +107,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			$paidClass = "hidden";
 
 		if($_SESSION["access_level"] == 1) { // sales agent
+			echo $btnmoreaction;//$btnprint;
 			if (($transaction["status"] == 0) && $transaction["paid"] == "0") {// && $_SESSION["id"] == $transaction["user_id"]
 				echo $btnvoid;
 				echo $btnpaid;
@@ -112,12 +117,13 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 		}// access level = 1;
 
 		if($_SESSION["access_level"] == 0) { //admin
+			echo $btnmoreaction;//$btnprint;
 
 			if ($transaction["status"] != "3") {
 
-				echo $btnmoreaction;//$btnprint;
-
 				if ($transaction["paid"] == "0") {
+					if ($transaction["status"] == 0)
+						echo $btnvoid;
 					echo $btnpaid;
 				}//if not paid
 				else{
@@ -143,7 +149,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	<div style="clear:both"></div>
 
 	<div class="void_notif">
-		ORDER VOIDED BY SALES AGENT.
+		ORDER VOIDED BY <span><?php echo $transaction["void_user"]; ?></span>
 	</div>
 
 	<div class="transaction_detail_container">
@@ -354,18 +360,20 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 								<tbody>
 								<?php
 								foreach($paymenthistory as $ind => $row){
+									$actbtn = '<button id="edit_'.$row["id"].'" type="button" class="btn btn-secondary grid-btn edit_payment">
+													<i class="fa fa-pencil"></i>
+												</button> &nbsp; 
+												<button id="delete_'.$row["id"].'" type="button" class="btn btn-danger grid-btn delete_payment">
+													<i class="fa fa-trash-o"></i>
+												</button>';
+									if($_SESSION["access_level"] == 1)
+										$actbtn = "";
 									echo '<tr id="tr_'.$row["id"].'" class="payment_history_tr">';
 									echo '<td>'.date("m/d/Y", strtotime($row["payment_date"])).'</td>';
 									echo '<td>'.$paymentmethodarray[$row["payment_method"]].'</td>';
 									echo '<td>'.number_format($row["amount"], 2).'</td>';
 									echo '<td>'.$row["payment_confirmation_detail"].'</td>';
-									echo '<td width="120px"><button id="edit_'.$row["id"].'" type="button" class="btn btn-secondary grid-btn edit_payment">
-													<i class="fa fa-pencil"></i>
-												</button> &nbsp; 
-												<button id="delete_'.$row["id"].'" type="button" class="btn btn-danger grid-btn delete_payment">
-													<i class="fa fa-trash-o"></i>
-												</button>
-											</td>';
+									echo '<td width="120px">'.$actbtn.'</td>';
 									echo '<td hidden>'.$row["payment_method"].'</td>';
 									echo '</tr>';
 								}
@@ -478,6 +486,206 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="order_history_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="exampleModalLabel">ORDER HISTORY</h4>
+				</div>
+				<div class="modal-body">
+					<div class="box">
+						<div class="box-body no-padding">
+							<table class="table table-striped table-hover" id="paymenthistory_table">
+								<thead>
+								<tr>
+									<th>Date</th>
+									<th>User</th>
+									<th>Action</th>
+									<th></th>
+								</tr>
+								</thead>
+								<tbody>
+								<?php
+								foreach($orderhistory as $ind => $row){
+									echo '<tr id="tr_'.$row["id"].'" class="order_history_tr">';
+									echo '<td>'.date("m/d/Y H:i:s", strtotime($row["created_at"])).'</td>';
+									echo '<td>'.$row["user_name"].'</td>';
+									echo '<td>'.ucfirst($row["event"]).'</td>';
+									echo '<td width="120px"><button id="historydetail_'.$row["id"].'" type="button" class="btn btn-secondary grid-btn view_history_detail">
+													Details
+												</button>
+											</td>';
+									echo '</tr>';
+								}
+								?>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.box-body -->
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<i class="fa fa-remove"></i> &nbsp;Close
+					</button>
+				</div>
+			</div>
+		</div>
+	</div><!-- modal -->
+
+	<div class="modal fade" id="history_detail_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="exampleModalLabel">ORDER HISTORY DETAILS</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header">
+										OLD VALUES
+									</div>
+									<?php
+										foreach($orderhistory as $ind => $row){
+									?>
+									<div class="card-body history-table" id="table_old_<?php echo $row["id"]; ?>">
+										<h5 class="card-title">TRANSACTION TABLE</h5>
+										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
+											<thead>
+											<tr>
+												<th>Field Name</th>
+												<th>Value</th>
+											</tr>
+											</thead>
+											<tbody>
+											<?php
+													$rows = json_decode($row["old_values"], true);
+
+													if(isset($rows["transaction"]))
+														foreach($rows["transaction"] as $tind => $trow){
+															if($tind == "total")
+																$trow = number_format($trow, 2);
+															if($tind == "delivery_date")
+																$trow = date("m/d/Y", strtotime($trow));
+															echo '<tr id="tr_'.$row["id"].'">';
+															echo '<td>'.strtoupper($tind).'</td>';
+															echo '<td>'.$trow.'</td>';
+															echo '</tr>';
+														}
+											?>
+											</tbody>
+										</table>
+									</div>
+									<div class="card-body history-table" id="table_detail_old_<?php echo $row["id"]; ?>">
+										<h5 class="card-title">TRANSACTION DETAIL TABLE</h5>
+										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
+											<thead>
+											<tr>
+												<th>Name</th>
+												<th>Quantity</th>
+												<th>Price</th>
+											</tr>
+											</thead>
+											<tbody>
+											<?php
+											$rows = json_decode($row["old_values"], true);
+
+											if(isset($rows["transaction_detail"]))
+												foreach($rows["transaction_detail"] as $tind => $trow){
+													echo '<tr>';
+													echo '<td>'.$trow["name"].'</td>';
+													echo '<td>'.$trow["quantity"].'</td>';
+													echo '<td>'.number_format($trow["total_price"], 2).'</td>';
+													echo '</tr>';
+												}
+											?>
+											</tbody>
+										</table>
+									</div>
+									<?php
+										}
+									?>
+								</div>
+							</div><!-- col 6 / left panel -->
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header">
+										NEW VALUES
+									</div>
+									<?php
+										foreach($orderhistory as $ind => $row){
+									?>
+									<div class="card-body history-table" id="table_new_<?php echo $row["id"]; ?>">
+										<h5 class="card-title">TRANSACTION TABLE</h5>
+										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
+											<thead>
+											<tr>
+												<th>Field Name</th>
+												<th>Value</th>
+											</tr>
+											</thead>
+											<tbody>
+											<?php
+												$rows = json_decode($row["new_values"], true);
+
+												if(isset($rows["transaction"]))
+													foreach($rows["transaction"] as $tind => $trow){
+														if($tind == "total")
+															$trow = number_format($trow, 2);
+														if($tind == "delivery_date")
+															$trow = date("m/d/Y", strtotime($trow));
+														echo '<tr id="tr_'.$row["id"].'">';
+														echo '<td>'.strtoupper($tind).'</td>';
+														echo '<td>'.$trow.'</td>';
+														echo '</tr>';
+													}
+											?>
+											</tbody>
+										</table>
+									</div>
+									<div class="card-body history-table" id="table_detail_new_<?php echo $row["id"]; ?>">
+										<h5 class="card-title">TRANSACTION DETAIL TABLE</h5>
+										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
+											<thead>
+											<tr>
+												<th>Name</th>
+												<th>Quantity</th>
+												<th>Price</th>
+											</tr>
+											</thead>
+											<tbody>
+											<?php
+											$rows = json_decode($row["new_values"], true);
+
+											if(isset($rows["transaction_detail"]))
+												foreach($rows["transaction_detail"] as $tind => $trow){
+													echo '<tr>';
+													echo '<td>'.$trow["name"].'</td>';
+													echo '<td>'.$trow["quantity"].'</td>';
+													echo '<td>'.number_format($trow["total_price"], 2).'</td>';
+													echo '</tr>';
+												}
+											?>
+											</tbody>
+										</table>
+									</div>
+									<?php } ?>
+								</div>
+							</div><!-- col 6 / right panel -->
+						</div><!-- row -->
+					</div>
+
+				</div><!-- modal body -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 
 <div id="paid_stamp" class="<?php echo $paidClass; ?>">

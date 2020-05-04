@@ -50,6 +50,7 @@ class ModTransactionDetail extends CI_Model {
     function insert($param) {
         $result = array();
         $data = array();
+		unset($param["price"]);
 
         foreach ($this->FIELDS as $alias => $field) {
             if (array_key_exists($alias, $param)) {
@@ -78,6 +79,7 @@ class ModTransactionDetail extends CI_Model {
         $data = array();
 
         $id = $param["id"];
+		unset($param["price"]);
 
         foreach ($this->FIELDS as $alias => $field) {
             if (array_key_exists($alias, $param))

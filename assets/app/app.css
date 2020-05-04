@@ -343,6 +343,7 @@ textarea#clipboard{
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
+	word-wrap: break-word;
 }
 
 #sidebar-wrapper {
@@ -365,6 +366,9 @@ textarea#clipboard{
 	white-space: normal;
 }
 
+.product_uom{
+	display: none;
+}
 
 @media only screen and (min-width: 500px) {
 

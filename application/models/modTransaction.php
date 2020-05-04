@@ -21,6 +21,7 @@ class ModTransaction extends CI_Model {
                 "status" => "transaction.status",
 				"paid" => "transaction.paid",
                 "void_reason" => "transaction.void_reason",
+				"void_user" => "transaction.void_user",
 				"haschanges" => "transaction.haschanges",
 				"location_image" => "transaction.location_image",
 				"printed" => "transaction.printed",
@@ -170,7 +171,7 @@ class ModTransaction extends CI_Model {
 	}
 
 	function haschanges($id){
-		$sql = "SELECT transaction.haschanges, transaction.status, transaction.void_reason FROM transaction WHERE transaction.id = ".$id;
+		$sql = "SELECT transaction.haschanges, transaction.status, transaction.void_reason, transaction.void_user FROM transaction WHERE transaction.id = ".$id;
 		return $this->db->query($sql);
 	}
 
@@ -183,6 +184,7 @@ class ModTransaction extends CI_Model {
 		$result = array();
 		$data = array();
 		$id = $param["id"];
+		unset($param["facebook_name"]);
 
 		foreach ($this->FIELDS as $alias => $field) {
 			if (array_key_exists($alias, $param))
@@ -196,6 +198,7 @@ class ModTransaction extends CI_Model {
 			$result["id"] = $id;
 			if(isset($param["date_printed"]))
 				$param["date_printed"] = date("m/d/Y H:i:s", strtotime($param["date_printed"]));
+			unset($param["location_image"]);
 			$result["param"] = $param;
 		} else {
 			$result["success"] = false;

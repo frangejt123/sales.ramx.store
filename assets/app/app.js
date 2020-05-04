@@ -558,7 +558,8 @@ $("document").ready(function(){
 			var pdesc = $(row).find(".summary_desc").html();
 			var qty = $(row).find(".summary_qty").html();
 			var price = $(".product_main #"+id).find("div.product_price").html();
-			ordershtml += "\n"+qty +" - "+pdesc+" @ "+toCurrency(price * qty);
+			var uom = $(".product_uom#produom_"+id).text();
+			ordershtml += "\n"+qty +uom+" - "+pdesc+" @ "+toCurrency(price * qty);
 			ordertotal += price * qty;
 		});
 
