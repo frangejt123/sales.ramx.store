@@ -23,9 +23,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div id="container">
 	<input type="text" id="order_last_id" value="<?php echo isset($lastid["id"]) ? $lastid["id"] : ""; ?>" hidden>
-	<button id="logout_btn" class="btn-danger">
+	<button id="logout_btn" class="btn-danger pull-left">
 		<i class="fa fa-sign-out fa-flip-horizontal"></i> &nbsp;Logout
 	</button>
+	<span class="span_seperator pull-left"></span>
+	<div id="current_logged_user" class="pull-left">
+		<span<b><i class="fa fa-user"></i> &nbsp; <?php echo $_SESSION["name"]; ?></b></span>
+	</div>
 
 	<?php if($_SESSION["access_level"] != 0) { ?>
 	<button id="create_order_btn" class="btn-dark pull-right">
@@ -63,6 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<button id="clear_filter_btn" class="btn-default pull-right">
 		<i class="fa fa-remove"></i> &nbsp;Clear Filter
 	</button>
+	<div style="clear: both"></div>
 
 	<div class="grid_container">
 		<div class="form-group">
