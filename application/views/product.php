@@ -75,7 +75,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</div>
 
-
 	<div id="product_modal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -83,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<h4 class="modal-title"><i class="fa fa-cubes"></i> Add Product</h4>
 				</div>
 				<div class="modal-body">
-					<input type="hidden" id="product_id">
+					<input type="hidden" id="product_id" class="not-required">
 					<div class="form-group">
 						<label>Description</label>
 						<input type="text" class="form-control" id="description">

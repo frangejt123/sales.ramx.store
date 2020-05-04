@@ -47,7 +47,7 @@ $(document).ready(function(){
 	});
 
 	$("#save_changes").on("click", function(){
-		var input = $("#product_modal").find("input");
+		var input = $("#product_modal").find("input").not(".not-required");
 		var product_id = $("#product_id").val();
 		var empty = 0;
 		$.each(input, function(ind, row){
