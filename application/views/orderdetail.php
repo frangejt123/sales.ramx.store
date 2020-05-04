@@ -163,7 +163,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				<td>Facebook Name : <?php echo $transaction["facebook_name"]; ?></td>
 				<td class="sep"></td>
 				<?php
-					$paymentmethodarray = array("Cash on Delivery (COD)", "Bank Transfer", "GCash");
+					$paymentmethodarray = array("Cash on Delivery (COD)", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
 				?>
 				<td>
 					Payment Method : <?php echo $paymentmethodarray[$transaction["payment_method"]]; ?>
