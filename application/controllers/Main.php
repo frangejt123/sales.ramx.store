@@ -282,6 +282,8 @@ class Main extends CI_Controller {
 	public function voidorder(){
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modTransaction', "", TRUE);
+		$this->load->model('modTransactionDetail', "", TRUE);
+		$this->load->model('modProduct', "", TRUE);
 		if($param["void_reason"] == "2"){
 			$param["void_reason"] = $param["other"];
 		}else{
@@ -290,6 +292,16 @@ class Main extends CI_Controller {
 		}
 		$param["status"] = "3";
 		$res = $this->modTransaction->update($param);
+
+		//update inventory
+		$p["transaction_id"] = $param["id"];
+		$transdetail = $this->modTransactionDetail->getAll($p)->result_array();
+		foreach ($transdetail as $ind => $row) {
+			$r["id"] = $row["product_id"];
+			$r["qty"] = $row["quantity"];
+			$this->modProduct->updateInventory($r);
+		}
+
 
 		echo json_encode($res);
 	}
