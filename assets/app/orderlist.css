@@ -344,12 +344,12 @@ input[type='file']#customer_location{
 
 #paid_stamp{
 	position: absolute;
-	margin-left: -260px;
-	margin-top: -150px;
+	margin-left: -130px;
+	margin-top: -120px;
 	top: 50%;
 	left: 50%;
-	width: 520px;
-	height: 300px;
+	width: 260px;
+	height: 120px;
 }
 .stamp {
 	transform: rotate(12deg);
@@ -372,7 +372,7 @@ input[type='file']#customer_location{
 	color: #fc5959;
 	border: 1rem double #fc5959;
 	transform: rotate(-20deg);
-	font-size: 10rem;
+	font-size: 3rem;
 	font-family: "Open sans", Helvetica, Arial, sans-serif;
 	border-radius: 0;
 	padding: 0.5rem;
