@@ -61,16 +61,19 @@ class Main extends CI_Controller {
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->load->model('modPayment', "", TRUE);
+		$this->load->model('modAuditTrail', "", TRUE);
 		$param["id"] = $orderid;
 		$detailparam["transaction_id"] = $orderid;
 		$transaction = $this->modTransaction->getAll($param)->row_array();
 		$transactiondetail = $this->modTransactionDetail->getAll($detailparam)->result_array();
 		$paymentparam["transaction_id"] = $orderid;
 		$payment = $this->modPayment->getAll($paymentparam)->result_array();
+		$audittrail = $this->modAuditTrail->getAll($detailparam)->result_array();
 
 		$data["transaction"] = $transaction;
 		$data["transactiondetail"] = $transactiondetail;
 		$data["paymenthistory"] = $payment;
+		$data["orderhistory"] = $audittrail;
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->view('orderdetail', $data);
@@ -135,6 +138,7 @@ class Main extends CI_Controller {
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
 		$this->load->model('modProduct', "", TRUE);
+		$this->load->model('modAuditTrail', "", TRUE);
 
 		$param = $this->input->post(NULL, "true");
 
@@ -178,31 +182,100 @@ class Main extends CI_Controller {
 			file_put_contents($filepath, $image);
 		}
 
-		if(isset($param["newcustomer"])){
-			if($image == "")
-				$param["newcustomer"]["location_image"] = "";
-			else{
-				$param["newcustomer"]["location_image"] = $imgname.".jpeg";
-			}
-			$param["newcustomer"]["facebook_name"] = $param["trans"]["facebook_name"];
-			$customerres = $this->modCustomer->insert($param["newcustomer"]);
-			$param["trans"]["customer_id"] = $customerres["id"];
-		}else{
-			$param["customerdetail"]["facebook_name"] = $param["trans"]["facebook_name"];
-			$customerres = $this->modCustomer->update($param["customerdetail"]);
-		}
-
 		$param["trans"]["delivery_date"] = date("Y-m-d", strtotime($param["trans"]["delivery_date"]));
 		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
+		$moparray = ["Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank"];
+
+
+
+		$updatenewvalue = array();
+		$detailparam["transaction_id"] = $param["trans"]["transaction_id"];
 		if($param["trans"]["haschanges"] == 1){
 			$param["trans"]["id"] = $param["trans"]["transaction_id"];
 			$param["trans"]["printed"] = 2;
 			$param["trans"]["date_revised"] = date("Y-m-d H:i:s");
+
+			$audit_trails = array();
+			$p["id"] = $param["trans"]["id"];
+			$transactions = $this->modTransaction->getAll($p)->row_array();
+			unset($transactions["location_image"]);
+
+			$oldvalues = array();
+			$oldvalues["total"] = $transactions["total"];
+			$oldvalues["name"] = $transactions["name"];
+			$oldvalues["delivery_address"] = $transactions["delivery_address"];
+			$oldvalues["delivery_date"] = $transactions["delivery_date"];
+			$oldvalues["payment_method"] = $moparray[$transactions["payment_method"]];
+			$oldvalues["payment_confirmation_detail"] = $transactions["payment_confirmation_detail"];
+			$oldvalues["remarks"] = $transactions["remarks"];
+			$oldvalues["facebook_name"] = $transactions["facebook_name"];
+			$oldvalues["contact_number"] = $transactions["contact_number"];
+			$oldvalues["sales_agent"] = $transactions["sales_agent"];
+
+			$transactionsdetails = $this->modTransactionDetail->getAll($detailparam)->result_array();
+
+			$olddetails = array();
+			foreach ($transactionsdetails as $ind => $row) {
+				$name = $this->modProduct->getname($row["product_id"])->row_array();
+				$olddetails[$ind]["name"] = $name["description"];
+				$olddetails[$ind]["quantity"] = $row["quantity"];
+				$olddetails[$ind]["total_price"] = $row["total_price"];
+			}
+
+			$newvalues = array();
+			$newvalues["total"] = $param["trans"]["total"];
+			$newvalues["name"] = $param["trans"]["customer_name"];
+			$newvalues["delivery_address"] = $param["trans"]["delivery_address"];
+			$newvalues["delivery_date"] = $param["trans"]["delivery_date"];
+			$newvalues["payment_method"] = $moparray[$param["trans"]["payment_method"]];
+			$newvalues["payment_confirmation_detail"] = $param["trans"]["payment_confirmation_detail"];
+			$newvalues["remarks"] = $param["trans"]["remarks"];
+			$newvalues["facebook_name"] = $param["trans"]["facebook_name"];
+			$newvalues["contact_number"] = $param["customerdetail"]["contact_number"];
+			$newvalues["sales_agent"] = $_SESSION["name"];
+			$updatenewvalue = $newvalues;
+
+			$audit_trails["user_id"] = $_SESSION["id"];
+			$audit_trails["event"] = "update";
+			$audit_trails["transaction_id"] = $param["trans"]["id"];
+			$audit_trails["table_name"] = json_encode(array("transaction","transaction_detail"));
+			$audit_trails["old_values"] = json_encode(array("transaction"=>$oldvalues, "transaction_detail"=>$olddetails));
+			$audit_trails["created_at"] = date("Y-m-d H:i:s");
+
 			$result = $this->modTransaction->update($param["trans"]);
 		}else{
 			unset($param["trans"]["transaction_id"]);
 			$param["trans"]["user_id"] = $_SESSION["id"];
 			$result = $this->modTransaction->insert($param["trans"]);
+
+			$newvalues = array();
+			$newvalues["total"] = $param["trans"]["total"];
+			$newvalues["name"] = $param["trans"]["customer_name"];
+			$newvalues["delivery_address"] = $param["trans"]["delivery_address"];
+			$newvalues["delivery_date"] = $param["trans"]["delivery_date"];
+			$newvalues["payment_method"] = $moparray[$param["trans"]["payment_method"]];
+			$newvalues["payment_confirmation_detail"] = $param["trans"]["payment_confirmation_detail"];
+			$newvalues["remarks"] = $param["trans"]["remarks"];
+			$newvalues["facebook_name"] = $param["trans"]["facebook_name"];
+			$newvalues["contact_number"] = $param["customerdetail"]["contact_number"];
+			$newvalues["sales_agent"] = $_SESSION["name"];
+
+			$newdetails = array();
+			if(isset($param["detail"])) {
+				foreach ($param["detail"] as $ind => $row) {
+					$name = $this->modProduct->getname($row["product_id"])->row_array();
+					$newdetails[$ind]["name"] = $name["description"];
+					$newdetails[$ind]["quantity"] = $row["quantity"];
+					$newdetails[$ind]["total_price"] = $row["price"];
+				}
+			}
+
+			$audit_trails["user_id"] = $_SESSION["id"];
+			$audit_trails["event"] = "insert";
+			$audit_trails["transaction_id"] = $result["id"];
+			$audit_trails["table_name"] = json_encode(array("transaction","transaction_detail"));
+			$audit_trails["new_values"] = json_encode(array("transaction"=>$newvalues, "transaction_detail"=>$newdetails));
+			$audit_trails["created_at"] = date("Y-m-d H:i:s");
 		}
 
 		if(isset($param["detail"])) {
@@ -217,6 +290,36 @@ class Main extends CI_Controller {
 					$this->modTransactionDetail->delete($row);
 			}
 		}
+
+		if($param["trans"]["haschanges"] == 1){
+			$newtransactionsdetails = $this->modTransactionDetail->getAll($detailparam)->result_array();
+			$newdetails = array();
+			foreach ($newtransactionsdetails as $ind => $row) {
+				$name = $this->modProduct->getname($row["product_id"])->row_array();
+				$newdetails[$ind]["name"] = $name["description"];
+				$newdetails[$ind]["quantity"] = $row["quantity"];
+				$newdetails[$ind]["total_price"] = $row["total_price"];
+			}
+
+			$audit_trails["new_values"] = json_encode(array("transaction"=>$updatenewvalue, "transaction_detail"=>$newdetails));
+		}
+
+		$this->modAuditTrail->insert($audit_trails);
+
+		if(isset($param["newcustomer"])){
+			if($image == "")
+				$param["newcustomer"]["location_image"] = "";
+			else{
+				$param["newcustomer"]["location_image"] = $imgname.".jpeg";
+			}
+			$param["newcustomer"]["facebook_name"] = $param["trans"]["facebook_name"];
+			$customerres = $this->modCustomer->insert($param["newcustomer"]);
+			$param["trans"]["customer_id"] = $customerres["id"];
+		}else{
+			$param["customerdetail"]["facebook_name"] = $param["trans"]["facebook_name"];
+			$customerres = $this->modCustomer->update($param["customerdetail"]);
+		}
+
 
 		$result["transaction_id"] = date("mdY")."-".sprintf("%04s", $result["id"]);
 		echo json_encode($result);
@@ -281,6 +384,7 @@ class Main extends CI_Controller {
 	}
 
 	public function voidorder(){
+		session_start();
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
@@ -292,6 +396,7 @@ class Main extends CI_Controller {
 			$param["void_reason"] = $reasons[$param["void_reason"]];
 		}
 		$param["status"] = "3";
+		$param["void_user"] = $_SESSION["name"];
 		$res = $this->modTransaction->update($param);
 
 		//update inventory
