@@ -325,7 +325,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 					</div>
 				</div>
 				<div style="clear:both"></div>
-				<div class="modal-footer">
+				<div class="modal-footer" style="padding-top: 30px;padding-bottom: 0px;">
 					<button type="button" class="btn btn-info" id="cancel_tag_as_paid">Cancel</button>
 					<button type="button" class="btn btn-success" id="confirm_tag_as_paid">Save</button>
 				</div>
@@ -487,7 +487,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 						</div><!-- right -->
 					</div><!-- left -->
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer" style="padding-top: 30px;padding-bottom: 0px;">
 					<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
 					<button type="button" class="btn btn-success" id="confirm_updatepayment">Update</button>
 				</div>
