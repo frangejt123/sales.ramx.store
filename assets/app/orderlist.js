@@ -335,22 +335,22 @@ $(document).ready(function(){
 		var rows = document.querySelector("#orderlist_table tbody").rows;
 
 		var deliverydate = $("#filter_delivery_date").val();
-		var status = ($("#filter_status  option:selected").text()).toUpperCase();
+		var status = ($("#filter_status option:selected").text()).toUpperCase();
 		var paid = $("#filter_paid").prop('checked') ? "PAID" : "";
 		var printed = $("#filter_printed").prop('checked') ? "PRINTED" : "";
 		var revised = $("#filter_revised").prop('checked') ? "REVISED" : "";
 		var orderid = $("#order_id_filter").val();
-		var mop = $("#filter_mop").val();
+		var mop = ($("#filter_mop option:selected").text()).toUpperCase();
 
 		for (var i = 0; i < rows.length; i++) {
 			$(rows[i]).removeClass("filtered");
-			var deliverydatetd = rows[i].cells[7].textContent;
-			var statustd = (rows[i].cells[6].textContent).toUpperCase();
+			var deliverydatetd = rows[i].cells[8].textContent;
+			var statustd = (rows[i].cells[7].textContent).toUpperCase();
 			var paidtd = (rows[i].cells[4].textContent).toUpperCase();
-			var printedtd = (rows[i].cells[5].textContent).toUpperCase();
-			var revisedtd = (rows[i].cells[5].textContent).toUpperCase();
+			var printedtd = (rows[i].cells[6].textContent).toUpperCase();
+			var revisedtd = (rows[i].cells[6].textContent).toUpperCase();
 			var orderidtd = (rows[i].cells[0].textContent).toUpperCase();
-			var moptd = (rows[i].cells[8].textContent).toUpperCase();
+			var moptd = (rows[i].cells[5].textContent).toUpperCase();
 			var filterarray = {
 				"delivery_date": deliverydatetd,
 				"status": statustd,

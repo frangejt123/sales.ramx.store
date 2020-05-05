@@ -84,14 +84,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<th>Delivery Date</th>
 						<th>Customer Name</th>
 						<th>Paid Status</th>
+						<th>Payment Method</th>
 						<th>Print Status</th>
 						<th>Status</th>
-						<th hidden></th><!-- filter -->
 						<th hidden></th><!-- filter -->
 					</tr>
 					</thead>
 					<tbody>
 					<?php
+						$moparray = array("Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
 						$statusarray = array("Pending", "For Delivery", "Complete", "Voided");
 						$tdclass = array("text-success", "text-warning", "text-primary", "text-danger");
 						$order = array();
@@ -118,10 +119,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								echo '<td>'.date("m/d/Y", strtotime($row["delivery_date"])).'</td>';
 								echo '<td width="25%">'.$row["name"].'</td>';
 								echo '<td class="'.$paidclass.'">'.$paid.'</td>';
+								echo '<td>'.$moparray[$row["payment_method"]].'</td>';
 								echo '<td class="'.$printCls.'">'.$printed.'</td>';
 								echo '<td class="'.$tdclass[$row["status"]].'">'.$statusarray[$row["status"]].'</td>';
 								echo '<td hidden>'.$row["delivery_date"].'</td>';
-								echo '<td hidden>'.$row["payment_method"].'</td>';
 							echo '</tr>';
 
 							json_encode($order[$row["id"]] = $transdate.'-'.sprintf("%04s", $row["id"]));
