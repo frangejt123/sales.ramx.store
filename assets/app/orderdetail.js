@@ -197,6 +197,7 @@ $(document).ready(function(){
 
 	$("#update_order_btn").on("click", function(){
 		var orderid = $("#selected_order").val();
+		NProgress.start();
 		window.location = baseurl + "/main/ut/"+btoa(orderid);
 	});
 
