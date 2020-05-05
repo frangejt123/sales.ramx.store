@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	$('.select2').select2()
+	$('.input_daterangepicker').daterangepicker();
 	NProgress.configure({ showSpinner: false });
 	$("input#search_customer_name").on("keyup", function(){
 		// Declare variables
@@ -90,11 +91,13 @@ $(document).ready(function(){
 	$("#print_report").on("click", function(){
 		var deliverydate = $("#rpt_delivery_date").val();
 		var order_id = $("#id_value").val();
+		var from_to = $("#delivery_date_from_to").val();
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');
 
 		var param = {
 			"delivery_date": ["item_summary", "item_summary_detail"],
-			"order_number": ["payment_record"]
+			"order_number": ["payment_record"],
+			"from_to": ["sales_by_delivery"]
 		}
 
 		var inputvalue = "";
@@ -108,6 +111,12 @@ $(document).ready(function(){
 			if(order_id == "")
 				return;
 			inputvalue = order_id;
+		}
+
+		if(param["from_to"].includes(rpt_name)){
+			if(from_to == "")
+				return;
+			inputvalue = from_to;
 		}
 
 		$("form#report_data input#param").val(inputvalue);

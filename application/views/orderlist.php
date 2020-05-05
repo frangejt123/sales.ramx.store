@@ -13,6 +13,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/Ionicons/css/ionicons.min.css">
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/select2/dist/css/select2.css">
+	<!-- daterange picker -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap-daterangepicker/daterangepicker.css">
 	<!-- iCheck -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/iCheck/square/blue.css">
 	<!-- Slimscroll -->
@@ -57,6 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="dropdown-menu">
 				<a class="dropdown-item dd-item rpt_btn" data-filter="delivery_date" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="delivery_date" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="order_number" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
 			</div>
 		</div>
@@ -254,6 +257,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<label>Delivery Date</label>
 						<input type="date" class="form-control" id="rpt_delivery_date">
 					</div>
+
+					<div class="form-group from_to filter_param">
+						<label>Delivery Date</label>
+						<div class="input-group">
+							<input type="text" class="form-control pull-right input_daterangepicker" id="delivery_date_from_to">
+						</div>
+						<!-- /.input group -->
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -271,6 +282,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/jquery.autocomplete.js"></script>
 <script src="<?php echo base_url(); ?>assets/bower_components/select2/dist/js/select2.js"></script>
+<script src="<?php echo base_url(); ?>assets/bower_components/moment/moment.js"></script>
+<script src="<?php echo base_url(); ?>assets/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 <!-- iCheck -->
