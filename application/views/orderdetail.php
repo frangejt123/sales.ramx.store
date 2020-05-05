@@ -190,13 +190,17 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	<div class="grid_container">
 		<div id="date_printed" class="pull-left" style="padding-top: 15px;">
 				<?php if($transaction["printed"] == 1){ ?>
-					<span class="text-primary">
+					<span class="text-success">
 							<i class="fa fa-print"></i> &nbsp;Printed &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_printed"])); ?>
 					</span>
 				<?php
 				}else if($transaction["printed"] == 2){//revised ?>
 					<span class="text-warning">
 						<i class="fa fa-undo"></i> &nbsp;Revised &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_revised"])); ?>
+					</span>
+				<?php }else if($transaction["printed"] == 3){//updated ?>
+					<span class="text-info">
+						<i class="fa fa-pencil"></i> &nbsp;Updated &mdash; <?php echo date("m/d/Y H:i:s", strtotime($transaction["date_revised"])); ?>
 					</span>
 				<?php } ?>
 		</div>
@@ -552,7 +556,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 										foreach($orderhistory as $ind => $row){
 									?>
 									<div class="card-body history-table" id="table_old_<?php echo $row["id"]; ?>">
-										<h5 class="card-title">TRANSACTION TABLE</h5>
+										<h5 class="card-title">TRANSACTION</h5>
 										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
 											<thead>
 											<tr>
@@ -580,7 +584,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 										</table>
 									</div>
 									<div class="card-body history-table" id="table_detail_old_<?php echo $row["id"]; ?>">
-										<h5 class="card-title">TRANSACTION DETAIL TABLE</h5>
+										<h5 class="card-title">TRANSACTION DETAIL</h5>
 										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
 											<thead>
 											<tr>
@@ -619,7 +623,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 										foreach($orderhistory as $ind => $row){
 									?>
 									<div class="card-body history-table" id="table_new_<?php echo $row["id"]; ?>">
-										<h5 class="card-title">TRANSACTION TABLE</h5>
+										<h5 class="card-title">TRANSACTION</h5>
 										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
 											<thead>
 											<tr>
@@ -647,7 +651,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 										</table>
 									</div>
 									<div class="card-body history-table" id="table_detail_new_<?php echo $row["id"]; ?>">
-										<h5 class="card-title">TRANSACTION DETAIL TABLE</h5>
+										<h5 class="card-title">TRANSACTION DETAIL</h5>
 										<table class="table table-striped table-hover" style="font-size: 10px;font-family: Courier">
 											<thead>
 											<tr>

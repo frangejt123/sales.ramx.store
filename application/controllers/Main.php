@@ -192,12 +192,14 @@ class Main extends CI_Controller {
 		$detailparam["transaction_id"] = $param["trans"]["transaction_id"];
 		if($param["trans"]["haschanges"] == 1){
 			$param["trans"]["id"] = $param["trans"]["transaction_id"];
-			$param["trans"]["printed"] = 2;
 			$param["trans"]["date_revised"] = date("Y-m-d H:i:s");
 
 			$audit_trails = array();
 			$p["id"] = $param["trans"]["id"];
 			$transactions = $this->modTransaction->getAll($p)->row_array();
+			$param["trans"]["printed"] = 2;//revised
+			if($transactions["printed"] == "0")
+				$param["trans"]["printed"] = 3;//updated
 			unset($transactions["location_image"]);
 
 			$oldvalues = array();
