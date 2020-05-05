@@ -11,6 +11,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css">
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/Ionicons/css/ionicons.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/select2/dist/css/select2.css">
 	<!-- iCheck -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/iCheck/square/blue.css">
 	<!-- Slimscroll -->
@@ -55,6 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="dropdown-menu">
 				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
 				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
+				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
 			</div>
 		</div>
 	<?php } ?>
@@ -79,14 +82,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<table class="table table-striped table-hover" id="orderlist_table">
 					<thead>
 					<tr>
-						<th>Order #</th>
-						<th>Order Date</th>
-						<th>Delivery Date</th>
-						<th>Customer Name</th>
-						<th>Paid Status</th>
-						<th>Payment Method</th>
-						<th>Print Status</th>
-						<th>Status</th>
+						<th class="sortable">Order # <i class="fa fa-sort float-right"></th>
+						<th class="sortable">Order Date <i class="fa fa-sort float-right"></th>
+						<th class="sortable">Delivery Date <i class="fa fa-sort float-right"></th>
+						<th class="sortable">Customer Name <i class="fa fa-sort float-right"></th>
+						<th class="sortable">Paid Status <i class="fa fa-sort float-right"></th>
+						<th class="sortable">Payment Method <i class="fa fa-sort float-right"></th>
+						<th class="sortable">Print Status <i class="fa fa-sort float-right"></th>
+						<th class="sortable">Status <i class="fa fa-sort float-right"></th>
 						<th hidden></th><!-- filter -->
 					</tr>
 					</thead>
@@ -105,6 +108,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							if($row["paid"] == 1){
 								$paid = "Paid";
 								$paidclass = "text-success";
+							}else{
+								$paid = "---";
 							}
 							if($row["printed"] == 1){
 								$printed = "Printed";
@@ -112,6 +117,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							}else if($row["printed"] == 2){
 								$printed = "Revised";
 								$printCls = "text-warning";
+							}else{
+								$printed = "---";
 							}
 							echo '<tr id="tr_'.$row["id"].'">';
 								echo '<td>'.$transdate.'-'.sprintf("%04s", $row["id"]).'</td>';
@@ -157,10 +164,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<input type="date" class="form-control" id="filter_delivery_date">
 					</div>
 
+<!--					<div class="form-group">-->
+<!--						<label>Payment Method</label>-->
+<!--						<select class="form-control" id="filter_mop">-->
+<!--							<option value=""></option>-->
+<!--							<option value="0">Cash on Delivery</option>-->
+<!--							<option value="1">Bank Transfer - BPI</option>-->
+<!--							<option value="3">Bank Transfer - Metrobank</option>-->
+<!--							<option value="2">GCash</option>-->
+<!--						</select>-->
+<!--					</div>-->
+
 					<div class="form-group">
-						<label>Payment Method</label>
-						<select class="form-control" id="filter_mop">
-							<option value=""></option>
+						<label>Mode of Payment</label>
+						<select class="form-control select2" id="filter_mop" multiple="multiple" data-placeholder="Select a Mode of Payment" style="width: 100%;">
+							<option value=""></option>-->
 							<option value="0">Cash on Delivery</option>
 							<option value="1">Bank Transfer - BPI</option>
 							<option value="3">Bank Transfer - Metrobank</option>
@@ -240,6 +258,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/jquery.autocomplete.js"></script>
+<script src="<?php echo base_url(); ?>assets/bower_components/select2/dist/js/select2.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 <!-- iCheck -->
