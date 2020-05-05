@@ -99,6 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						$statusarray = array("Pending", "For Delivery", "Complete", "Voided");
 						$tdclass = array("text-success", "text-warning", "text-primary", "text-danger");
 						$order = array();
+						$rowcount = 0;
 						foreach($transaction as $ind => $row){
 							$paidclass = "";
 							$paid = "";
@@ -133,11 +134,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							echo '</tr>';
 
 							json_encode($order[$row["id"]] = $transdate.'-'.sprintf("%04s", $row["id"]));
+							$rowcount++;
 						}
 
 						$orderids = json_encode($order);
 					?>
 					</tbody>
+					<caption>Total number or rows : <span id="table_rowcount"><?php echo $rowcount; ?></span></caption>
 				</table>
 			</div>
 			<!-- /.box-body -->

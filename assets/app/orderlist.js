@@ -15,17 +15,20 @@ $(document).ready(function(){
 			tr = $(table).find("tr");
 
 		// Loop through all table rows, and hide those who don't match the search query
+		var rowcount = 0;
 		for (i = 0; i < tr.length; i++) {
 			td = tr[i].getElementsByTagName("td")[3];
 			if (td) {
 				txtValue = td.textContent || td.innerText;
 				if (txtValue.toUpperCase().indexOf(filter) > -1) {
 						tr[i].style.display = "";
+						rowcount++;
 				} else {
 					tr[i].style.display = "none";
 				}
 			}
 		}
+		$("#table_rowcount").html(rowcount);
 	});
 
 	$("button#create_order_btn").on("click", function(){
@@ -377,6 +380,7 @@ $(document).ready(function(){
 		var revisedtd = "";
 		var orderidtd = "";
 		var moptd = "";
+		var rowcount = 0;
 		for (var i = 0; i < rows.length; i++) {
 			if(moparray.length > 0)
 				moptd = (rows[i].cells[5].textContent).toUpperCase();
@@ -404,6 +408,8 @@ $(document).ready(function(){
 				&& (orderid == orderidtd)
 			){
 				rows[i].style.display = "";
+				$(rows[i]).addClass("filtered");
+				rowcount++;
 			} else {
 				rows[i].style.display = "none";
 			}
@@ -412,6 +418,7 @@ $(document).ready(function(){
 				&& (revised == "") && (orderid == "") && (moparray.length == 0)){
 				rows[i].style.display = "";
 			}
+			$("#table_rowcount").html(rowcount);
 		}
 
 		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
