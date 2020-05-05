@@ -53,7 +53,7 @@ $(document).ready(function(){
 		window.location = baseurl + "/product";
 	});
 
-	$("table#orderlist_table").on("click", "tr", function(){
+	$("table#orderlist_table tbody").on("click", "tr", function(){
 		var id = $(this).attr("id").split("_")[1];
 		NProgress.start();
 		window.location = baseurl + "/main/orderdetail/"+btoa(id);
