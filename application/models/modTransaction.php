@@ -68,11 +68,12 @@ class ModTransaction extends CI_Model {
 
 		if(isset($param["sort_delivery_date"])) {
 			$this->db->where('transaction.delivery_date >= ', date('Y-m-d'));
+			$this->db->order_by('transaction.status', 'ASC');
 			$this->db->order_by('transaction.delivery_date', 'ASC');
 		}else{
+			$this->db->order_by('transaction.status', 'ASC');
 			$this->db->order_by('transaction.delivery_date', 'DESC');
 		}
-		$this->db->order_by('transaction.status', 'ASC');
 
         $query = $this->db->get();
         return $query;
