@@ -351,19 +351,36 @@ $(document).ready(function(){
 				one from current row and one from the next: */
 				x = rows[i].getElementsByTagName("TD")[n];
 				y = rows[i + 1].getElementsByTagName("TD")[n];
+				//check if the two rows should switch place:
 				/* Check if the two rows should switch place,
 				based on the direction, asc or desc: */
 				if (dir == "asc") {
-					if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-						// If so, mark as a switch and break the loop:
-						shouldSwitch = true;
-						break;
+					if(!isNaN(x.innerHTML)){
+						if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+							// If so, mark as a switch and break the loop:
+							shouldSwitch = true;
+							break;
+						}
+					}else{
+						if(x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+							// If so, mark as a switch and break the loop:
+							shouldSwitch = true;
+							break;
+						}
 					}
 				} else if (dir == "desc") {
-					if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-						// If so, mark as a switch and break the loop:
-						shouldSwitch = true;
-						break;
+					if(!isNaN(x.innerHTML)){
+						if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+							// If so, mark as a switch and break the loop:
+							shouldSwitch = true;
+							break;
+						}
+					}else{
+						if(x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+							// If so, mark as a switch and break the loop:
+							shouldSwitch = true;
+							break;
+						}
 					}
 				}
 			}
