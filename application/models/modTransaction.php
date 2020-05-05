@@ -29,7 +29,7 @@ class ModTransaction extends CI_Model {
 				"date_revised" => "transaction.date_revised"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void");
-	public $PAYMENT_METHOD = array("COD", "GCASH", "Bank Transfer");
+	public $PAYMENT_METHOD = array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
 
     function __construct() {
         // Call the Model constructor
