@@ -216,7 +216,7 @@ class Main extends CI_Controller {
 			$param["trans"]["printed"] = 3;//updated
 			if($transactions["printed"] == "1")
 				$param["trans"]["printed"] = 2;//revised
-			
+
 			unset($transactions["location_image"]);
 
 			$oldvalues = array();

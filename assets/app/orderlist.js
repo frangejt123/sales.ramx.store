@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+	$('.select2').select2()
 	NProgress.configure({ showSpinner: false });
 	$("input#search_customer_name").on("keyup", function(){
 		// Declare variables
@@ -337,49 +338,57 @@ $(document).ready(function(){
 	$("#confirm_filter").on("click", function(){
 		var rows = document.querySelector("#orderlist_table tbody").rows;
 
+		var moparray = [];
+		$("#filter_mop option:selected").each(function() {
+			moparray.push((this.text).toUpperCase());
+		});
+
 		var deliverydate = $("#filter_delivery_date").val();
 		var status = ($("#filter_status option:selected").text()).toUpperCase();
 		var paid = $("#filter_paid").prop('checked') ? "PAID" : "";
 		var printed = $("#filter_printed").prop('checked') ? "PRINTED" : "";
 		var revised = $("#filter_revised").prop('checked') ? "REVISED" : "";
 		var orderid = $("#order_id_filter").val();
-		var mop = ($("#filter_mop option:selected").text()).toUpperCase();
 
+		var statustd = "";
+		var deliverydatetd = "";
+		var paidtd = "";
+		var printedtd = "";
+		var revisedtd = "";
+		var orderidtd = "";
+		var moptd = "";
 		for (var i = 0; i < rows.length; i++) {
-			$(rows[i]).removeClass("filtered");
-			var deliverydatetd = rows[i].cells[8].textContent;
-			var statustd = (rows[i].cells[7].textContent).toUpperCase();
-			var paidtd = (rows[i].cells[4].textContent).toUpperCase();
-			var printedtd = (rows[i].cells[6].textContent).toUpperCase();
-			var revisedtd = (rows[i].cells[6].textContent).toUpperCase();
-			var orderidtd = (rows[i].cells[0].textContent).toUpperCase();
-			var moptd = (rows[i].cells[5].textContent).toUpperCase();
-			var filterarray = {
-				"delivery_date": deliverydatetd,
-				"status": statustd,
-				"paid": paidtd,
-				"printed": printedtd,
-				"revised": revisedtd,
-				"orderid": orderidtd,
-				"mop": moptd
-			}
-			
-			if(filterarray["delivery_date"].includes(deliverydate)
-				&& (filterarray["status"].includes(status))
-				&& (filterarray["paid"].includes(paid))
-				&& filterarray["printed"].includes(printed)
-				&& filterarray["revised"].includes(revised)
-				&& filterarray["orderid"].includes(orderid)
-				&& filterarray["mop"].includes(mop)){
-				$(rows[i]).addClass("filtered");
+			if($("#filter_mop").val() != "")
+				moptd = (rows[i].cells[5].textContent).toUpperCase();
+			if(deliverydate != "")
+				deliverydatetd = rows[i].cells[8].textContent;
+			if(paid != "")
+				paidtd = (rows[i].cells[4].textContent).toUpperCase();
+			if(printed != "")
+				printedtd = (rows[i].cells[6].textContent).toUpperCase();
+			if(revised != "")
+				revisedtd = (rows[i].cells[6].textContent).toUpperCase();
+			if(orderid != "")
+				orderidtd = (rows[i].cells[0].textContent).toUpperCase();
+			if(status != "")
+				statustd = (rows[i].cells[7].textContent).toUpperCase();
+
+			if(moparray.includes(moptd)
+				&& (status == statustd)
+				&& (deliverydate == deliverydatetd)
+				&& (paid == paidtd)
+				&& (printed == printedtd)
+				&& (revised == revisedtd)
+				&& (orderid == orderidtd)
+			){
 				rows[i].style.display = "";
-			}else{
+			} else {
 				rows[i].style.display = "none";
 			}
 		}
 
 		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
-			&& (revised == "") && (orderid == "") && (mop == "")){
+			&& (revised == "") && (orderid == "") && ($("#filter_mop").val() == "")){
 			$("#clear_filter_btn").hide();
 		}else{
 			$("#clear_filter_btn").show();
