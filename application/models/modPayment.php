@@ -13,7 +13,8 @@ class ModPayment extends CI_Model {
 		"payment_method" => "payment.payment_method",
 		"payment_confirmation_detail" => "payment.payment_confirmation_detail",
 		"amount" => "payment.amount",
-		"payment_date" => "payment.payment_date"
+		"payment_date" => "payment.payment_date",
+		"image_name" => "payment.image_name"
 	);
 
 	function __construct() {

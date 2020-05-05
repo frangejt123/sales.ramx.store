@@ -271,19 +271,20 @@ $(document).ready(() => {
 						});
 						croppieready = true;
 					}
-				}, 500);
-				setTimeout(function(){
+
 					croppie.croppie('bind', {
 						url: e.target.result
 					});
 
+				}, 500);
+				setTimeout(function(){
 					$('#map_img_preview').croppie("result", {
 						type: "base64",
 						format: "jpeg"
 					}).then(function(img) {
 						croppieimg = img;
 					});
-				},600);
+				},700);
 				imghaschanges = true;
 			}
 			reader.readAsDataURL(input.files[0]);

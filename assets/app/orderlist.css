@@ -248,6 +248,11 @@ textarea{
 }
 /* modal confirm */
 
+.modal-fixed-width{
+	width: 800px !important;
+	max-width: 800px !important;
+}
+
 span.span_seperator{
 	width: 20px;
 	display: block;
@@ -378,17 +383,29 @@ input[type='file']#customer_location{
 	padding: 0.5rem;
 }
 
-#map_preview{
+#payment_preview, #payment_preview_update{
 	border: 1px solid #ccc;
-	height: 230px;
+	height: 330px;
 }
 
-#map_img_preview{
-	max-height: 230px;
+#payment_img_preview, #payment_img_preview_update{
+	max-height: 330px;
 }
 
-.detail_map_preview{
-	width: 454px;
+.payment_image{
+	width: auto;
+}
+
+/* custom file input style */
+input[type="file"] {
+	white-space: normal;
+	word-wrap: break-word;
+	width: 400px;
+	overflow: auto;
+}
+
+.croppie-container .cr-slider-wrap{
+	margin-top: 0px !important;
 }
 
 .dd-item{

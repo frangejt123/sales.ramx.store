@@ -434,8 +434,23 @@ class Main extends CI_Controller {
 
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modTransaction', "", TRUE);
+
+		$image = $param["payment_img"];
+		$imgname = md5(uniqid());
 		$param["payment_date"] = date("Y-m-d");
+
+		if($image != "") {
+			list($type, $image) = explode(';', $image);
+			list(, $image) = explode(',', $image);
+			$image = base64_decode($image);
+
+			$filepath = "assets/payment_image/".$imgname.".jpeg";
+			$param["image_name"] = $imgname;
+			file_put_contents($filepath, $image);
+		}
+
 		$res = $this->modPayment->insert($param);
+
 		$transparam["id"] = $param["transaction_id"];
 		$transparam["payment_method"] = $param["payment_method"];
 		$transparam["payment_confirmation_detail"] = $param["payment_confirmation_detail"];
@@ -464,6 +479,25 @@ class Main extends CI_Controller {
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modTransaction', "", TRUE);
+
+		$image = $param["payment_img"];
+		$oldimagename = $param["oldimgname"];
+		$imgname = md5(uniqid());
+		if($oldimagename != ""){
+			$imgname = $oldimagename;
+		}
+		$param["payment_date"] = date("Y-m-d");
+
+		if($image != "") {
+			list($type, $image) = explode(';', $image);
+			list(, $image) = explode(',', $image);
+			$image = base64_decode($image);
+
+			$filepath = "assets/payment_image/".$imgname.".jpeg";
+			$param["image_name"] = $imgname;
+			file_put_contents($filepath, $image);
+		}
+
 		$res = $this->modPayment->update($param);
 		$paidparam["id"] = $param["transaction_id"];
 		$transparam["transaction_id"]  = $param["transaction_id"];

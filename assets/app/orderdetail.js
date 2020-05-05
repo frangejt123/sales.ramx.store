@@ -1,6 +1,12 @@
 $(document).ready(function(){
 
 	NProgress.configure({ showSpinner: false });
+
+	var croppieimg = "";
+	var imghaschanges;
+	var croppie;
+	var croppieready = false;
+
 	var selectedorder = $("#selected_order").val();
 
 	$("button#cancel_orderlist_btn").on("click", function(){
@@ -219,24 +225,39 @@ $(document).ready(function(){
 
 		var balance = $("#balance").val();
 
-		$.ajax({
-			method: 'POST',
-			data: {"transaction_id":selectedorder, payment_method, payment_confirmation_detail, amount, balance},
-			url: baseurl + '/main/insertpayment',
-			success: function (res) {
-				var res = JSON.parse(res);
-				alert("Changes successfully saved!");
-				NProgress.done();
-				location.reload();
-			},
-			error: function (xhr, status, error) {
-				NProgress.done();
-				alert("Oppss! Something went wrong.");
-			},
-			beforeSend: function(){
-				NProgress.start();
+		setTimeout(function(){
+			if(imghaschanges) {
+				$('#payment_img_preview').croppie("result", {
+					type: "base64",
+					format: "jpeg"
+				}).then(function (img) {
+					croppieimg = img;
+				});
 			}
-		});
+		}, 500);
+
+		NProgress.start();
+		setTimeout(function(){
+			var payment_img = croppieimg;
+			$.ajax({
+				method: 'POST',
+				data: {"transaction_id":selectedorder, payment_method, payment_confirmation_detail, amount, balance, payment_img},
+				url: baseurl + '/main/insertpayment',
+				success: function (res) {
+					var res = JSON.parse(res);
+					alert("Changes successfully saved!");
+					NProgress.done();
+					location.reload();
+				},
+				error: function (xhr, status, error) {
+					NProgress.done();
+					alert("Oppss! Something went wrong.");
+				},
+				beforeSend: function(){
+				}
+			});
+
+		}, 800);
 	});
 
 	$("#confirm_unpaid").on("click", function(){
@@ -329,9 +350,14 @@ $(document).ready(function(){
 		var amount = td[2].innerText;
 		var mop = td[5].innerText;
 		var pcd = td[3].innerText;
+		var imagename = td[6].innerText;
+
+		var bsurl = baseurl.replace("index.php", "");
+
 		$("#update_mode_of_payment").val(mop);
 		$("#update_paid_amount").val(parseFloat(amount));
 		$("#update_payment_confirmation_detail").val(pcd);
+		$("img#payment_img_preview_update").attr('src', bsurl+"assets/payment_image/"+imagename+".jpeg");
 		$("#update_payment_modal").modal("show").data("payment_id", id);
 	});
 
@@ -340,6 +366,7 @@ $(document).ready(function(){
 		var td = $("#paymenthistory_table tr#tr_"+id).find("td");
 		var transaction_id = selectedorder;
 		var oldamount = td[2].innerText;
+		var oldimgname = td[6].innerText;
 		var amount = $("#update_paid_amount").val();
 		var payment_method = $("#update_mode_of_payment").val();
 		var moptext = $("#update_mode_of_payment option:selected").text();
@@ -350,27 +377,132 @@ $(document).ready(function(){
 		var newbalance = oldbalance - parseFloat(amount);
 		$("input#balance").val(newbalance);
 
-		$.ajax({
-			method: 'POST',
-			data: {id, amount, payment_method, payment_confirmation_detail, newbalance, transaction_id},
-			url: baseurl + '/main/updatepayment',
-			success: function (res) {
-				var res = JSON.parse(res);
-				$("#update_payment_modal").modal("hide");
-				alert("Changes successfully saved");
-				location.reload();
-				NProgress.done();
-			},
-			error: function (xhr, status, error) {
-				NProgress.done();
-				alert("Oppss! Something went wrong.");
-			},
-			beforeSend: function(){
-				NProgress.start();
+		setTimeout(function(){
+			if(imghaschanges) {
+				$('#payment_img_preview_update').croppie("result", {
+					type: "base64",
+					format: "jpeg"
+				}).then(function (img) {
+					croppieimg = img;
+				});
 			}
+		}, 500);
+
+		NProgress.start();
+		setTimeout(function() {
+			var payment_img = croppieimg;
+			$.ajax({
+				method: 'POST',
+				data: {id, amount, payment_method, payment_confirmation_detail, newbalance, transaction_id, payment_img, oldimgname},
+				url: baseurl + '/main/updatepayment',
+				success: function (res) {
+					var res = JSON.parse(res);
+					$("#update_payment_modal").modal("hide");
+					alert("Changes successfully saved");
+					location.reload();
+					NProgress.done();
+				},
+				error: function (xhr, status, error) {
+					NProgress.done();
+					alert("Oppss! Something went wrong.");
+				},
+				beforeSend: function(){
+				}
+			});
+		}, 800);
+	});
+
+	$("#tag_as_paid_modal").on("shown.bs.modal", function(){
+		setTimeout(function(){
+			if (!croppieready) {
+				croppie = $('#payment_img_preview').croppie({
+					"viewport": {
+						width: ($(".payment_image").width()+2)+"px",
+						height: 330,
+						type: 'square'
+					},
+					enforceBoundary: false,
+				});
+				croppieready = true;
+			}
+		},600);
+	});
+
+	$("#payment_proof").change(function(){
+		var imgfile = $(this).val();
+		var extension = imgfile.replace(/^.*\./, '');
+		if (extension == imgfile)
+			extension = '';
+		else
+			extension = extension.toLowerCase();
+
+		var currentimgsrc = $("#payment_img_preview").attr("src");
+
+		if(extension !== "jpg" && extension !== "jpeg"){
+			alert("Please upload JPEG / JPG file only.");
+			$(this).val("");
+			$("#payment_img_preview").attr("src", currentimgsrc);
+			return;
+		}
+
+		$("#payment_img_preview").css({
+			width: $("#payment_preview").width() + "px",
 		});
 
+		readURL(this, "");
 	});
+
+	$("#payment_proof_update").change(function(){
+		var imgfile = $(this).val();
+		var extension = imgfile.replace(/^.*\./, '');
+		if (extension == imgfile)
+			extension = '';
+		else
+			extension = extension.toLowerCase();
+
+		var currentimgsrc = $("#payment_img_preview_update").attr("src");
+
+		if(extension !== "jpg" && extension !== "jpeg"){
+			alert("Please upload JPEG / JPG file only.");
+			$(this).val("");
+			$("#payment_img_preview_update").attr("src", currentimgsrc);
+			return;
+		}
+
+		$("#payment_img_preview_update").css({
+			width: $("#payment_preview_update").width() + "px",
+		});
+
+		readURL(this, "_update");
+	});
+
+	function readURL(input, update) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+				$('#payment_img_preview'+update).attr('src', e.target.result);
+					setTimeout(function() {
+						if (!croppieready) {
+							croppie = $('#payment_img_preview'+update).croppie({
+								"viewport": {
+									width: ($(".payment_image"+update).width()+2)+"px",
+									height: 330,
+									type: 'square'
+								},
+								enforceBoundary: false,
+							});
+							croppieready = true;
+						}
+						croppie.croppie('bind', {
+							url: e.target.result
+						});
+					}, 500);
+				imghaschanges = true;
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
 
 	function changeorderstatus(status){
 		$.ajax({

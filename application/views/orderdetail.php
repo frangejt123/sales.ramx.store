@@ -91,6 +91,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/Ionicons/css/ionicons.min.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/nprogress.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/croppie.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/orderlist.css">
 
 </head>
@@ -280,7 +281,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	</div>
 
 	<div id="tag_as_paid_modal" class="modal fade">
-		<div class="modal-dialog modal-confirm">
+		<div class="modal-dialog modal-fixed-width modal-confirm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="icon-box" style="border: 3px solid #104675;color: #286090">
@@ -290,31 +291,43 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				</div>
 				<h4 class="modal-title">TAG AS PAID</h4>
 				<div class="modal-body" style="text-align: left">
-					<div class="form-group">
-						<label>Mode of Payment</label>
-						<select class="form-control" id="mode_of_payment">
-							<?php $pm = $transaction["payment_method"]; ?>
-							<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash On Delivery (COD)</option>
-							<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer - BPI</option>
-							<option value="3" <?php echo $pm == 3 ? 'selected="selected"' : ''; ?>>Bank Transfer - Metrobank</option>
-							<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
-						</select>
-					</div>
+					<div class="row">
+						<div class="col-5">
+							<div class="form-group">
+								<label>Mode of Payment</label>
+								<select class="form-control" id="mode_of_payment">
+									<?php $pm = $transaction["payment_method"]; ?>
+									<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash On Delivery (COD)</option>
+									<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer - BPI</option>
+									<option value="3" <?php echo $pm == 3 ? 'selected="selected"' : ''; ?>>Bank Transfer - Metrobank</option>
+									<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
+								</select>
+							</div>
 
-					<div class="form-group">
-						<label>Amount</label>
-						<input type="text" class="form-control" id="paid_amount" value="<?php echo $balance; ?>">
-					</div>
+							<div class="form-group">
+								<label>Amount</label>
+								<input type="text" class="form-control" id="paid_amount" value="<?php echo $balance; ?>">
+							</div>
 
-					<div class="form-group">
-						<label>Payment Confirmation Detail</label>
-						<textarea class="form-control" rows="2" id="payment_confirmation_detail"><?php echo $pm = $transaction["payment_confirmation_detail"]; ?></textarea>
+							<div class="form-group">
+								<label>Payment Confirmation Detail</label>
+								<textarea class="form-control" rows="5" id="payment_confirmation_detail"><?php echo $pm = $transaction["payment_confirmation_detail"]; ?></textarea>
+							</div>
+						</div><!-- left -->
+						<div class="col-7">
+							<div class="form-group">
+								<input type='file' id="payment_proof" />
+								<div id="payment_preview" class="payment_image">
+									<img id="payment_img_preview" src="" alt="Proof of Payment" />
+								</div>
+							</div>
+						</div><!-- right -->
 					</div>
-					<p style="text-align: center">This order will be tag as PAID. <br />Do you want to continue?</p>
 				</div>
+				<div style="clear:both"></div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-info" id="cancel_tag_as_paid">No</button>
-					<button type="button" class="btn btn-success" id="confirm_tag_as_paid">Yes</button>
+					<button type="button" class="btn btn-info" id="cancel_tag_as_paid">Cancel</button>
+					<button type="button" class="btn btn-success" id="confirm_tag_as_paid">Save</button>
 				</div>
 			</div>
 		</div>
@@ -359,6 +372,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 									<th>Payment Confirmation Detail</th>
 									<th></th>
 									<th hidden></th>
+									<th hidden></th>
 								</tr>
 								</thead>
 								<tbody>
@@ -379,6 +393,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 									echo '<td>'.$row["payment_confirmation_detail"].'</td>';
 									echo '<td width="120px">'.$actbtn.'</td>';
 									echo '<td hidden>'.$row["payment_method"].'</td>';
+									echo '<td hidden>'.$row["image_name"].'</td>';
 									echo '</tr>';
 								}
 								?>
@@ -432,7 +447,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	</div><!-- modal -->
 
 	<div id="update_payment_modal" class="modal fade">
-		<div class="modal-dialog modal-confirm">
+		<div class="modal-dialog modal-fixed-width modal-confirm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="icon-box" style="border: 3px solid #104675;color: #286090">
@@ -442,25 +457,35 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				</div>
 				<h4 class="modal-title">UPDATE PAYMENT</h4>
 				<div class="modal-body" style="text-align: left">
-					<div class="form-group">
-						<label>Mode of Payment</label>
-						<select class="form-control" id="update_mode_of_payment">
-							<option value="0">Cash On Delivery (COD)</option>
-							<option value="1">Bank Transfer - BPI</option>
-							<option value="3">Bank Transfer - Metrobank</option>
-							<option value="2">GCash</option>
-						</select>
-					</div>
-
-					<div class="form-group">
-						<label>Amount</label>
-						<input type="text" class="form-control" id="update_paid_amount" value="">
-					</div>
-
-					<div class="form-group">
-						<label>Payment Confirmation Detail</label>
-						<textarea class="form-control" rows="2" id="update_payment_confirmation_detail"></textarea>
-					</div>
+					<div class="row">
+						<div class="col-5">
+							<div class="form-group">
+								<label>Mode of Payment</label>
+								<select class="form-control" id="update_mode_of_payment">
+									<option value="0">Cash On Delivery (COD)</option>
+									<option value="1">Bank Transfer - BPI</option>
+									<option value="3">Bank Transfer - Metrobank</option>
+									<option value="2">GCash</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label>Amount</label>
+								<input type="text" class="form-control" id="update_paid_amount" value="">
+							</div>
+							<div class="form-group">
+								<label>Payment Confirmation Detail</label>
+								<textarea class="form-control" rows="2" id="update_payment_confirmation_detail"></textarea>
+							</div>
+						</div>
+						<div class="col-7">
+							<div class="form-group">
+								<input type='file' id="payment_proof_update" />
+								<div id="payment_preview_update" class="payment_image_update">
+									<img id="payment_img_preview_update" src="" alt="Proof of Payment" />
+								</div>
+							</div>
+						</div><!-- right -->
+					</div><!-- left -->
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
@@ -702,6 +727,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/croppie.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
