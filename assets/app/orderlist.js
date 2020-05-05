@@ -75,19 +75,39 @@ $(document).ready(function(){
 	$(".rpt_btn").on("click", function(){
 		var title = $(this).html();
 		var id = $(this).attr("id");
+		var param = $(this).attr("data-filter");
+		$("#id_value").val("");
 		$("#report_param_modal #reportModalLabel").html(title);
+		$("#report_param_modal").find(".filter_param").hide();
+		$("#report_param_modal").find("."+param).show();
+
 		$("#report_param_modal").data("rpt_name", id).modal("show");
 	});
 
 	$("#print_report").on("click", function(){
 		var deliverydate = $("#rpt_delivery_date").val();
-
-		if(deliverydate == "")
-			return;
-
-		$("form#report_data input#dlvrydate").val(deliverydate);
+		var order_id = $("#id_value").val();
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');
 
+		var param = {
+			"delivery_date": ["item_summary", "item_summary_detail"],
+			"order_number": ["payment_record"]
+		}
+
+		var inputvalue = "";
+		if(param["delivery_date"].includes(rpt_name)){
+			if(deliverydate == "")
+				return;
+			inputvalue = deliverydate;
+		}
+
+		if(param["order_number"].includes(rpt_name)){
+			if(order_id == "")
+				return;
+			inputvalue = order_id;
+		}
+
+		$("form#report_data input#param").val(inputvalue);
 		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);
 
 		window.open('', 'new_window');
@@ -449,7 +469,7 @@ $(document).ready(function(){
 		var orderidArray = $.map(orderids, function (value, key) {
 			return {value: value, data: key};
 		});
-		$('#order_id_filter').autocomplete({
+		$('.order_id_filter').autocomplete({
 			lookup: orderidArray,
 			lookupLimit: 5,
 			lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
@@ -459,11 +479,13 @@ $(document).ready(function(){
 			onSelect: function (suggestion) {
 				//$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
 				var id = suggestion.data;
+				$("#id_value").val(id);
 			},
 			onHint: function (hint) {
-				$('#orderid_autocomplete_hint').val(hint);
+				$('.orderid_autocomplete_hint').val(hint);
 			},
 			onInvalidateSelection: function () {
+				$("#id_value").val("");
 			}
 		});
 	}

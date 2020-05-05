@@ -55,9 +55,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<i class="fa fa-file-text-o"></i> &nbsp;Report
 			</button>
 			<div class="dropdown-menu">
-				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
-				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
-				<a class="dropdown-item dd-item rpt_btn" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="delivery_date" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="delivery_date" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="order_number" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
 			</div>
 		</div>
 	<?php } ?>
@@ -154,8 +154,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="form-group">
 						<label>Order #</label>
 						<div style="position: relative; height: 34px;">
-							<input type="text" class="form-control" id="order_id_filter" style="position: absolute; z-index: 2; background: transparent;">
-							<input type="text" class="form-control" id="orderid_autocomplete_hint"  disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
+							<input type="text" class="form-control order_id_filter" id="order_id_filter" style="position: absolute; z-index: 2; background: transparent;">
+							<input type="text" class="form-control orderid_autocomplete_hint" disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
 						</div>
 					</div>
 
@@ -238,7 +238,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<h4 class="modal-title" id="reportModalLabel"></h4>
 				</div>
 				<div class="modal-body">
-					<div class="form-group">
+					<div class="form-group order_number filter_param">
+						<label>Order #</label>
+						<input type="hidden" id="id_value">
+						<div style="position: relative; height: 34px;">
+							<input type="text" class="form-control order_id_filter" id="order_id_rpt" style="position: absolute; z-index: 2; background: transparent;">
+							<input type="text" class="form-control orderid_autocomplete_hint" disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
+						</div>
+					</div>
+
+					<div class="form-group delivery_date filter_param">
 						<label>Delivery Date</label>
 						<input type="date" class="form-control" id="rpt_delivery_date">
 					</div>
@@ -253,7 +262,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </div>
 <form id="report_data" method="post" action="" target="new_window">
-	<input type="hidden" id="dlvrydate" name="deliverydate" />
+	<input type="text" id="param" name="param" />
 </form>
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
