@@ -707,7 +707,8 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
 	var transmop = '<?php echo $transaction["payment_method"]; ?>';
-	var transpcd = '<?php echo $transaction["payment_confirmation_detail"]; ?>';
+	var transpcd = '<?php echo preg_replace("/\r\n|\r|\n/",'<br/>', $transaction["payment_confirmation_detail"]); ?>';
+
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
