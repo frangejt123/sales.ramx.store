@@ -140,7 +140,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						$orderids = json_encode($order);
 					?>
 					</tbody>
-					<caption>Total number or rows : <span id="table_rowcount"><?php echo $rowcount; ?></span></caption>
+					<caption><span id="table_rowcount"><?php echo $rowcount; ?></span> Records found</caption>
 				</table>
 			</div>
 			<!-- /.box-body -->
