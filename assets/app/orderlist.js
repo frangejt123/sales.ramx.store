@@ -107,6 +107,7 @@ $(document).ready(function(){
 			url: baseurl + '/main/neworder',
 			success: function (res) {
 				var res = JSON.parse(res);
+				var moparr = ["Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank"];
 				var statusarr = ["Pending", "For Delivery", "Completed"];
 				var tdclass = ["text-success", "text-warning", "text-primary"];
 				$.each(res["orders"], function (ind, row) {
@@ -120,8 +121,10 @@ $(document).ready(function(){
 					tr += "<td>" + row["delivery_date"] + "</td>";
 					tr += "<td width='25%'>" + row["name"] + "</td>";
 					tr += "<td class='"+paidCls+"'>" + rowPaid + "</td>";
+					tr += "<td>" + moparr[row["payment_method"]] + "</td>";
 					tr += "<td class='"+printCls+"'>" + rowPrint + "</td>";
 					tr += "<td class='" + tdclass[row["status"]] + "'>" + statusarr[row["status"]] + "</td>";
+					tr += "<td hidden>"+row["delivery_date"]+"</td>";
 					tr += "</tr>";
 
 					$("table#orderlist_table tbody").prepend(tr);

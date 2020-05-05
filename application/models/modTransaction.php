@@ -161,6 +161,7 @@ class ModTransaction extends CI_Model {
 					transaction.paid,
 					transaction.printed,
 					transaction.status,
+					transaction.payment_method,
 					DATE_FORMAT(transaction.delivery_date, '%m/%d/%Y') as delivery_date,
 					customer.name from transaction 
 					INNER JOIN customer ON customer.customer_id = transaction.customer_id
