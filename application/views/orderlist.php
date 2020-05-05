@@ -262,7 +262,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </div>
 <form id="report_data" method="post" action="" target="new_window">
-	<input type="text" id="param" name="param" />
+	<input type="hidden" id="param" name="param" />
 </form>
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
