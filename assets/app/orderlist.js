@@ -358,7 +358,7 @@ $(document).ready(function(){
 		var orderidtd = "";
 		var moptd = "";
 		for (var i = 0; i < rows.length; i++) {
-			if($("#filter_mop").val() != "")
+			if(moparray.length > 0)
 				moptd = (rows[i].cells[5].textContent).toUpperCase();
 			if(deliverydate != "")
 				deliverydatetd = rows[i].cells[8].textContent;
@@ -385,10 +385,15 @@ $(document).ready(function(){
 			} else {
 				rows[i].style.display = "none";
 			}
+
+			if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
+				&& (revised == "") && (orderid == "") && (moparray.length == 0)){
+				rows[i].style.display = "";
+			}
 		}
 
 		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
-			&& (revised == "") && (orderid == "") && ($("#filter_mop").val() == "")){
+			&& (revised == "") && (orderid == "") && (moparray.length == 0)){
 			$("#clear_filter_btn").hide();
 		}else{
 			$("#clear_filter_btn").show();
@@ -404,7 +409,7 @@ $(document).ready(function(){
 		$("#filter_printed").iCheck('uncheck');
 		$("#filter_revised").iCheck('uncheck');
 		$("#order_id_filter").val("");
-		$("#filter_mop").val("");
+		$("#filter_mop").val([]).trigger('change');
 
 		$("#confirm_filter").trigger("click");
 	});
