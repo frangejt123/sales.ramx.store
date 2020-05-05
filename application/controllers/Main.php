@@ -186,10 +186,26 @@ class Main extends CI_Controller {
 		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
 		$moparray = ["Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank"];
 
-
-
 		$updatenewvalue = array();
 		$detailparam["transaction_id"] = $param["trans"]["transaction_id"];
+
+		$contact_number = "";
+		if(isset($param["newcustomer"])){
+			if($image == "")
+				$param["newcustomer"]["location_image"] = "";
+			else{
+				$param["newcustomer"]["location_image"] = $imgname.".jpeg";
+			}
+			$param["newcustomer"]["facebook_name"] = $param["trans"]["facebook_name"];
+			$customerres = $this->modCustomer->insert($param["newcustomer"]);
+			$param["trans"]["customer_id"] = $customerres["id"];
+			$contact_number = $param["newcustomer"]["contact_number"];
+		}else{
+			$param["customerdetail"]["facebook_name"] = $param["trans"]["facebook_name"];
+			$contact_number = $param["customerdetail"]["contact_number"];
+			$customerres = $this->modCustomer->update($param["customerdetail"]);
+		}
+
 		if($param["trans"]["haschanges"] == 1){
 			$param["trans"]["id"] = $param["trans"]["transaction_id"];
 			$param["trans"]["date_revised"] = date("Y-m-d H:i:s");
@@ -233,7 +249,7 @@ class Main extends CI_Controller {
 			$newvalues["payment_confirmation_detail"] = $param["trans"]["payment_confirmation_detail"];
 			$newvalues["remarks"] = $param["trans"]["remarks"];
 			$newvalues["facebook_name"] = $param["trans"]["facebook_name"];
-			$newvalues["contact_number"] = $param["customerdetail"]["contact_number"];
+			$newvalues["contact_number"] = $contact_number;
 			$newvalues["sales_agent"] = $_SESSION["name"];
 			$updatenewvalue = $newvalues;
 
@@ -259,7 +275,7 @@ class Main extends CI_Controller {
 			$newvalues["payment_confirmation_detail"] = $param["trans"]["payment_confirmation_detail"];
 			$newvalues["remarks"] = $param["trans"]["remarks"];
 			$newvalues["facebook_name"] = $param["trans"]["facebook_name"];
-			$newvalues["contact_number"] = $param["customerdetail"]["contact_number"];
+			$newvalues["contact_number"] = $contact_number;
 			$newvalues["sales_agent"] = $_SESSION["name"];
 
 			$newdetails = array();
@@ -307,21 +323,6 @@ class Main extends CI_Controller {
 		}
 
 		$this->modAuditTrail->insert($audit_trails);
-
-		if(isset($param["newcustomer"])){
-			if($image == "")
-				$param["newcustomer"]["location_image"] = "";
-			else{
-				$param["newcustomer"]["location_image"] = $imgname.".jpeg";
-			}
-			$param["newcustomer"]["facebook_name"] = $param["trans"]["facebook_name"];
-			$customerres = $this->modCustomer->insert($param["newcustomer"]);
-			$param["trans"]["customer_id"] = $customerres["id"];
-		}else{
-			$param["customerdetail"]["facebook_name"] = $param["trans"]["facebook_name"];
-			$customerres = $this->modCustomer->update($param["customerdetail"]);
-		}
-
 
 		$result["transaction_id"] = date("mdY")."-".sprintf("%04s", $result["id"]);
 		echo json_encode($result);
