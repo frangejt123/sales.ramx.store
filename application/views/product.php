@@ -44,11 +44,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<table class="table table-striped table-hover" id="productlist_table">
 					<thead>
 					<tr>
-						<th>Description</th>
+						<th class="sortable">Description <i class="fa fa-sort float-right"></i></th>
 						<th>Measurement</th>
-						<th>Quantity</th>
+						<th class="sortable">Quantity <i class="fa fa-sort float-right"></i></th>
 						<th>Price</th>
-						<th>Category</th>
+						<th class="sortable">Category <i class="fa fa-sort float-right"></i></th>
 						<th hidden></th>
 						<th hidden></th>
 					</tr>
@@ -57,10 +57,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<?php
 
 					foreach($product as $ind => $row){
+						$cls = "";
+						if($row["avail_qty"] == 0)
+							$cls=' text-danger';
 						echo '<tr>';
 						echo '<td>'.$row["description"].'</td>';
 						echo '<td>'.$row["uom"].'</td>';
-						echo '<td>'.number_format($row["avail_qty"], 2).'</td>';
+						echo '<td class="'.$cls.'">'.number_format($row["avail_qty"], 2).'</td>';
 						echo '<td>'.number_format($row["price"], 2).'</td>';
 						echo '<td>'.$row["category"].'</td>';
 						echo '<td hidden>'.$row["id"].'</td>';
