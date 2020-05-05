@@ -213,9 +213,10 @@ class Main extends CI_Controller {
 			$audit_trails = array();
 			$p["id"] = $param["trans"]["id"];
 			$transactions = $this->modTransaction->getAll($p)->row_array();
-			$param["trans"]["printed"] = 2;//revised
-			if($transactions["printed"] == "0")
-				$param["trans"]["printed"] = 3;//updated
+			$param["trans"]["printed"] = 3;//updated
+			if($transactions["printed"] == "1")
+				$param["trans"]["printed"] = 2;//revised
+			
 			unset($transactions["location_image"]);
 
 			$oldvalues = array();
