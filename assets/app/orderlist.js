@@ -70,6 +70,7 @@ $(document).ready(function(){
 			url: baseurl + '/login/logout',
 			success: function (res) {
 				if(res == "success"){
+					localStorage.removeItem("filter");
 					window.location = baseurl + "/login";
 				}
 			}
@@ -367,14 +368,77 @@ $(document).ready(function(){
 		$("#filter_modal").modal("show");
 	});
 
+	/* access local storage filters */
+	if(typeof (localStorage["filter"]) !== 'undefined') {
+		var orderfilters = JSON.parse(localStorage["filter"]);
+		if (orderfilters) {
+			$("#filter_revised").iCheck("uncheck");
+			$("#filter_revised").iCheck("uncheck");
+			$("#filter_revised").iCheck("uncheck");
+			$("#filter_delivery_date").val(orderfilters["deliverydate"]);
+			$("#filter_status").val(orderfilters["status"]);
+			if (orderfilters["paid"] == "PAID")
+				$("#filter_paid").iCheck("check");
+			if (orderfilters["printed"] == "PRINTED")
+				$("#filter_printed").iCheck("check");
+			if (orderfilters["revised"] == "REVISED")
+				$("#filter_revised").iCheck("check");
+			$("#order_id_filter").val(orderfilters["orderid"]);
+			$("#filter_mop").select2().val(orderfilters["mop"]).trigger("change");
+			filterlist();
+		}
+	}
+
 	$("#confirm_filter").on("click", function(){
+		filterlist();
+	});
+
+	$("#clear_filter_btn").on("click", function(){
+		$("#filter_delivery_date").val("");
+		$("#filter_status").val("");
+		$("#filter_paid").iCheck('uncheck');
+		$("#filter_printed").iCheck('uncheck');
+		$("#filter_revised").iCheck('uncheck');
+		$("#order_id_filter").val("");
+		$("#filter_mop").val([]).trigger('change');
+
+		$("#confirm_filter").trigger("click");
+	});
+
+	$("#filter_printed").on('ifChecked', function(event){
+		$("#filter_revised").iCheck("uncheck");
+	});
+
+	$("#filter_revised").on('ifChecked', function(event){
+		$("#filter_printed").iCheck("uncheck");
+	});
+
+	$(".sortable").click(function(e) {
+		let ind = e.currentTarget.cellIndex;
+		let tbl = $(e.currentTarget.offsetParent).attr("id");
+		let isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
+
+		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
+		$(".sortable i").addClass("fa-sort");
+
+		$(e.currentTarget).find("i").removeClass("fa-sort");
+
+		if(isSortUp) {
+			$(e.currentTarget).find("i").addClass("fa-sort-down");
+		} else {
+			$(e.currentTarget).find("i").addClass("fa-sort-up");
+		}
+
+		sortTable(ind, tbl);
+	});
+
+	function filterlist(){
 		var rows = document.querySelector("#orderlist_table tbody").rows;
 
 		var moparray = [];
 		$("#filter_mop option:selected").each(function() {
 			moparray.push((this.text).toUpperCase());
 		});
-
 		var deliverydate = $("#filter_delivery_date").val();
 		var status = ($("#filter_status option:selected").text()).toUpperCase();
 		var paid = $("#filter_paid").prop('checked') ? "PAID" : "";
@@ -437,47 +501,19 @@ $(document).ready(function(){
 			$("#clear_filter_btn").show();
 		}
 
+		var orderfilters = {};
+		orderfilters["orderid"] = orderid;
+		orderfilters["deliverydate"] = deliverydate;
+		orderfilters["status"] = $("#filter_status").val();
+		orderfilters["paid"] = paid;
+		orderfilters["printed"] = printed;
+		orderfilters["revised"] = revised;
+		orderfilters["mop"] = $("#filter_mop").val();
+
+		localStorage["filter"] = JSON.stringify(orderfilters);
+
 		$("#filter_modal").modal("hide");
-	});
-
-	$("#clear_filter_btn").on("click", function(){
-		$("#filter_delivery_date").val("");
-		$("#filter_status").val("");
-		$("#filter_paid").iCheck('uncheck');
-		$("#filter_printed").iCheck('uncheck');
-		$("#filter_revised").iCheck('uncheck');
-		$("#order_id_filter").val("");
-		$("#filter_mop").val([]).trigger('change');
-
-		$("#confirm_filter").trigger("click");
-	});
-
-	$("#filter_printed").on('ifChecked', function(event){
-		$("#filter_revised").iCheck("uncheck");
-	});
-
-	$("#filter_revised").on('ifChecked', function(event){
-		$("#filter_printed").iCheck("uncheck");
-	});
-
-	$(".sortable").click(function(e) {
-		let ind = e.currentTarget.cellIndex;
-		let tbl = $(e.currentTarget.offsetParent).attr("id");
-		let isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
-
-		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-		$(".sortable i").addClass("fa-sort");
-
-		$(e.currentTarget).find("i").removeClass("fa-sort");
-
-		if(isSortUp) {
-			$(e.currentTarget).find("i").addClass("fa-sort-down");
-		} else {
-			$(e.currentTarget).find("i").addClass("fa-sort-up");
-		}
-
-		sortTable(ind, tbl);
-	});
+	}
 
 	inputautocomplete();
 	function inputautocomplete() {
