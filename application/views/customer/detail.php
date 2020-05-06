@@ -7,7 +7,7 @@
 		$contact_number = $customer["contact_number"];
 		$delivery_address = $customer["delivery_address"];
 		$location_image = $customer["location_image"];
-		$status_class = array("success", "warning", "primary", "danger");
+		$status_class = array("success", "warning", "primary", "danger", "info");
 	}
 
 	if(isset($transactions)) {
