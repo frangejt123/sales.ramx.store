@@ -210,9 +210,10 @@ $("document").ready(function(){
 				NProgress.done();
 				if(res["success"]){
 					alert("Transaction Successfully Settled!");
-					new_transaction_id = res["transaction_id"];
-					$("#confirmmodal").modal("hide");
-					$("#productsummary").find(".row").addClass("saved");
+					//new_transaction_id = res["transaction_id"];
+					window.location = baseurl + "/main/ut/"+btoa(res["id"]);
+					//$("#confirmmodal").modal("hide");
+					//$("#productsummary").find(".row").addClass("saved");
 					//location.reload();
 				}else{
 					alert(res["error"] + "\n" + res["product"]);
@@ -240,12 +241,9 @@ $("document").ready(function(){
 		});
 
 		if(products.length > 0){
-			if(saved == 0)
-				$("#confirmcancelmodal").modal("show").data("mode", "new");
-			else
-				location.reload();
+			$("#confirmcancelmodal").modal("show").data("mode", "new");
 		}else{
-			location.reload();
+			window.location = baseurl + "/main/pos";
 		}
 	});
 
@@ -345,24 +343,13 @@ $("document").ready(function(){
 
 	$("button#cancel_order_btn").on("click", function(){
 		var products = $("#productsummary").find(".row.haschanges");
-		var saved = 0;
 		var url = baseurl;
 
 		if($("#transaction_id_inp").val() != "")
 			url = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
 
-		$.each(products, function(i, r){
-			if($(r).hasClass("saved"))
-				saved++;
-		});
-
 		if(products.length > 0){
-			if(saved == 0)
-				$("#confirmcancelmodal").modal("show");
-			else{
-				NProgress.start();
-				window.location = url;
-			}
+			$("#confirmcancelmodal").modal("show").data("mode", "back");
 		}else{
 			NProgress.start();
 			window.location = url;
@@ -565,7 +552,7 @@ $("document").ready(function(){
 
 		var clipboardtext = "Name: "+name+"\n"
 			+"Facebook Name: "+fbname+"\n"
-			+"Order #: "+new_transaction_id+"\n"
+			+"Order #: "+ordernumber+"\n"
 			+"Address: "+cust_address+"\n"
 			+"Delivery Date: "+deliver_date+"\n"
 			+"Contact #: "+contact_number+"\n"

@@ -14,6 +14,7 @@ $total = "";
 $custid = "";
 $locationimage = "#";
 $fb_name = "";
+$ordernumber = "";
 
 if(isset($transaction)){
 	$name = $transaction["name"];
@@ -27,6 +28,9 @@ if(isset($transaction)){
 	$total = $transaction["total"];
 	$locationimage = $transaction["cust_location_image"];
 	$fb_name = $transaction["facebook_name"];
+	$orderid = sprintf("%04s", $transaction["id"]);
+	$tnxdt =  date("mdY", strtotime($transaction["datetime"]));
+	$ordernumber = $tnxdt."-".$orderid;
 }
 ?>
 
@@ -68,11 +72,9 @@ if(isset($transaction)){
 							<i class="fa fa-arrow-left"></i> &nbsp; Back
 						</button>
 						&nbsp; &nbsp;
-						<?php if(!isset($update)) { ?>
-							<button id = "new_order_btn" class="btn-info" >
+						<button id = "new_order_btn" class="btn-info" >
 							<i class="fa fa-undo" ></i > &nbsp; New Order
-							</button >
-						<?php } ?>
+						</button >
 					</div>
 				</div><!-- left column -->
 				<div class="col-6 pl-0 pr-0">
@@ -344,6 +346,7 @@ if(isset($transaction)){
 	var namelist = <?php print_r($namelist); ?>;
 	var customerdetail = <?php print_r($customerdetail); ?>;
 	var newcustomer;
+	var ordernumber = '<?php echo $ordernumber; ?>';
 
 	$(document).ready(function(){
 		$('a#click-a').click(function(){
