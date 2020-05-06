@@ -367,6 +367,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 								<thead>
 								<tr>
 									<th>Date</th>
+									<th>User</th>
 									<th>Payment Method</th>
 									<th>Amount</th>
 									<th>Payment Confirmation Detail</th>
@@ -388,6 +389,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 										$actbtn = "";
 									echo '<tr id="tr_'.$row["id"].'" class="payment_history_tr">';
 									echo '<td>'.date("m/d/Y", strtotime($row["payment_date"])).'</td>';
+									echo '<td>'.$row["user_name"].'</td>';
 									echo '<td>'.$paymentmethodarray[$row["payment_method"]].'</td>';
 									echo '<td>'.number_format($row["amount"], 2).'</td>';
 									echo '<td>'.$row["payment_confirmation_detail"].'</td>';

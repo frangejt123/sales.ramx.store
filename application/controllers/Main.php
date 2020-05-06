@@ -430,6 +430,7 @@ class Main extends CI_Controller {
 	}
 
 	public function insertpayment(){
+		session_start();
 		$param = $this->input->post(NULL, "true");
 
 		$this->load->model('modPayment', "", TRUE);
@@ -449,6 +450,7 @@ class Main extends CI_Controller {
 			file_put_contents($filepath, $image);
 		}
 
+		$param["user_id"] = $_SESSION["id"];
 		$res = $this->modPayment->insert($param);
 
 		$transparam["id"] = $param["transaction_id"];
@@ -476,6 +478,7 @@ class Main extends CI_Controller {
 	}
 
 	public function updatepayment(){
+		session_start();
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modTransaction', "", TRUE);
@@ -498,6 +501,7 @@ class Main extends CI_Controller {
 			file_put_contents($filepath, $image);
 		}
 
+		$param["user_id"] = $_SESSION["id"];
 		$res = $this->modPayment->update($param);
 		$paidparam["id"] = $param["transaction_id"];
 		$transparam["transaction_id"]  = $param["transaction_id"];

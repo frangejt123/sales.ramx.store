@@ -10,6 +10,7 @@ class ModPayment extends CI_Model {
 		$FIELDS = array(
 		"id" => "payment.id",
 		"transaction_id" => "payment.transaction_id",
+		"user_id" => "payment.user_id",
 		"payment_method" => "payment.payment_method",
 		"payment_confirmation_detail" => "payment.payment_confirmation_detail",
 		"amount" => "payment.amount",
@@ -25,6 +26,8 @@ class ModPayment extends CI_Model {
 	function getAll($param) {
 		$tablefield = "";
 
+		$this->FIELDS["user_name"] = "user.name";
+
 		foreach ($this->FIELDS as $alias => $field) {
 			if ($tablefield != "") {
 				$tablefield .= ",";
@@ -39,6 +42,7 @@ class ModPayment extends CI_Model {
 
 		$this->db->select($tablefield);
 		$this->db->from("payment");
+		$this->db->join("user", 'user.id = payment.user_id', 'left');
 		$this->db->order_by('payment.id', 'DESC');
 
 		$query = $this->db->get();
