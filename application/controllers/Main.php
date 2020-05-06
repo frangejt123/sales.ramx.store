@@ -512,6 +512,7 @@ class Main extends CI_Controller {
 
 		$recentpayment = $this->modPayment->getAll($transparam)->row_array();
 		$paidparam["payment_method"] = $recentpayment["payment_method"];
+		$paidparam["payment_confirmation_detail"] = $recentpayment["payment_confirmation_detail"];
 		$this->modTransaction->update($paidparam);
 		$res["payment_method"] = $recentpayment["payment_method"];
 

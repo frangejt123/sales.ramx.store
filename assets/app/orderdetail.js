@@ -347,10 +347,10 @@ $(document).ready(function(){
 	$(".edit_payment").on("click", function(){
 		var id = $(this).attr("id").split("_")[1];
 		var td = $("#paymenthistory_table tr#tr_"+id).find("td");
-		var amount = td[2].innerText;
-		var mop = td[5].innerText;
-		var pcd = td[3].innerText;
-		var imagename = td[6].innerText;
+		var amount = td[3].innerText;
+		var mop = td[6].innerText;
+		var pcd = td[4].innerText;
+		var imagename = td[7].innerText;
 
 		var bsurl = baseurl.replace("index.php", "");
 
