@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</button>
 			<div class="dropdown-menu">
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
-				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="delivery_date" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="order_number" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
 			</div>

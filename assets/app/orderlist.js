@@ -95,17 +95,17 @@ $(document).ready(function(){
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');
 
 		var param = {
-			//"delivery_date": ["item_summary_test", "item_summary_detail_test"],
+			"delivery_date": ["item_summary_detail"],
 			"order_number": ["payment_record"],
-			"from_to": ["sales_by_delivery", "item_summary", "item_summary_detail"]
+			"from_to": ["sales_by_delivery", "item_summary"]
 		}
 
 		var inputvalue = "";
-		// if(param["delivery_date"].includes(rpt_name)){
-		// 	if(deliverydate == "")
-		// 		return;
-		// 	inputvalue = deliverydate;
-		// }
+		if(param["delivery_date"].includes(rpt_name)){
+			if(deliverydate == "")
+				return;
+			inputvalue = deliverydate;
+		}
 
 		if(param["order_number"].includes(rpt_name)){
 			if(order_id == "")
