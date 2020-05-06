@@ -99,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<tbody>
 					<?php
 						$moparray = array("Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
-						$statusarray = array("Pending", "For Delivery", "Complete", "Voided");
+						$statusarray = array("Pending", "For Delivery", "Complete", "Voided", "Delivered");
 						$tdclass = array("text-success", "text-warning", "text-primary", "text-danger");
 						$order = array();
 						$rowcount = 0;
