@@ -47,15 +47,12 @@ class Report extends CI_Controller {
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$param = $this->input->post(NULL, "true");
-			/*$dd_param = explode(" - ", $param["param"]);
+			$dd_param = explode(" - ", $param["param"]);
 			$from = date("Y-m-d", strtotime($dd_param[0]));
 			$to = date("Y-m-d", strtotime($dd_param[1]));
+			
 			$condition = [
-				"DELIVERY_DATE_FROM" => $from,		  
-				"DELIVERY_DATE_TO" => $to
-			];*/
-			$condition = [
-				"CONDITION" => "transaction.delivery_date='".$param["param"]."'"
+				"CONDITION" => "transaction.delivery_date>='" . $from . "' AND transaction.delivery_date<='" . $to . "'"
 			];
 			
 			$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
