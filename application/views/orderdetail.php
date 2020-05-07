@@ -152,6 +152,9 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			$total_payment += $row["amount"];
 		}
 		$balance = $transaction["total"] - $total_payment;
+
+		$transdate = date("mdY", strtotime($transaction["datetime"]));
+		$ordernumber = $transdate.'-'.sprintf("%04s", $row["id"]);
 	?>
 
 	<input type="text" hidden id="balance" value="<?php echo $balance; ?>">
@@ -163,6 +166,12 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 
 	<div class="transaction_detail_container">
 		<table id="table_trans_detail">
+			<tr>
+
+				<td>Order # : <?php echo $ordernumber; ?></td>
+				<td class="sep"></td>
+				<td>Datetime : <?php echo date("m/d/Y H:i:s", strtotime($transaction["datetime"])); ?></td>
+			</tr>
 			<tr>
 				<td>Customer Name : <?php echo $transaction["name"]; ?></td>
 				<td class="sep"></td>
