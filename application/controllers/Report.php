@@ -117,11 +117,11 @@ class Report extends CI_Controller {
 
 	public function so_list_by_delivery_date() {
 		$input_param = [
-			"delivery_date_from" => $this->input->get("delivery_date_from", TRUE),
-			"delivery_date_to" => $this->input->get("delivery_date_to", TRUE),
-			"txn_status" => $this->input->get("txn_status", TRUE),
-			"payment_method" => $this->input->get("payment_method", TRUE),
-			"txn_paid" => $this->input->get("txn_paid", TRUE),
+			"delivery_date_from" 	=> $this->input->post("delivery_date_from", TRUE),
+			"delivery_date_to" 		=> $this->input->post("delivery_date_to", TRUE),
+			"txn_status" 			=> $this->input->post("txn_status", TRUE),
+			"payment_method" 		=> $this->input->post("payment_method", TRUE),
+			"txn_paid" 				=> $this->input->post("txn_paid", TRUE),
 		];
 
 		// Check required parameters
