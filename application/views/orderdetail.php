@@ -109,11 +109,16 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 
 		if($_SESSION["access_level"] == 1) { // sales agent
 			echo $btnmoreaction;//$btnprint;
-			if (($transaction["status"] == 0) && $transaction["paid"] == "0") {// && $_SESSION["id"] == $transaction["user_id"]
-				echo $btnvoid;
+
+			if($transaction["paid"] == "0") {
+				if (($transaction["status"] == 0)) {// && $_SESSION["id"] == $transaction["user_id"]
+					echo $btnvoid;
+					echo $btnupdate;
+				}//if logged-in agent = agent created the order && order is not paid
+
 				echo $btnpaid;
-				echo $btnupdate;
-			}//if logged-in agent = agent created the order && order is not paid
+			}
+
 
 		}// access level = 1;
 
