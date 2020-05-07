@@ -159,6 +159,7 @@ $(document).ready(function(){
 					tr += "<td>" + row["datetime"] + "</td>";
 					tr += "<td>" + row["delivery_date"] + "</td>";
 					tr += "<td width='25%'>" + row["name"] + "</td>";
+					tr += "<td>" + row["driver_name"] + "</td>";
 					tr += "<td class='"+paidCls+"'>" + rowPaid + "</td>";
 					tr += "<td>" + moparr[row["payment_method"]] + "</td>";
 					tr += "<td class='"+printCls+"'>" + rowPrint + "</td>";
@@ -461,21 +462,21 @@ $(document).ready(function(){
 		var rowcount = 0;
 		for (var i = 0; i < rows.length; i++) {
 			if(moparray.length > 0)
-				moptd = (rows[i].cells[5].textContent).toUpperCase();
+				moptd = (rows[i].cells[6].textContent).toUpperCase();
 			else
 				moparray = "";
 			if(deliverydate != "")
-				deliverydatetd = rows[i].cells[8].textContent;
+				deliverydatetd = rows[i].cells[9].textContent;
 			if(paid != "")
-				paidtd = (rows[i].cells[4].textContent).toUpperCase();
+				paidtd = (rows[i].cells[5].textContent).toUpperCase();
 			if(printed != "")
-				printedtd = (rows[i].cells[6].textContent).toUpperCase();
+				printedtd = (rows[i].cells[7].textContent).toUpperCase();
 			if(revised != "")
-				revisedtd = (rows[i].cells[6].textContent).toUpperCase();
+				revisedtd = (rows[i].cells[7].textContent).toUpperCase();
 			if(orderid != "")
 				orderidtd = (rows[i].cells[0].textContent).toUpperCase();
 			if(status != "")
-				statustd = (rows[i].cells[7].textContent).toUpperCase();
+				statustd = (rows[i].cells[8].textContent).toUpperCase();
 
 			if((moparray.includes(moptd))
 				&& (status == statustd)

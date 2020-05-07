@@ -86,15 +86,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<table class="table table-striped table-hover" id="orderlist_table">
 					<thead>
 					<tr>
-						<th class="sortable">Order # <i class="fa fa-sort float-right"></th>
-						<th class="sortable">Order Date <i class="fa fa-sort float-right"></th>
-						<th class="sortable">Delivery Date <i class="fa fa-sort float-right"></th>
-						<th class="sortable">Customer Name <i class="fa fa-sort float-right"></th>
-						<th class="sortable">Paid Status <i class="fa fa-sort float-right"></th>
-						<th class="sortable">Payment Method <i class="fa fa-sort float-right"></th>
-						<th class="sortable">Print Status <i class="fa fa-sort float-right"></th>
-						<th class="sortable">Status <i class="fa fa-sort float-right"></th>
-						<th hidden></th><!-- filter -->
+						<!-- 0 --><th class="sortable">Order # <i class="fa fa-sort float-right"></th>
+						<!-- 1 --><th class="sortable">Order Date <i class="fa fa-sort float-right"></th>
+						<!-- 2 --><th class="sortable">Delivery Date <i class="fa fa-sort float-right"></th>
+						<!-- 3 --><th class="sortable">Customer Name <i class="fa fa-sort float-right"></th>
+						<!-- 4 --><th class="sortable">Driver <i class="fa fa-sort float-right"></th>
+						<!-- 5 --><th class="sortable">Paid Status <i class="fa fa-sort float-right"></th>
+						<!-- 6 --><th class="sortable">Payment Method <i class="fa fa-sort float-right"></th>
+						<!-- 7 --><th class="sortable">Print Status <i class="fa fa-sort float-right"></th>
+						<!-- 8 --><th class="sortable">Status <i class="fa fa-sort float-right"></th>
+						<!-- 9 --><th hidden></th><!-- filter -->
 					</tr>
 					</thead>
 					<tbody>
@@ -130,6 +131,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								echo '<td>'.date("m/d/Y H:i:s", strtotime($row["datetime"])).'</td>';
 								echo '<td>'.date("m/d/Y", strtotime($row["delivery_date"])).'</td>';
 								echo '<td width="25%">'.$row["name"].'</td>';
+								echo '<td>'.$row["driver_name"].'</td>';
 								echo '<td class="'.$paidclass.'">'.$paid.'</td>';
 								echo '<td>'.$moparray[$row["payment_method"]].'</td>';
 								echo '<td class="'.$printCls.'">'.$printed.'</td>';
