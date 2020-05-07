@@ -49,6 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<a class="dropdown-item dd-item text-warning" href="#" id="customer_btn"><i class="fa fa-users"></i> &nbsp; Cutomer List</a>
 				<a class="dropdown-item dd-item text-info" href="#" id="inventory_adjustment_btn"><i class="fa fa-cogs"></i> &nbsp; Inv. Adjustment</a>
 				<a class="dropdown-item dd-item text-default" href="#" id="user_list_btn"><i class="fa fa-user-secret"></i> &nbsp; User List</a>
+				<a class="dropdown-item dd-item text-default" href="#" id="driver_list_btn"><i class="fa fa-user"></i> &nbsp; Driver</a>
 			</div>
 		</div>
 		<span class="span_seperator pull-right"></span>

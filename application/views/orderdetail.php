@@ -90,6 +90,8 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css">
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/Ionicons/css/ionicons.min.css">
+	<!-- Slimscroll -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/slimscroll.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/nprogress.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/croppie.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/orderlist.css">
@@ -164,7 +166,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 			<tr>
 				<td>Customer Name : <?php echo $transaction["name"]; ?></td>
 				<td class="sep"></td>
-				<td>Date : <?php echo date("m/d/Y H:i:s", strtotime($transaction["datetime"])); ?></td>
+				<td>Driver : <?php echo $transaction["driver_name"]; ?></td>
 			</tr>
 			<tr>
 				<td>Facebook Name : <?php echo $transaction["facebook_name"]; ?></td>
@@ -277,6 +279,14 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				<h4 class="modal-title">UPDATE ORDER STATUS</h4>
 				<div class="modal-body">
 					<p>Update order status to <b>"<span id="ordernewstatus"></span>"</b>?</p>
+					<div class="form-group" id="driver_name_grp">
+						<label>Select Driver</label>
+						<input type="hidden" id="driver_id">
+						<div style="position: relative; height: 34px;">
+							<input type="text" class="form-control" id="driver_filter" style="position: absolute; z-index: 2; background: transparent;">
+							<input type="text" class="form-control" id="driver_autocomplete_hint" disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-info" id="cancel_change_status">No</button>
@@ -732,9 +742,15 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 <form id="report_data" method="post" action="<?php echo base_url(); ?>index.php/report" target="new_window">
 	<input type="hidden" id="trans_id" name="id" />
 </form>
-
+<?php
+	$driverarray = array();
+	foreach($driverlist as $ind => $row){
+		json_encode($driverarray[$row["id"]] = $row["name"]);
+	}
+?>
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/jquery.autocomplete.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/croppie.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 <script>
@@ -742,6 +758,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
 	var transmop = '<?php echo $transaction["payment_method"]; ?>';
 	var transpcd = '<?php echo preg_replace("/\r\n|\r|\n/",'<br/>', $transaction["payment_confirmation_detail"]); ?>';
+	var driverlist = JSON.parse('<?php echo json_encode($driverarray); ?>');
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

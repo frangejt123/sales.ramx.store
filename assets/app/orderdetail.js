@@ -146,6 +146,7 @@ $(document).ready(function(){
 	});
 
 	$("#pending_order_btn").on("click", function(){
+		$("#driver_name_grp").hide();
 		$("span#ordernewstatus").text("Pending");
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #388638",
@@ -156,6 +157,7 @@ $(document).ready(function(){
 	});
 
 	$("#process_order_btn").on("click", function(){
+		$("#driver_name_grp").show();
 		$("span#ordernewstatus").text("For Delivery");
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #c57e19",
@@ -166,6 +168,7 @@ $(document).ready(function(){
 	});
 
 	$("#delivered_order_btn").on("click", function(){
+		$("#driver_name_grp").hide();
 		$("span#ordernewstatus").text("Delivered");
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #0a6a7a",
@@ -176,6 +179,7 @@ $(document).ready(function(){
 	});
 
 	$("#complete_order_btn").on("click", function(){
+		$("#driver_name_grp").hide();
 		$("span#ordernewstatus").text("Complete");
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #104675",
@@ -187,6 +191,8 @@ $(document).ready(function(){
 
 	$("#confirm_change_status").on("click", function(){
 		if($("span#ordernewstatus").text() == "For Delivery"){
+			if($("#driver_id").val() == "")
+				return;
 			changeorderstatus(1);
 		}else if($("span#ordernewstatus").text() == "Pending"){
 			changeorderstatus(0);
@@ -505,9 +511,14 @@ $(document).ready(function(){
 	}
 
 	function changeorderstatus(status){
+		var driver_id = $("#driver_id").val();
+		var data = {"id":selectedorder, status};
+		if(status == "1")
+			data["driver_id"] = driver_id;
+
 		$.ajax({
 			method: 'POST',
-			data: {"id":selectedorder, status},
+			data: data,
 			url: baseurl + '/main/updateorder',
 			success: function (res) {
 				var res = JSON.parse(res);
@@ -523,4 +534,32 @@ $(document).ready(function(){
 			}
 		});
 	}
+
+	inputautocomplete();
+	function inputautocomplete() {
+		// Initialize ajax autocomplete:
+		var driverArray = $.map(driverlist, function (value, key) {
+			return {value: value, data: key};
+		});
+		$('#driver_filter').autocomplete({
+			lookup: driverArray,
+			lookupLimit: 5,
+			lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+				var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+				return re.test(suggestion.value);
+			},
+			onSelect: function (suggestion) {
+				//$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+				var id = suggestion.data;
+				$("#driver_id").val(id);
+			},
+			onHint: function (hint) {
+				$('#driver_autocomplete_hint').val(hint);
+			},
+			onInvalidateSelection: function () {
+				$("#driver_id").val("");
+			}
+		});
+	}
+
 });

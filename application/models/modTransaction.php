@@ -26,7 +26,8 @@ class ModTransaction extends CI_Model {
 				"location_image" => "transaction.location_image",
 				"printed" => "transaction.printed",
 				"date_printed" => "transaction.date_printed",
-				"date_revised" => "transaction.date_revised"
+				"date_revised" => "transaction.date_revised",
+				"driver_id" => "transaction.driver_id"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void", "Delivered");
 	public $PAYMENT_METHOD = array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
@@ -43,6 +44,7 @@ class ModTransaction extends CI_Model {
 		$this->FIELDS["cust_location_image"] = "customer.location_image";
 		$this->FIELDS["sales_agent"] = "user.name";
 		$this->FIELDS["contact_number"] = "customer.contact_number";
+		$this->FIELDS["driver_name"] = "driver.name";
 		if(isset($param["no_image"]))
 			unset($this->FIELDS["location_image"]);
 
@@ -62,6 +64,7 @@ class ModTransaction extends CI_Model {
         $this->db->from("transaction");
 		$this->db->join("customer", 'customer.customer_id = transaction.customer_id');
 		$this->db->join("user", 'user.id = transaction.user_id');
+		$this->db->join("driver", 'driver.id = transaction.driver_id', 'left');
 		if(isset($param["old_transaction"])) {
 			$this->db->where('transaction.delivery_date < ', date('Y-m-d'));
 		}

@@ -52,6 +52,11 @@ $(document).ready(function(){
 		window.location = baseurl + "/user";
 	});
 
+	$("#driver_list_btn").on("click", function(){
+		NProgress.start();
+		window.location = baseurl + "/driver";
+	});
+
 	$("#product_list_btn").on("click", function(){
 		NProgress.start();
 		window.location = baseurl + "/product";

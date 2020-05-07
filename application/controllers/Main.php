@@ -62,6 +62,7 @@ class Main extends CI_Controller {
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modAuditTrail', "", TRUE);
+		$this->load->model('modDriver', "", TRUE);
 		$param["id"] = $orderid;
 		$detailparam["transaction_id"] = $orderid;
 		$transaction = $this->modTransaction->getAll($param)->row_array();
@@ -69,11 +70,13 @@ class Main extends CI_Controller {
 		$paymentparam["transaction_id"] = $orderid;
 		$payment = $this->modPayment->getAll($paymentparam)->result_array();
 		$audittrail = $this->modAuditTrail->getAll($detailparam)->result_array();
+		$drivers = $this->modDriver->getAll(null)->result_array();
 
 		$data["transaction"] = $transaction;
 		$data["transactiondetail"] = $transactiondetail;
 		$data["paymenthistory"] = $payment;
 		$data["orderhistory"] = $audittrail;
+		$data["driverlist"] = $drivers;
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->view('orderdetail', $data);
