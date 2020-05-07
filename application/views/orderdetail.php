@@ -154,7 +154,7 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 		$balance = $transaction["total"] - $total_payment;
 
 		$transdate = date("mdY", strtotime($transaction["datetime"]));
-		$ordernumber = $transdate.'-'.sprintf("%04s", $row["id"]);
+		$ordernumber = $transdate.'-'.sprintf("%04s", $transaction["id"]);
 	?>
 
 	<input type="text" hidden id="balance" value="<?php echo $balance; ?>">
