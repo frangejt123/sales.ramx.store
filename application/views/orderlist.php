@@ -130,7 +130,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								echo '<td>'.$transdate.'-'.sprintf("%04s", $row["id"]).'</td>';
 								echo '<td>'.date("m/d/Y H:i:s", strtotime($row["datetime"])).'</td>';
 								echo '<td>'.date("m/d/Y", strtotime($row["delivery_date"])).'</td>';
-								echo '<td width="25%">'.$row["name"].'</td>';
+								echo '<td width="20%">'.$row["name"].'</td>';
 								echo '<td>'.$row["driver_name"].'</td>';
 								echo '<td class="'.$paidclass.'">'.$paid.'</td>';
 								echo '<td>'.$moparray[$row["payment_method"]].'</td>';
