@@ -76,6 +76,8 @@ $(document).ready(function(){
 			success: function (res) {
 				if(res == "success"){
 					localStorage.removeItem("filter");
+					localStorage.removeItem("inverse");
+					localStorage.removeItem("thIndex");
 					window.location = baseurl + "/login";
 				}
 			}
@@ -419,74 +421,48 @@ $(document).ready(function(){
 		$("#filter_printed").iCheck("uncheck");
 	});
 
-	var table = $('table#orderlist_table');
-	$('.sortable')
-	.wrapInner('<span title="sort this column"/>')
-	.each(function(){
+	var inverse = false;
+	if(localStorage["inverse"] != undefined){
+		inverse = (localStorage["inverse"] == 'true');
+		sortable(parseInt(localStorage["thIndex"]));
+	}
 
-		var th = $(this),
-			thIndex = th.index(),
-			inverse = false;
 
-		th.click(function(){
+	$("th.sortable").on("click", function(){
+		var th = $(this);
+		let isSortUp = $(th).find("i").hasClass("fa-sort-up");
 
-			table.find('td').filter(function(){
+		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
+		$(".sortable i").addClass("fa-sort");
 
-				return $(this).index() === thIndex;
+		if(isSortUp) {
+			$(th).find("i").addClass("fa-sort-down");
+		} else {
+			$(th).find("i").addClass("fa-sort-up");
+		}
+		sortable(th.index());
+	});
 
-			}).sortElements(function(a, b){
-
-				return $.text([a]) > $.text([b]) ?
-					inverse ? -1 : 1
-					: inverse ? 1 : -1;
-
-			}, function(){
-
-				// parentNode is the element we want to move
-				return this.parentNode;
-
-			});
-
-			inverse = !inverse;
+	function sortable(thIndex){
+		$('table#orderlist_table').find('td').filter(function(){
+			return $(this).index() === thIndex;
+		}).sortElements(function(a, b){
+			if($.text([a]) > $.text([b])){
+				return inverse ? -1 : 1
+			}
+			else{
+				return inverse ? 1 : -1;
+			}
+		}, function(){
+			// parentNode is the element we want to move
+			return this.parentNode;
 
 		});
 
-	}).click(function(e){
-		let ind = e.currentTarget.cellIndex;
-		let tbl = $(e.currentTarget.offsetParent).attr("id");
-		let isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
-
-		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-		$(".sortable i").addClass("fa-sort");
-
-		$(e.currentTarget).find("i").removeClass("fa-sort");
-
-		if(isSortUp) {
-			$(e.currentTarget).find("i").addClass("fa-sort-down");
-		} else {
-			$(e.currentTarget).find("i").addClass("fa-sort-up");
-		}
-	});
-
-
-	/*$(".sortable").click(function(e) {
-		let ind = e.currentTarget.cellIndex;
-		let tbl = $(e.currentTarget.offsetParent).attr("id");
-		let isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
-
-		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-		$(".sortable i").addClass("fa-sort");
-
-		$(e.currentTarget).find("i").removeClass("fa-sort");
-
-		if(isSortUp) {
-			$(e.currentTarget).find("i").addClass("fa-sort-down");
-		} else {
-			$(e.currentTarget).find("i").addClass("fa-sort-up");
-		}
-
-		sortTable(ind, tbl);
-	});*/
+		localStorage["inverse"] = inverse;
+		inverse = !inverse;
+		localStorage["thIndex"] = thIndex;
+	}
 
 	function filterlist(){
 		var rows = document.querySelector("#orderlist_table tbody").rows;
@@ -537,15 +513,18 @@ $(document).ready(function(){
 				&& (orderid == orderidtd)
 			){
 				rows[i].style.display = "";
+				$(rows[i]).find("td").removeClass("display");
 				$(rows[i]).addClass("filtered");
 				rowcount++;
 			} else {
 				rows[i].style.display = "none";
+				$(rows[i]).find("td").addClass("display");
 			}
 
 			if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
 				&& (revised == "") && (orderid == "") && (moparray.length == 0)){
 				rows[i].style.display = "";
+				$(rows[i]).find("td").removeClass("display");
 			}
 			$("#table_rowcount").html(rowcount);
 		}
@@ -609,76 +588,4 @@ $(document).ready(function(){
 				return $1.toUpperCase()
 			})
 	}
-
-	// function sortTable(n, tableId) {
-	// 	var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-	// 	table = document.getElementById(tableId);
-	// 	switching = true;
-	// 	// Set the sorting direction to ascending:
-	// 	dir =  "asc";
-	// 	/* Make a loop that will continue until
-	// 	no switching has been done: */
-	// 	while (switching) {
-	// 		// Start by saying: no switching is done:
-	// 		switching = false;
-	// 		rows = table.rows;
-	// 		/* Loop through all table rows (except the
-	// 		first, which contains table headers): */
-	// 		for (i = 1; i < (rows.length - 1); i++) {
-	// 			// Start by saying there should be no switching:
-	// 			shouldSwitch = false;
-	// 			/* Get the two elements you want to compare,
-	// 			one from current row and one from the next: */
-	// 			x = rows[i].getElementsByTagName("TD")[n];
-	// 			y = rows[i + 1].getElementsByTagName("TD")[n];
-	// 			//check if the two rows should switch place:
-	// 			/* Check if the two rows should switch place,
-	// 			based on the direction, asc or desc: */
-	// 			if (dir == "asc") {
-	// 				if(!isNaN(x.innerHTML)){
-	// 					if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
-	// 						// If so, mark as a switch and break the loop:
-	// 						shouldSwitch = true;
-	// 						break;
-	// 					}
-	// 				}else{
-	// 					if(x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
-	// 						// If so, mark as a switch and break the loop:
-	// 						shouldSwitch = true;
-	// 						break;
-	// 					}
-	// 				}
-	// 			} else if (dir == "desc") {
-	// 				if(!isNaN(x.innerHTML)){
-	// 					if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
-	// 						// If so, mark as a switch and break the loop:
-	// 						shouldSwitch = true;
-	// 						break;
-	// 					}
-	// 				}else{
-	// 					if(x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
-	// 						// If so, mark as a switch and break the loop:
-	// 						shouldSwitch = true;
-	// 						break;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		if (shouldSwitch) {
-	// 			/* If a switch has been marked, make the switch
-	// 			and mark that a switch has been done: */
-	// 			rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-	// 			switching = true;
-	// 			// Each time a switch is done, increase this count by 1:
-	// 			switchcount ++;
-	// 		} else {
-	// 			/* If no switching has been done AND the direction is "asc",
-	// 			set the direction to "desc" and run the while loop again. */
-	// 			if (switchcount == 0 && dir == "asc") {
-	// 				dir = "desc";
-	// 				switching = true;
-	// 			}
-	// 		}
-	// 	}
-	// }
 });

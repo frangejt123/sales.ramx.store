@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+	localStorage.removeItem("filter");
+	localStorage.removeItem("inverse");
+	localStorage.removeItem("thIndex");
+	
 	NProgress.configure({ showSpinner: false });
 	$("button#login_btn").on("click", function(){
 		var username = $("#username").val();

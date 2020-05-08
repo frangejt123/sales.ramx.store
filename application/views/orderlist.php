@@ -86,15 +86,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<table class="table table-striped table-hover" id="orderlist_table">
 					<thead>
 						<tr>
-							<!-- 0 --><th class="sortable">Order # <i class="fa fa-sort float-right"></th>
-							<!-- 1 --><th class="sortable">Order Date <i class="fa fa-sort float-right"></th>
-							<!-- 2 --><th class="sortable">Delivery Date <i class="fa fa-sort float-right"></th>
-							<!-- 3 --><th class="sortable">Customer Name <i class="fa fa-sort float-right"></th>
-							<!-- 4 --><th class="sortable">Driver <i class="fa fa-sort float-right"></th>
-							<!-- 5 --><th class="sortable">Paid Status <i class="fa fa-sort float-right"></th>
-							<!-- 6 --><th class="sortable">Payment Method <i class="fa fa-sort float-right"></th>
-							<!-- 7 --><th class="sortable">Print Status <i class="fa fa-sort float-right"></th>
-							<!-- 8 --><th class="sortable">Status <i class="fa fa-sort float-right"></th>
+							<!-- 0 --><th class="sortable" id="td_orderid">Order # <i class="fa fa-sort float-right"></th>
+							<!-- 1 --><th class="sortable" id="td_orderdate">Order Date <i class="fa fa-sort float-right"></th>
+							<!-- 2 --><th class="sortable" id="td_deliverydate">Delivery Date <i class="fa fa-sort float-right"></th>
+							<!-- 3 --><th class="sortable" id="td_customername">Customer Name <i class="fa fa-sort float-right"></th>
+							<!-- 4 --><th class="sortable" id="td_driver">Driver <i class="fa fa-sort float-right"></th>
+							<!-- 5 --><th class="sortable" id="td_paid_status">Paid Status <i class="fa fa-sort float-right"></th>
+							<!-- 6 --><th class="sortable" id="td_mop">Payment Method <i class="fa fa-sort float-right"></th>
+							<!-- 7 --><th class="sortable" id="td_print_status">Print Status <i class="fa fa-sort float-right"></th>
+							<!-- 8 --><th class="sortable" id="td_status">Status <i class="fa fa-sort float-right"></th>
 							<!-- 9 --><th hidden></th><!-- filter -->
 						</tr>
 					</thead>
@@ -127,15 +127,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								$printed = "---";
 							}
 							echo '<tr id="tr_'.$row["id"].'">';
-								echo '<td>'.$transdate.'-'.sprintf("%04s", $row["id"]).'</td>';
-								echo '<td>'.date("m/d/Y H:i:s", strtotime($row["datetime"])).'</td>';
-								echo '<td>'.date("m/d/Y", strtotime($row["delivery_date"])).'</td>';
-								echo '<td width="20%">'.$row["name"].'</td>';
-								echo '<td>'.$row["driver_name"].'</td>';
-								echo '<td class="'.$paidclass.'">'.$paid.'</td>';
-								echo '<td>'.$moparray[$row["payment_method"]].'</td>';
-								echo '<td class="'.$printCls.'">'.$printed.'</td>';
-								echo '<td class="'.$tdclass[$row["status"]].'">'.$statusarray[$row["status"]].'</td>';
+								echo '<td class="td_orderid">'.$transdate.'-'.sprintf("%04s", $row["id"]).'</td>';
+								echo '<td class="td_orderdate">'.date("m/d/Y H:i:s", strtotime($row["datetime"])).'</td>';
+								echo '<td class="td_deliverydate">'.date("m/d/Y", strtotime($row["delivery_date"])).'</td>';
+								echo '<td class="td_customername" width="20%">'.$row["name"].'</td>';
+								echo '<td class="td_driver">'.($row["driver_name"] == null ? "---" : $row["driver_name"]).'</td>';
+								echo '<td class="td_paid_status '.$paidclass.'">'.$paid.'</td>';
+								echo '<td class="td_mop">'.$moparray[$row["payment_method"]].'</td>';
+								echo '<td class="td_print_status '.$printCls.'">'.$printed.'</td>';
+								echo '<td class="td_status '.$tdclass[$row["status"]].'">'.$statusarray[$row["status"]].'</td>';
 								echo '<td hidden>'.$row["delivery_date"].'</td>';
 							echo '</tr>';
 
