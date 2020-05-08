@@ -76,8 +76,6 @@ $(document).ready(function(){
 			success: function (res) {
 				if(res == "success"){
 					localStorage.removeItem("filter");
-					localStorage.removeItem("sort_mode");
-					localStorage.removeItem("sorted_tdname");
 					window.location = baseurl + "/login";
 				}
 			}
@@ -422,133 +420,53 @@ $(document).ready(function(){
 	});
 
 	var table = $('table#orderlist_table');
+	$('.sortable')
+	.wrapInner('<span title="sort this column"/>')
+	.each(function(){
 
-	$(table).find('td.'+localStorage["sorted_tdname"]).sortElements(function(a, b){
-		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-		// console.log(localStorage["sort_mode"]);
-		if(localStorage["sort_mode"] != undefined) {
-			if (localStorage["sort_mode"] == "sort_desc") {
-				$('th#'+localStorage["sorted_tdname"]).find("i").addClass("fa-sort-up");
-				return $(a).text() < $(b).text() ? 1 : -1;
-				//$(e.currentTarget).find("i").addClass("fa-sort-down");
-			} else {
-				$('th#'+localStorage["sorted_tdname"]).find("i").addClass("fa-sort-down");
-				return $(a).text() > $(b).text() ? 1 : -1;
-				//$(e.currentTarget).find("i").addClass("fa-sort-up");
-			}
-		}
-	});
+		var th = $(this),
+			thIndex = th.index(),
+			inverse = false;
 
-	$('.sortable').click(function(e){
-		var tdid = $(this).attr("id");
-		let isSortUp;
-		if(localStorage["sort_mode"] != undefined){
-			if(localStorage["sort_mode"] == "sort_asc"){
-				isSortUp = false;
-			}else{
-				isSortUp = true;
-			}
-		}else{
-			isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
-		}
+		th.click(function(){
+
+			table.find('td').filter(function(){
+
+				return $(this).index() === thIndex;
+
+			}).sortElements(function(a, b){
+
+				return $.text([a]) > $.text([b]) ?
+					inverse ? -1 : 1
+					: inverse ? 1 : -1;
+
+			}, function(){
+
+				// parentNode is the element we want to move
+				return this.parentNode;
+
+			});
+
+			inverse = !inverse;
+
+		});
+
+	}).click(function(e){
+		let ind = e.currentTarget.cellIndex;
+		let tbl = $(e.currentTarget.offsetParent).attr("id");
+		let isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
 
 		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
 		$(".sortable i").addClass("fa-sort");
 
 		$(e.currentTarget).find("i").removeClass("fa-sort");
-		localStorage["sorted_tdname"] = tdid;
 
 		if(isSortUp) {
-			localStorage["sort_mode"] = "sort_asc";
 			$(e.currentTarget).find("i").addClass("fa-sort-down");
-			$(table).find('td.'+tdid).sortElements(function(a, b){
-				return $(a).text() > $(b).text() ? 1 : -1;
-			}).addClass("sorted_td");
 		} else {
-			localStorage["sort_mode"] = "sort_desc";
 			$(e.currentTarget).find("i").addClass("fa-sort-up");
-			$(table).find('td.'+tdid).sortElements(function(a, b){
-				return $(a).text() < $(b).text() ? 1 : -1;
-			}).addClass("sorted_td");
 		}
 	});
-
-
-	// $('.sortable')
-	// .wrapInner('<span title="sort this column"/>')
-	// .each(function(){
-	//
-	// 	var th = $(this),
-	// 		thIndex = th.index(),
-	// 		inverse = false;
-	//
-	// 	th.click(function(){
-	//
-	// 		table.find('td').filter(function(){
-	//
-	// 			return $(this).index() === thIndex;
-	//
-	// 		}).sortElements(function(a, b){
-	// 			if(localStorage["sort_mode"] != undefined){
-	// 				if(localStorage["sort_mode"] == "sort_asc"){
-	// 					return $.text([a]) > $.text([b]) ?
-	// 						inverse ? -1 : 1
-	// 						: inverse ? 1 : -1;
-	// 				}else{
-	// 					return $.text([a]) < $.text([b]) ?
-	// 						inverse ? -1 : 1
-	// 						: inverse ? 1 : -1;
-	// 				}
-	// 			}else{
-	// 				return $.text([a]) > $.text([b]) ?
-	// 					inverse ? -1 : 1
-	// 					: inverse ? 1 : -1;
-	// 			}
-	//
-	// 		}, function(){
-	//
-	// 			// parentNode is the element we want to move
-	// 			return this.parentNode;
-	//
-	// 		}).addClass("sorted_td");
-	// 			if(localStorage["sort_mode"] != undefined){
-	// 				if(localStorage["sort_mode"] == "sort_asc"){
-	// 					inverse = inverse;
-	// 				}else{
-	// 					inverse = !inverse;
-	// 				}
-	// 			}else{
-	// 				inverse = !inverse;
-	// 			}
-	//
-	// 	});
-	//
-	// }).click(function(e){
-	// 	let isSortUp;
-	// 	if(localStorage["sort_mode"] != undefined){
-	// 		if(localStorage["sort_mode"] == "sort_asc"){
-	// 			isSortUp = true;
-	// 		}else{
-	// 			isSortUp = false;
-	// 		}
-	// 	}else{
-	// 		isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
-	// 	}
-	//
-	// 	$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-	// 	$(".sortable i").addClass("fa-sort");
-	//
-	// 	$(e.currentTarget).find("i").removeClass("fa-sort");
-	// 	localStorage["sorted_tdname"] =$(this).attr("id")
-	//
-	// 	if(isSortUp) {
-	// 		localStorage["sort_mode"] = "sort_desc";
-	// 		$(e.currentTarget).find("i").addClass("fa-sort-down");
-	// 	} else {
-	// 		localStorage["sort_mode"] = "sort_asc";
-	// 		$(e.currentTarget).find("i").addClass("fa-sort-up");
-	// 	}
-	// });
 
 
 	/*$(".sortable").click(function(e) {
