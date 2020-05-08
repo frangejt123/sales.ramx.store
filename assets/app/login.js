@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+	localStorage.removeItem("filter");
+	localStorage.removeItem("sort_mode");
+	localStorage.removeItem("sorted_tdname");
+	
 	NProgress.configure({ showSpinner: false });
 	$("button#login_btn").on("click", function(){
 		var username = $("#username").val();
