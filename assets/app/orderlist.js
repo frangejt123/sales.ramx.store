@@ -103,9 +103,9 @@ $(document).ready(function(){
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');
 
 		var param = {
-			"delivery_date": ["item_summary_detail"],
+			"delivery_date": [],
 			"order_number": ["payment_record"],
-			"from_to": ["sales_by_delivery", "item_summary"]
+			"from_to": ["sales_by_delivery", "item_summary", "item_summary_detail"]
 		}
 
 		var inputvalue = "";
@@ -426,7 +426,6 @@ $(document).ready(function(){
 		inverse = (localStorage["inverse"] == 'true');
 		sortable(parseInt(localStorage["thIndex"]));
 	}
-
 
 	$("th.sortable").on("click", function(){
 		var th = $(this);
