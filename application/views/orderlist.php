@@ -85,18 +85,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="box-body no-padding">
 				<table class="table table-striped table-hover" id="orderlist_table">
 					<thead>
-					<tr>
-						<!-- 0 --><th class="sortable">Order # <i class="fa fa-sort float-right"></th>
-						<!-- 1 --><th class="sortable">Order Date <i class="fa fa-sort float-right"></th>
-						<!-- 2 --><th class="sortable">Delivery Date <i class="fa fa-sort float-right"></th>
-						<!-- 3 --><th class="sortable">Customer Name <i class="fa fa-sort float-right"></th>
-						<!-- 4 --><th class="sortable">Driver <i class="fa fa-sort float-right"></th>
-						<!-- 5 --><th class="sortable">Paid Status <i class="fa fa-sort float-right"></th>
-						<!-- 6 --><th class="sortable">Payment Method <i class="fa fa-sort float-right"></th>
-						<!-- 7 --><th class="sortable">Print Status <i class="fa fa-sort float-right"></th>
-						<!-- 8 --><th class="sortable">Status <i class="fa fa-sort float-right"></th>
-						<!-- 9 --><th hidden></th><!-- filter -->
-					</tr>
+						<tr>
+							<!-- 0 --><th class="sortable">Order # <i class="fa fa-sort float-right"></th>
+							<!-- 1 --><th class="sortable">Order Date <i class="fa fa-sort float-right"></th>
+							<!-- 2 --><th class="sortable">Delivery Date <i class="fa fa-sort float-right"></th>
+							<!-- 3 --><th class="sortable">Customer Name <i class="fa fa-sort float-right"></th>
+							<!-- 4 --><th class="sortable">Driver <i class="fa fa-sort float-right"></th>
+							<!-- 5 --><th class="sortable">Paid Status <i class="fa fa-sort float-right"></th>
+							<!-- 6 --><th class="sortable">Payment Method <i class="fa fa-sort float-right"></th>
+							<!-- 7 --><th class="sortable">Print Status <i class="fa fa-sort float-right"></th>
+							<!-- 8 --><th class="sortable">Status <i class="fa fa-sort float-right"></th>
+							<!-- 9 --><th hidden></th><!-- filter -->
+						</tr>
 					</thead>
 					<tbody>
 					<?php
@@ -305,6 +305,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/sortelement.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/nprogress.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/orderlist.js"></script>
 
