@@ -133,7 +133,8 @@ if(isset($transaction)){
 						echo '<div class="product_main">';
 						echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
 						echo '<div class="product_desc">'.$row["description"].'</div>';
-						echo '<div class="product_price">'.number_format($row["price"], 2).'</div>';
+						echo '<div class="p_price">'.number_format($row["price"], 2).'</div>';
+						echo '<div class="product_price" hidden>'.$row["price"].'</div>';
 						echo '<div class="product_uom" id="produom_'.$row["id"].'">'.$row["uom"].'</div>';
 						echo '</div>';//product_cont
 						echo '<div id="qty_'.$row["id"].'" class="availqty_cont">Avail Qty: <span>'.
