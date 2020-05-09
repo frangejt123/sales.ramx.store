@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-//require_once "../sales.ramx.store/vendor/autoload.php";
+require_once "../sales.ramx.store/vendor/autoload.php";
 use Jaspersoft\Client\Client;
 
 class Report extends CI_Controller {
