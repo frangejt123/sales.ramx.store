@@ -27,6 +27,7 @@ class ModTransaction extends CI_Model {
 				"printed" => "transaction.printed",
 				"date_printed" => "transaction.date_printed",
 				"date_revised" => "transaction.date_revised",
+				"date_delivered" => "transaction.date_delivered",
 				"driver_id" => "transaction.driver_id"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void", "Delivered");

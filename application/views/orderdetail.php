@@ -79,6 +79,12 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 					'</div>'.
 				'</div>';
 
+$delivery_date = date("m/d/Y", strtotime($transaction["delivery_date"]));
+$date_delivered = $transaction["date_delivered"];
+if(!is_null($date_delivered))
+	$date_delivered = date("m/d/Y", strtotime($transaction["date_delivered"]));
+
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -193,7 +199,10 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 				<td>Payment Confirmation Details : <?php echo $transaction["payment_confirmation_detail"]; ?></td>
 			</tr>
 			<tr>
-				<td width="50%">Delivery Date : <?php echo date("m/d/Y", strtotime($transaction["delivery_date"])); ?></td>
+				<td width="50%">Delivery Date : <?php echo $delivery_date;
+					if(!is_null($date_delivered))
+						echo ' &mdash;&mdash; Date Delivered : '.$date_delivered; ?>
+				</td>
 				<td class="sep"></td>
 				<td>Sales Agent : <?php echo $transaction["sales_agent"]; ?></td>
 			</tr>
@@ -295,6 +304,11 @@ $btnstatus = '<span class="pull-right span_seperator"></span>'.
 							<input type="text" class="form-control" id="driver_filter" style="position: absolute; z-index: 2; background: transparent;">
 							<input type="text" class="form-control" id="driver_autocomplete_hint" disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
 						</div>
+					</div>
+
+					<div class="form-group" id="date_delivered_grp">
+						<label>Date Delivered</label>
+						<input type="date" class="form-control" id="date_delivered" value="<?php echo $transaction["delivery_date"]; ?>">
 					</div>
 				</div>
 				<div class="modal-footer">

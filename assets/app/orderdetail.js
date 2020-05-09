@@ -146,7 +146,7 @@ $(document).ready(function(){
 	});
 
 	$("#pending_order_btn").on("click", function(){
-		$("#driver_name_grp").hide();
+		$("#driver_name_grp, #date_delivered_grp").hide();
 		$("span#ordernewstatus").text("Pending");
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #388638",
@@ -157,6 +157,7 @@ $(document).ready(function(){
 	});
 
 	$("#process_order_btn").on("click", function(){
+		$("#date_delivered_grp").hide();
 		$("#driver_name_grp").show();
 		$("span#ordernewstatus").text("For Delivery");
 		$("#statusmodal").find(".icon-box").css({
@@ -169,6 +170,7 @@ $(document).ready(function(){
 
 	$("#delivered_order_btn").on("click", function(){
 		$("#driver_name_grp").hide();
+		$("#date_delivered_grp").show();
 		$("span#ordernewstatus").text("Delivered");
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #0a6a7a",
@@ -179,7 +181,7 @@ $(document).ready(function(){
 	});
 
 	$("#complete_order_btn").on("click", function(){
-		$("#driver_name_grp").hide();
+		$("#driver_name_grp, #date_delivered_grp").hide();
 		$("span#ordernewstatus").text("Complete");
 		$("#statusmodal").find(".icon-box").css({
 			"border": "3px solid #104675",
@@ -197,6 +199,8 @@ $(document).ready(function(){
 		}else if($("span#ordernewstatus").text() == "Pending"){
 			changeorderstatus(0);
 		}else if($("span#ordernewstatus").text() == "Delivered"){
+			if($("#date_delivered").val() == "")
+				return;
 			changeorderstatus(4);
 		}else{
 			changeorderstatus(2);
@@ -512,9 +516,12 @@ $(document).ready(function(){
 
 	function changeorderstatus(status){
 		var driver_id = $("#driver_id").val();
+		var date_delivered = $("#date_delivered").val();
 		var data = {"id":selectedorder, status};
 		if(status == "1")
 			data["driver_id"] = driver_id;
+		if(status == "4")
+			data["date_delivered"] = date_delivered;
 
 		$.ajax({
 			method: 'POST',
