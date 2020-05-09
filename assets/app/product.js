@@ -25,6 +25,9 @@ $(document).ready(function(){
 
 	$("button#create_product_btn").on("click", function(){
 		$("input#product_id").val("");
+		$("#phase_out_grp").hide();
+
+		$("#product_modal .modal-header span").text("Add Product");
 		$("#delete_product").attr("hidden", "hidden");
 		$("#product_modal").modal("show");
 	});
@@ -36,10 +39,19 @@ $(document).ready(function(){
 
 	$("#productlist_table").on("click", "tr", function(){
 		var td = $(this).find("td");
+
+		$("#product_modal .modal-header span").text("Update Product");
+		$("#phase_out_grp").show();
+
 		$("#description").val(td[0].textContent);
 		$("#uom").val(td[1].textContent);
 		$("#price").val(td[3].textContent);
 		$("#category").val(td[6].textContent);
+		if(td[7].textContent == "1"){
+			$("#phase_out").iCheck("check");
+		}else{
+			$("#phase_out").iCheck("uncheck");
+		}
 
 		$("input#product_id").val(td[5].textContent);
 		$("#delete_product").removeAttr("hidden");
@@ -66,8 +78,9 @@ $(document).ready(function(){
 		var price = $("#price").val();
 		var category_id = $("select#category").val();
 		var url = baseurl + '/product/addProduct';
+		var phase_out = $("#phase_out").prop('checked') ? "1" : "0";
 
-		var data = {description, uom, price, category_id};
+		var data = {description, uom, price, category_id, phase_out};
 		if(product_id != "") {//update
 			data["id"] = product_id;
 			url = baseurl + '/product/update';

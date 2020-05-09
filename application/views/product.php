@@ -51,6 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<th class="sortable">Category <i class="fa fa-sort float-right"></i></th>
 						<th hidden></th>
 						<th hidden></th>
+						<th hidden></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -68,6 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						echo '<td>'.$row["category"].'</td>';
 						echo '<td hidden>'.$row["id"].'</td>';
 						echo '<td hidden>'.$row["category_id"].'</td>';
+						echo '<td hidden>'.$row["phase_out"].'</td>';
 						echo '</tr>';
 					}
 					?>
@@ -82,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title"><i class="fa fa-cubes"></i> Add Product</h4>
+					<h4 class="modal-title"><i class="fa fa-cubes"></i> <span>Add Product<span></h4>
 				</div>
 				<div class="modal-body">
 					<input type="hidden" id="product_id" class="not-required">
@@ -111,6 +113,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								}
 							?>
 						</select>
+					</div>
+
+					<div class="form-group" id="phase_out_grp">
+						<label></label>
+						<div class="checkbox icheck">
+							<label>
+								<input type="checkbox" id="phase_out"> &nbsp; Phase Out
+							</label>
+						</div>
 					</div>
 				</div>
 				<div class="modal-footer" style="display: inline !important;">

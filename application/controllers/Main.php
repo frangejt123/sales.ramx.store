@@ -30,8 +30,9 @@ class Main extends CI_Controller {
 		$this->load->model('modCustomer', "", TRUE);
 		$this->load->model('modCategory', "", TRUE);
 
+		$product_product["phase_out"] = "0";
 		$data["category"] = $this->modCategory->getAll(null)->result_array();
-		$data["product"] = $this->modProduct->getAll(null)->result_array();
+		$data["product"] = $this->modProduct->getAll($product_product)->result_array();
 		$customer = $this->modCustomer->getAll(null)->result_array();
 		$customerarray = array();
 		$nameopt = array();
@@ -340,8 +341,9 @@ class Main extends CI_Controller {
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->load->model('modCategory', "", TRUE);
 
+		$product_product["phase_out"] = "0";
 		$data["category"] = $this->modCategory->getAll(null)->result_array();
-		$data["product"] = $this->modProduct->getAll(null)->result_array();
+		$data["product"] = $this->modProduct->getAll($product_product)->result_array();
 		$customer = $this->modCustomer->getAll(null)->result_array();
 
 		$id = base64_decode($id);
