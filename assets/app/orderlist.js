@@ -111,58 +111,72 @@ $(document).ready(function(){
 
 		var param_mop = $("#param_status").val();
 		var param_status = $("#param_mop").val();
-		var param_paid = $("#param_paid").val();
 		var param_trxdate = $("#param_trxdate").val();
 
 		$("form#report_data input#param_status").val("");
 		$("form#report_data input#param_mop").val("");
 		$("form#report_data input#param_paid").val("");
 		$("form#report_data input#param_trxdate").val("");
+		$("form#report_data input#param").val("");
 
-		var param = {
-			"delivery_date": [],
-			"order_number": ["payment_record"],
-			"from_to": ["sales_by_delivery", "item_summary", "item_summary_detail", "sales_by_payment_method", "so_list_by_delivery_date"]
+		// var param = {
+		// 	"delivery_date": [],
+		// 	"order_number": ["payment_record"],
+		// 	"from_to": ["sales_by_delivery", "item_summary", "item_summary_detail", "sales_by_payment_method", "so_list_by_delivery_date"]
+		// }
+
+		// var inputvalue = "";
+		// if(param["delivery_date"].includes(rpt_name)){
+		// 	if(deliverydate == "")
+		// 		return;
+		// 	inputvalue = deliverydate;
+		// }
+		//
+		// if(param["order_number"].includes(rpt_name)){
+		// 	if(order_id == "")
+		// 		return;
+		// 	inputvalue = order_id;
+		// }
+		//
+		// if(param["from_to"].includes(rpt_name)){
+		// 	if(from_to == "")
+		// 		return;
+		// 	inputvalue = from_to;
+		// }
+
+		if(from_to != ""){
+			$("form#report_data input#param").val(deliverydate);
 		}
 
-		var inputvalue = "";
-		if(param["delivery_date"].includes(rpt_name)){
-			if(deliverydate == "")
-				return;
-			inputvalue = deliverydate;
+		if(order_id != ""){
+			$("form#report_data input#param").val(deliverydate);
 		}
 
-		if(param["order_number"].includes(rpt_name)){
-			if(order_id == "")
-				return;
-			inputvalue = order_id;
+		if(deliverydate != ""){
+			$("form#report_data input#param").val(deliverydate);
 		}
 
-		if(param["from_to"].includes(rpt_name)){
-			if(from_to == "")
-				return;
-			inputvalue = from_to;
-		}
-
-		if($("#param_mop").val() != ""){
+		if(param_mop != ""){
 			$("form#report_data input#param_mop").val($("#param_mop").val());
 		}
-		if($("#param_status").val() != ""){
+		if(param_status != ""){
 			$("form#report_data input#param_status").val($("#param_status").val());
 		}
 		if($("#param_paid").prop('checked')){
 			$("form#report_data input#param_paid").val("1");
 		}
+
 		if($("#param_trxdate").val() != ""){
 			$("form#report_data input#param_trxdate").val(param_trxdate);
 		}
-
-		$("form#report_data input#param").val(inputvalue);
 
 		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);
 
 		window.open('', 'new_window');
 		document.getElementById('report_data').submit();
+
+
+		$("#report_param_modal").modal("hide");
 	});
 
 	/* AJAX LONG pollING */
