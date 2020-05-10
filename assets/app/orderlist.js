@@ -145,11 +145,11 @@ $(document).ready(function(){
 		// }
 
 		if(from_to != ""){
-			$("form#report_data input#param").val(deliverydate);
+			$("form#report_data input#param").val(from_to);
 		}
 
 		if(order_id != ""){
-			$("form#report_data input#param").val(deliverydate);
+			$("form#report_data input#param").val(order_id);
 		}
 
 		if(deliverydate != ""){
