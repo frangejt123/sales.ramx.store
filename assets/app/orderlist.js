@@ -112,10 +112,12 @@ $(document).ready(function(){
 		var param_mop = $("#param_status").val();
 		var param_status = $("#param_mop").val();
 		var param_paid = $("#param_paid").val();
+		var param_trxdate = $("#param_trxdate").val();
 
 		$("form#report_data input#param_status").val("");
 		$("form#report_data input#param_mop").val("");
 		$("form#report_data input#param_paid").val("");
+		$("form#report_data input#param_trxdate").val("");
 
 		var param = {
 			"delivery_date": [],
@@ -151,7 +153,12 @@ $(document).ready(function(){
 		if($("#param_paid").prop('checked')){
 			$("form#report_data input#param_paid").val("1");
 		}
+		if($("#param_trxdate").val() != ""){
+			$("form#report_data input#param_trxdate").val(param_trxdate);
+		}
 
+
+		return;
 		$("form#report_data input#param").val(inputvalue);
 
 		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);

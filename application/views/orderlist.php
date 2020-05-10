@@ -60,8 +60,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="dropdown-menu">
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
-				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="order_number" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="so_list_by_delivery_date_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales Order</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,trx_date" href="javascript:void(0)" id="sales_by_payment_method_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Payment Method</a>
 			</div>
 		</div>
 	<?php } ?>
@@ -269,6 +271,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<!-- /.input group -->
 					</div>
 
+					<div class="form-group trx_date filter_param">
+						<label>Order Date</label>
+						<div class="input-group">
+							<input type="text" class="form-control pull-right input_daterangepicker" id="param_trxdate">
+						</div>
+						<!-- /.input group -->
+					</div>
+
 					<div class="form-group trx_status filter_param">
 						<label>Status</label>
 						<select class="form-control" id="param_status">
@@ -311,6 +321,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 <form id="report_data" method="post" action="" target="new_window">
 	<input type="hidden" id="param" name="param" />
+	<input type="hidden" id="param_trxdate" name="param_trxdate" />
 	<input type="hidden" id="param_status" name="param_status" />
 	<input type="hidden" id="param_mop" name="param_mop" />
 	<input type="hidden" id="param_paid" name="param_paid" />
