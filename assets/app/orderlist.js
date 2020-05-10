@@ -156,9 +156,7 @@ $(document).ready(function(){
 		if($("#param_trxdate").val() != ""){
 			$("form#report_data input#param_trxdate").val(param_trxdate);
 		}
-
-
-		return;
+		
 		$("form#report_data input#param").val(inputvalue);
 
 		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);
