@@ -122,7 +122,7 @@ $(document).ready(function(){
 		var param = {
 			"delivery_date": [],
 			"order_number": ["payment_record"],
-			"from_to": ["sales_by_delivery", "item_summary", "item_summary_detail"]
+			"from_to": ["sales_by_delivery", "item_summary", "item_summary_detail", "sales_by_payment_method", "so_list_by_delivery_date"]
 		}
 
 		var inputvalue = "";
@@ -156,7 +156,7 @@ $(document).ready(function(){
 		if($("#param_trxdate").val() != ""){
 			$("form#report_data input#param_trxdate").val(param_trxdate);
 		}
-		
+
 		$("form#report_data input#param").val(inputvalue);
 
 		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);
