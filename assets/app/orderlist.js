@@ -87,12 +87,19 @@ $(document).ready(function(){
 	$(".rpt_btn").on("click", function(){
 		var title = $(this).html();
 		var id = $(this).attr("id");
-		var param = $(this).attr("data-filter");
+		var param = $(this).attr("data-filter").split(",");
+
+		$("select").val("");
+		$(".select2").select2().val("").trigger("change")
+		$("input").val("");
+		$("input[type='checkbox']").iCheck("uncheck");
+
 		$("#id_value").val("");
 		$("#report_param_modal #reportModalLabel").html(title);
 		$("#report_param_modal").find(".filter_param").hide();
-		$("#report_param_modal").find("."+param).show();
-
+		$.each(param, function(ind, row){
+			$("#report_param_modal").find("."+row).show();
+		});
 		$("#report_param_modal").data("rpt_name", id).modal("show");
 	});
 
@@ -101,6 +108,14 @@ $(document).ready(function(){
 		var order_id = $("#id_value").val();
 		var from_to = $("#delivery_date_from_to").val();
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');
+
+		var param_mop = $("#param_status").val();
+		var param_status = $("#param_mop").val();
+		var param_paid = $("#param_paid").val();
+
+		$("form#report_data input#param_status").val("");
+		$("form#report_data input#param_mop").val("");
+		$("form#report_data input#param_paid").val("");
 
 		var param = {
 			"delivery_date": [],
@@ -127,7 +142,18 @@ $(document).ready(function(){
 			inputvalue = from_to;
 		}
 
+		if($("#param_mop").val() != ""){
+			$("form#report_data input#param_mop").val($("#param_mop").val());
+		}
+		if($("#param_status").val() != ""){
+			$("form#report_data input#param_status").val($("#param_status").val());
+		}
+		if($("#param_paid").prop('checked')){
+			$("form#report_data input#param_paid").val("1");
+		}
+
 		$("form#report_data input#param").val(inputvalue);
+
 		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);
 
 		window.open('', 'new_window');

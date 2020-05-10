@@ -60,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="dropdown-menu">
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="item_summary_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary </a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="item_summary_detail_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Item Summary  Detail</a>
-				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="order_number" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
 			</div>
 		</div>
@@ -268,6 +268,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						</div>
 						<!-- /.input group -->
 					</div>
+
+					<div class="form-group trx_status filter_param">
+						<label>Status</label>
+						<select class="form-control" id="param_status">
+							<option value=""></option>
+							<option value="0" class="text-success">Pending</option>
+							<option value="1" class="text-warning">For Delivery</option>
+							<option value="4" class="text-info">Delivered</option>
+							<option value="2" class="text-primary">Complete</option>
+							<option value="3" class="text-danger">Voided</option>
+						</select>
+					</div>
+
+					<div class="form-group rpt_mop filter_param">
+						<label>Mode of Payment</label>
+						<select class="form-control select2" id="param_mop" multiple="multiple" data-placeholder="Select a Mode of Payment" style="width: 100%;">
+							<option value="0">Cash on Delivery</option>
+							<option value="1">Bank Transfer - BPI</option>
+							<option value="3">Bank Transfer - Metrobank</option>
+							<option value="2">GCash</option>
+						</select>
+					</div>
+
+					<div class="form-group rpt_paid filter_param">
+						<label></label>
+						<div class="checkbox icheck">
+							<label>
+								<input type="checkbox" id="param_paid"> &nbsp; Paid
+							</label>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -280,6 +311,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 <form id="report_data" method="post" action="" target="new_window">
 	<input type="hidden" id="param" name="param" />
+	<input type="hidden" id="param_status" name="param_status" />
+	<input type="hidden" id="param_mop" name="param_mop" />
+	<input type="hidden" id="param_paid" name="param_paid" />
 </form>
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
