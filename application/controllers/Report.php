@@ -214,7 +214,8 @@ class Report extends CI_Controller {
 			"txn_date_from" 		=> $trx_from,
 			"txn_date_to" 			=> $trx_to,
 			"txn_status" 			=> $status,
-			"payment_method" 		=> $mop
+			"payment_method" 		=> $mop,
+			"driver"				=> $this->input->post("driver", "true")
 		];
 
 		$report_param = [
@@ -231,6 +232,10 @@ class Report extends CI_Controller {
 		
 		if ($input_param["payment_method"] != "") {
 			$report_param["CONDITION"] .= " AND transaction.payment_method IN (".$input_param["payment_method"].")";
+		}
+
+		if (!is_null($input_param["driver"])) {
+			$report_param["CONDITION"] .= " AND driver.id IN (".$input_param["driver"].")";
 		}
 
 		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
