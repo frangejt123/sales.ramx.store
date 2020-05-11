@@ -110,7 +110,7 @@ $(document).ready(function(){
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');
 
 		var param_mop = $("#rpt_param_mop").val();
-		var param_status = $("#rpt_param_mop").val();
+		var param_status = $("#rpt_param_status").val();
 		var param_trxdate = $("#rpt_param_trxdate").val();
 
 		if(from_to != ""){
