@@ -109,40 +109,9 @@ $(document).ready(function(){
 		var from_to = $("#delivery_date_from_to").val();
 		var rpt_name = ($("#report_param_modal").data("rpt_name")).replace('_rpt','');
 
-		var param_mop = $("#param_status").val();
-		var param_status = $("#param_mop").val();
-		var param_trxdate = $("#param_trxdate").val();
-
-		$("form#report_data input#param_status").val("");
-		$("form#report_data input#param_mop").val("");
-		$("form#report_data input#param_paid").val("");
-		$("form#report_data input#param_trxdate").val("");
-		$("form#report_data input#param").val("");
-
-		// var param = {
-		// 	"delivery_date": [],
-		// 	"order_number": ["payment_record"],
-		// 	"from_to": ["sales_by_delivery", "item_summary", "item_summary_detail", "sales_by_payment_method", "so_list_by_delivery_date"]
-		// }
-
-		// var inputvalue = "";
-		// if(param["delivery_date"].includes(rpt_name)){
-		// 	if(deliverydate == "")
-		// 		return;
-		// 	inputvalue = deliverydate;
-		// }
-		//
-		// if(param["order_number"].includes(rpt_name)){
-		// 	if(order_id == "")
-		// 		return;
-		// 	inputvalue = order_id;
-		// }
-		//
-		// if(param["from_to"].includes(rpt_name)){
-		// 	if(from_to == "")
-		// 		return;
-		// 	inputvalue = from_to;
-		// }
+		var param_mop = $("#rpt_param_mop").val();
+		var param_status = $("#rpt_param_mop").val();
+		var param_trxdate = $("#rpt_param_trxdate").val();
 
 		if(from_to != ""){
 			$("form#report_data input#param").val(from_to);
@@ -157,16 +126,16 @@ $(document).ready(function(){
 		}
 
 		if(param_mop != ""){
-			$("form#report_data input#param_mop").val($("#param_mop").val());
+			$("form#report_data input#param_mop").val(param_mop);
 		}
 		if(param_status != ""){
-			$("form#report_data input#param_status").val($("#param_status").val());
+			$("form#report_data input#param_status").val(param_status);
 		}
-		if($("#param_paid").prop('checked')){
+		if($("#rpt_param_paid").prop('checked')){
 			$("form#report_data input#param_paid").val("1");
 		}
 
-		if($("#param_trxdate").val() != ""){
+		if(param_trxdate != ""){
 			$("form#report_data input#param_trxdate").val(param_trxdate);
 		}
 
@@ -177,6 +146,12 @@ $(document).ready(function(){
 
 
 		$("#report_param_modal").modal("hide");
+
+		$("form#report_data input#param_status").val("");
+		$("form#report_data input#param_mop").val("");
+		$("form#report_data input#param_paid").val("");
+		$("form#report_data input#param_trxdate").val("");
+		$("form#report_data input#param").val("");
 	});
 
 	/* AJAX LONG pollING */

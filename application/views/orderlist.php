@@ -274,14 +274,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="form-group trx_date filter_param">
 						<label>Order Date</label>
 						<div class="input-group">
-							<input type="text" class="form-control pull-right input_daterangepicker" id="param_trxdate">
+							<input type="text" class="form-control pull-right input_daterangepicker" id="rpt_param_trxdate">
 						</div>
 						<!-- /.input group -->
 					</div>
 
 					<div class="form-group trx_status filter_param">
 						<label>Status</label>
-						<select class="form-control" id="param_status">
+						<select class="form-control" id="rpt_param_status">
 							<option value=""></option>
 							<option value="0" class="text-success">Pending</option>
 							<option value="1" class="text-warning">For Delivery</option>
@@ -293,7 +293,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					<div class="form-group rpt_mop filter_param">
 						<label>Mode of Payment</label>
-						<select class="form-control select2" id="param_mop" multiple="multiple" data-placeholder="Select a Mode of Payment" style="width: 100%;">
+						<select class="form-control select2" id="rpt_param_mop" multiple="multiple" data-placeholder="Select a Mode of Payment" style="width: 100%;">
 							<option value="0">Cash on Delivery</option>
 							<option value="1">Bank Transfer - BPI</option>
 							<option value="3">Bank Transfer - Metrobank</option>
@@ -305,7 +305,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<label></label>
 						<div class="checkbox icheck">
 							<label>
-								<input type="checkbox" id="param_paid"> &nbsp; Paid
+								<input type="checkbox" id="rpt_param_paid"> &nbsp; Paid
 							</label>
 						</div>
 					</div>
