@@ -11,6 +11,7 @@ class Main extends CI_Controller {
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->model('modTransaction', "", TRUE);
+			$this->load->model('modDriver', "", TRUE);
 			$param["sort_delivery_date"] = true;
 			$param["no_image"] = true;
 			$new_transaction = $this->modTransaction->getAll($param)->result_array();
@@ -19,6 +20,8 @@ class Main extends CI_Controller {
 			$data["transaction"] = array_merge($new_transaction, $old_transaction);
 
 			$data["lastid"] = $this->modTransaction->getLastTransactionID(null)->row_array();
+			$drivers = $this->modDriver->getAll(null)->result_array();
+			$data["driverlist"] = $drivers;
 			$this->load->view('orderlist', $data);
 		}else{
 			$this->load->view('login');

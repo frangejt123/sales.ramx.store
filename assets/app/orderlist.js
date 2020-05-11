@@ -596,6 +596,33 @@ $(document).ready(function(){
 		});
 	}
 
+	driverautocomplete();
+	function driverautocomplete(){
+		// Initialize ajax autocomplete:
+		var driverArray = $.map(driverlist, function (value, key) {
+			return {value: value, data: key};
+		});
+		$('#driver_id_rpt').autocomplete({
+			lookup: driverArray,
+			lookupLimit: 5,
+			lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+				var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+				return re.test(suggestion.value);
+			},
+			onSelect: function (suggestion) {
+				//$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+				var id = suggestion.data;
+				$("form#report_data input#param_driver").val(id);
+			},
+			onHint: function (hint) {
+				$('#driver_autocomplete_hint').val(hint);
+			},
+			onInvalidateSelection: function () {
+				$("form#report_data input#param_driver").val("");
+			}
+		});
+	}
+
 	function validate(s) {
 		var rgx = /^[0-9]*\.?[0-9]*$/;
 		return s.match(rgx);
