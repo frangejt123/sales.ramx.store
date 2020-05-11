@@ -47,9 +47,14 @@ class Report extends CI_Controller {
 		session_start();
 		if(isset($_SESSION["username"])) {
 			$param = $this->input->post(NULL, "true");
-			$dd_param = explode(" - ", $param["param"]);
-			$from = date("Y-m-d", strtotime($dd_param[0]));
-			$to = date("Y-m-d", strtotime($dd_param[1]));
+			
+			$from = "";
+			$to = "";
+			if(isset($param["param"]) && $param["param"] != ""){
+				$dd_param = explode(" - ", $param["param"]);
+				$from = date("Y-m-d", strtotime($dd_param[0]));
+				$to = date("Y-m-d", strtotime($dd_param[1]));
+			}
 			
 			$condition = [
 				"CONDITION" => "transaction.delivery_date>='" . $from . "' AND transaction.delivery_date<='" . $to . "'"
@@ -89,13 +94,18 @@ class Report extends CI_Controller {
 		if (!isset($_SESSION["username"])) $this->output->set_status_header(401)->set_output("Unauthorize Access!");
 		
 		$param = $this->input->post(NULL, "true");
-		$dd_param = explode(" - ", $param["param"]);
-		$from = date("Y-m-d", strtotime($dd_param[0]));
-		$to = date("Y-m-d", strtotime($dd_param[1]));
 		
-		$status = $param["param_status"];
-		$mop = $param["param_mop"];
-		$paid = $param["param_paid"];
+		$from = "";
+		$to = "";
+		if(isset($param["param"]) && $param["param"] != ""){
+			$dd_param = explode(" - ", $param["param"]);
+			$from = date("Y-m-d", strtotime($dd_param[0]));
+			$to = date("Y-m-d", strtotime($dd_param[1]));
+		}
+		
+		$status = isset($param["param_status"]) ? $param["param_status"] : "";
+		$mop = isset($param["param_mop"]) ? $param["param_mop"] : "";
+		$paid = isset($param["param_paid"]) ? $param["param_paid"] : "";
 
 		$input_param = [
 			"delivery_date_from" 	=> $from, // Required Parameter
@@ -142,13 +152,18 @@ class Report extends CI_Controller {
 		if (!isset($_SESSION["username"])) $this->output->set_status_header(401)->set_output("Unauthorize Access!");
 		
 		$param = $this->input->post(NULL, "true");
-		$dd_param = explode(" - ", $param["param"]);
-		$from = date("Y-m-d", strtotime($dd_param[0]));
-		$to = date("Y-m-d", strtotime($dd_param[1]));
 		
-		$status = $param["param_status"];
-		$mop = $param["param_mop"];
-		$paid = $param["param_paid"];
+		$from = "";
+		$to = "";
+		if(isset($param["param"]) && $param["param"] != ""){
+			$dd_param = explode(" - ", $param["param"]);
+			$from = date("Y-m-d", strtotime($dd_param[0]));
+			$to = date("Y-m-d", strtotime($dd_param[1]));
+		}
+		
+		$status = isset($param["param_status"]) ? $param["param_status"] : "";
+		$mop = isset($param["param_mop"]) ? $param["param_mop"] : "";
+		$paid = isset($param["param_paid"]) ? $param["param_paid"] : "";
 
 		$input_param = [
 			"delivery_date_from" 	=> $from, // Required Parameter
@@ -193,20 +208,25 @@ class Report extends CI_Controller {
 		if (!isset($_SESSION["username"])) $this->output->set_status_header(401)->set_output("Unauthorize Access!");
 		$param = $this->input->post(NULL, "true");
 		
-		$dd_param = explode(" - ", $param["param"]);
-		$from = date("Y-m-d", strtotime($dd_param[0]));
-		$to = date("Y-m-d", strtotime($dd_param[1]));
+		$from = "";
+		$to = "";
+		if(isset($param["param"]) && $param["param"] != ""){
+			$dd_param = explode(" - ", $param["param"]);
+			$from = date("Y-m-d", strtotime($dd_param[0]));
+			$to = date("Y-m-d", strtotime($dd_param[1]));
+		}
 		
 		$trx_from = "";
 		$trx_to = "";
-		if($param["param_trxdate"] != ""){
+		if(isset($param["param_trxdate"]) && $param["param_trxdate"] != ""){
 			$trx_param = explode(" - ", $param["param_trxdate"]);
 			$trx_from = date("Y-m-d", strtotime($trx_param[0]));
 			$trx_to = date("Y-m-d", strtotime($trx_param[1]));
 		}
 		
-		$status = $param["param_status"];
-		$mop = $param["param_mop"];
+		$status = isset($param["param_status"]) ? $param["param_status"] : "";
+		$mop = isset($param["param_mop"]) ? $param["param_mop"] : "";
+		$driver = isset($param["param_driver"]) ? $param["param_driver"] : "";
 
 		$input_param = [
 			"delivery_date_from" 	=> $from,
@@ -215,7 +235,7 @@ class Report extends CI_Controller {
 			"txn_date_to" 			=> $trx_to,
 			"txn_status" 			=> $status,
 			"payment_method" 		=> $mop,
-			"driver"				=> $this->input->post("driver_name", "true")
+			"driver"				=> $driver
 		];
 
 		$report_param = [
@@ -235,7 +255,7 @@ class Report extends CI_Controller {
 		}
 
 		if (!is_null($input_param["driver"])) {
-			$report_param["CONDITION"] .= " AND driver.name=\"" . $input_param["driver"] . "\"";
+			$report_param["CONDITION"] .= " AND driver.id=\"" . $input_param["driver"] . "\"";
 		}
 
 		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
