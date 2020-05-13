@@ -241,8 +241,12 @@ class Report extends CI_Controller {
 		$report_param = [
 			"CONDITION" => "transaction.status!=3 AND transaction.paid=1"
 		];
+		
+		if (($input_param["delivery_date_from"] != "") && ($input_param["delivery_date_to"] != "")) {
+			$report_param["CONDITION"] .= " AND transaction.delivery_date>='" . $input_param["delivery_date_from"] . "' AND transaction.delivery_date<='" . $input_param["delivery_date_to"] . "'";
+		}
 
-		if (($input_param["txn_date_from"] != "") && ($input_param["txn_date_to"])) {
+		if (($input_param["txn_date_from"] != "") && ($input_param["txn_date_to"] != "")) {
 			$report_param["CONDITION"] .= " AND transaction.datetime>='" . $input_param["txn_date_from"] . "' AND transaction.datetime<='" . $input_param["txn_date_to"] . "'";
 		}
 
@@ -254,16 +258,17 @@ class Report extends CI_Controller {
 			$report_param["CONDITION"] .= " AND transaction.payment_method IN (".$input_param["payment_method"].")";
 		}
 
-		if (!is_null($input_param["driver"])) {
+		if (!is_null($input_param["driver"]) && $input_param["driver"] != "") {
 			$report_param["CONDITION"] .= " AND driver.id=\"" . $input_param["driver"] . "\"";
 		}
-
+		
+		//print_r($report_param);
+	
 		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
 		$report = $report_client->reportService()->runReport("/Reports/RAMX/SalesByPaymentMethod", "pdf", null, null, $report_param);
 
 		$this->output
 			->set_content_type('application/pdf')
 			->set_output($report);
-		
 	}
 }
