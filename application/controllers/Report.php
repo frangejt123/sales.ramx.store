@@ -321,30 +321,21 @@ class Report extends CI_Controller {
 		
 		
 		if (!is_null($input_param["delivery_date_from"]) && !is_null($input_param["delivery_date_to"])) {
-			$date_from = DateTime::createFromFormat("Y-m-d", $input_param["delivery_date_from"]);
-			$date_to = DateTime::createFromFormat("Y-m-d", $input_param["delivery_date_to"]);
+			$report_param["CONDITION"] .= " AND transaction.delivery_date>='" . $input_param["delivery_date_from"]->format("Y-m-d") . "' AND transaction.delivery_date<='" . $input_param["delivery_date_to"]->format("Y-m-d") . "'";
 
-			$report_param["CONDITION"] .= " AND transaction.delivery_date>='" . $date_from->format("Y-m-d") . "' AND transaction.delivery_date<='" . $date_to->format("Y-m-d") . "'";
-
-			$report_param["REPORT_PAYLOAD"] .= "DELIVERY DATE[" . $date_from->format("m/d/Y") . " - " . $date_to->format("m/d/Y") . "]; ";
+			$report_param["REPORT_PAYLOAD"] .= "DELIVERY DATE[" . $input_param["delivery_date_from"]->format("m/d/Y") . " - " . $input_param["delivery_date_to"]->format("m/d/Y") . "]; ";
 		}
 
 		if (!is_null($input_param["txn_date_from"]) && !is_null($input_param["txn_date_to"])) {
-			$date_from = DateTime::createFromFormat("Y-m-d", $input_param["txn_date_from"]);
-			$date_to = DateTime::createFromFormat("Y-m-d", $input_param["txn_date_to"]);
+			$report_param["CONDITION"] .= " AND transaction.datetime>='" . $input_param["txn_date_from"]->format("Y-m-d") . "' AND transaction.datetime<='" . $input_param["txn_date_to"]->format("Y-m-d") . "'";
 
-			$report_param["CONDITION"] .= " AND transaction.datetime>='" . $date_from->format("Y-m-d") . "' AND transaction.datetime<='" . $date_to->format("Y-m-d") . "'";
-
-			$report_param["REPORT_PAYLOAD"] .= "TXN DATE[" . $date_from->format("m/d/Y") . " - " . $date_to->format("m/d/Y") . "]; ";
+			$report_param["REPORT_PAYLOAD"] .= "TXN DATE[" . $input_param["txn_date_from"]->format("m/d/Y") . " - " . $input_param["txn_date_to"]->format("m/d/Y") . "]; ";
 		}
 
 		if (!is_null($input_param["payment_date_from"]) && !is_null($input_param["payment_date_to"])) {
-			$date_from = DateTime::createFromFormat("Y-m-d", $input_param["payment_date_from"]);
-			$date_to = DateTime::createFromFormat("Y-m-d", $input_param["payment_date_to"]);
+			$report_param["CONDITION"] .= " AND payment.payment_date>='" . $input_param["payment_date_from"]->format("Y-m-d") . "' AND payment.payment_date<='" . $input_param["payment_date_to"]->format("Y-m-d") . "'";
 
-			$report_param["CONDITION"] .= " AND payment.payment_date>='" . $date_from->format("Y-m-d") . "' AND payment.payment_date<='" . $date_to->format("Y-m-d") . "'";
-
-			$report_param["REPORT_PAYLOAD"] .= "PAYMENT DATE[" . $date_from->format("m/d/Y") . " - " . $date_to->format("m/d/Y") . "]; ";
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT DATE[" . $input_param["payment_date_from"]->format("m/d/Y") . " - " . $input_param["payment_date_to"]->format("m/d/Y") . "]; ";
 		}
 		
 		if (!is_null($input_param["payment_method"])) {
