@@ -112,6 +112,7 @@ $(document).ready(function(){
 		var param_mop = $("#rpt_param_mop").val();
 		var param_status = $("#rpt_param_status").val();
 		var param_trxdate = $("#rpt_param_trxdate").val();
+		var param_paymentdate = $("#rpt_param_paymentdate").val();
 
 		if(from_to != ""){
 			$("form#report_data input#param").val(from_to);
@@ -137,6 +138,10 @@ $(document).ready(function(){
 
 		if(param_trxdate != ""){
 			$("form#report_data input#param_trxdate").val(param_trxdate);
+		}
+
+		if(param_paymentdate != ""){
+			$("form#report_data input#param_paymentdate").val(param_paymentdate);
 		}
 
 		$('#report_data').attr("action", baseurl+"/report/"+rpt_name);
