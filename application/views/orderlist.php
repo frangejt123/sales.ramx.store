@@ -344,7 +344,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<input type="hidden" id="param_mop" name="param_mop" />
 	<input type="hidden" id="param_paid" name="param_paid" />
 	<input type="hidden" id="param_driver" name="param_driver" />
-	<input type="hidden" id="param_driver" name="param_paymentdate" />
+	<input type="hidden" id="param_paymentdate" name="param_paymentdate" />
 </form>
 <?php
 $driverarray = array();
