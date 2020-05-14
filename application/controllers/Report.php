@@ -339,9 +339,19 @@ class Report extends CI_Controller {
 		}
 		
 		if (!is_null($input_param["payment_method"])) {
-			$report_param["CONDITION"] .= " AND payment.payment_method=" . $input_param["payment_method"];
+			$report_param["CONDITION"] .= " AND payment.payment_method IN (" . $input_param["payment_method"] . ")";
 
-			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD=" . $input_param["payment_method"];
+			$method = "";
+
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD[";
+
+			foreach(explode(",", $input_param["payment_method"]) as $key => $value) {
+				if ($method != "") $method .= ",";
+
+				$method .= array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - MBTC")[$value];
+			}
+
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD[" . $input_param["payment_method"] . "]";
 		}
 		
 		print_r($report_param);
