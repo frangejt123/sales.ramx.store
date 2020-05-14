@@ -276,48 +276,49 @@ class Report extends CI_Controller {
 		session_start();
 
 		if (!isset($_SESSION["username"])) $this->output->set_status_header(401)->set_output("Unauthorize Access!");
-		
-		$from = "";
-		$to = "";
-		if(isset($param["param"]) && $param["param"] != ""){
-			$dd_param = explode(" - ", $param["param"]);
-			$from = date("Y-m-d", strtotime($dd_param[0]));
-			$to = date("Y-m-d", strtotime($dd_param[1]));
-		}
-		
-		$trx_from = "";
-		$trx_to = "";
-		if(isset($param["param_trxdate"]) && $param["param_trxdate"] != ""){
-			$trx_param = explode(" - ", $param["param_trxdate"]);
-			$trx_from = date("Y-m-d", strtotime($trx_param[0]));
-			$trx_to = date("Y-m-d", strtotime($trx_param[1]));
-		}
-		
-		
-		$payment_from = "";
-		$payment_to = "";
-		if(isset($param["param_paymentdate"]) && $param["param_paymentdate"] != ""){
-			$payment_param = explode(" - ", $param["param_paymentdate"]);
-			$payment_from = date("Y-m-d", strtotime($payment_param[0]));
-			$payment_to = date("Y-m-d", strtotime($payment_param[1]));
-		}
-		
-		$mop = isset($param["param_mop"]) ? $param["param_mop"] : "";
-		
+
 		$input_param = [
-			"delivery_date_from" 	=> $from,
-			"delivery_date_to" 		=> $to,
-			"txn_date_from" 		=> $trx_from,
-			"txn_date_to" 			=> $trx_to,
-			"payment_date_from" 	=> $payment_from,
-			"payment_date_from" 	=> $payment_to,
-			"payment_method"		=> $mop,
+			"delivery_date_from" 	=> null,
+			"delivery_date_to" 		=> null,
+			"txn_date_from" 		=> null,
+			"txn_date_to" 			=> null,
+			"payment_date_from" 	=> null,
+			"payment_date_from" 	=> null,
+			"payment_method"		=> null
 		];
 
+		$param = $this->input->post(NULL, "true");
+		
+		if(isset($param["param"]) && $param["param"] != "") {
+			$daterange = explode(" - ", $param["param"]);
+
+			$input_param["delivery_date_from"] = DateTime::createFromFormat("m/d/Y", $daterange[0]);
+			$input_param["delivery_date_to"] = DateTime::createFromFormat("m/d/Y", $daterange[1]);
+		}
+		
+
+		if(isset($param["param_trxdate"]) && $param["param_trxdate"] != "") {
+			$daterange = explode(" - ", $param["param_trxdate"]);
+
+			$input_param["txn_date_from"] = DateTime::createFromFormat("m/d/Y", $daterange[0]);
+			$input_param["txn_date_to"] = DateTime::createFromFormat("m/d/Y", $daterange[1]);
+		}
+
+		if(isset($param["param_paymentdate"]) && $param["param_paymentdate"] != "") {
+			$daterange = explode(" - ", $param["param_paymentdate"]);
+
+			$input_param["payment_date_from"] = DateTime::createFromFormat("m/d/Y", $daterange[0]);
+			$input_param["payment_date_to"] = DateTime::createFromFormat("m/d/Y", $daterange[1]);
+		}
+		
+		$input_param["payment_method"] = isset($param["param_mop"]) && $param["param_mop"] != "" ? $param["param_mop"] : null;
+		
+		
 		$report_param = [
 			"CONDITION" => "transaction.status!=3 AND transaction.paid=1",
 			"REPORT_PAYLOAD" => ""
 		];
+		
 		
 		if (!is_null($input_param["delivery_date_from"]) && !is_null($input_param["delivery_date_to"])) {
 			$date_from = DateTime::createFromFormat("Y-m-d", $input_param["delivery_date_from"]);
