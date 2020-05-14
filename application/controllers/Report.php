@@ -271,4 +271,67 @@ class Report extends CI_Controller {
 			->set_content_type('application/pdf')
 			->set_output($report);
 	}
+
+	public function payment_summary_by_method () {
+		session_start();
+
+		if (!isset($_SESSION["username"])) $this->output->set_status_header(401)->set_output("Unauthorize Access!");
+		
+		$input_param = [
+			"delivery_date_from" 	=> $this->input->post("delivery_date_from", true),
+			"delivery_date_to" 		=> $this->input->post("delivery_date_to", true),
+			"txn_date_from" 		=> $this->input->post("txn_date_from", true),
+			"txn_date_to" 			=> $this->input->post("txn_date_to", true),
+			"payment_date_from" 	=> $this->input->post("payment_date_from", true),
+			"payment_date_from" 	=> $this->input->post("payment_date_to", true),
+			"payment_method"		=> $this->input->post("payment_method", true),
+		];
+
+		$report_param = [
+			"CONDITION" => "transaction.status!=3 AND transaction.paid=1",
+			"REPORT_PAYLOAD" => ""
+		];
+		
+		if (!is_null($input_param["delivery_date_from"]) && !is_null($input_param["delivery_date_to"])) {
+			$date_from = DateTime::createFromFormat("Y-m-d", $input_param["delivery_date_from"]);
+			$date_to = DateTime::createFromFormat("Y-m-d", $input_param["delivery_date_to"]);
+
+			$report_param["CONDITION"] .= " AND transaction.delivery_date>='" . $date_from->format("Y-m-d") . "' AND transaction.delivery_date<='" . $date_to->format("Y-m-d") . "'";
+
+			$report_param["REPORT_PAYLOAD"] .= "DELIVERY DATE[" . $date_from->format("m/d/Y") . " - " . $date_to->format("m/d/Y") . "]; ";
+		}
+
+		if (!is_null($input_param["txn_date_from"]) && !is_null($input_param["txn_date_to"])) {
+			$date_from = DateTime::createFromFormat("Y-m-d", $input_param["txn_date_from"]);
+			$date_to = DateTime::createFromFormat("Y-m-d", $input_param["txn_date_to"]);
+
+			$report_param["CONDITION"] .= " AND transaction.datetime>='" . $date_from->format("Y-m-d") . "' AND transaction.datetime<='" . $date_to->format("Y-m-d") . "'";
+
+			$report_param["REPORT_PAYLOAD"] .= "TXN DATE[" . $date_from->format("m/d/Y") . " - " . $date_to->format("m/d/Y") . "]; ";
+		}
+
+		if (!is_null($input_param["payment_date_from"]) && !is_null($input_param["payment_date_to"])) {
+			$date_from = DateTime::createFromFormat("Y-m-d", $input_param["payment_date_from"]);
+			$date_to = DateTime::createFromFormat("Y-m-d", $input_param["payment_date_to"]);
+
+			$report_param["CONDITION"] .= " AND payment.payment_date>='" . $date_from->format("Y-m-d") . "' AND payment.payment_date<='" . $date_to->format("Y-m-d") . "'";
+
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT DATE[" . $date_from->format("m/d/Y") . " - " . $date_to->format("m/d/Y") . "]; ";
+		}
+		
+		if (!is_null($input_param["payment_method"])) {
+			$report_param["CONDITION"] .= " AND payment.payment_method=" . $input_param["payment_method"];
+
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD=" . $input_param["payment_method"];
+		}
+		
+		print_r($report_param);
+	
+		/*$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+		$report = $report_client->reportService()->runReport("/Reports/RAMX/PaymentSummaryByMethod", "pdf", null, null, $report_param);
+
+		$this->output
+			->set_content_type('application/pdf')
+			->set_output($report);*/
+	}
 }
