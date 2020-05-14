@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="so_list_by_delivery_date_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales Order</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,trx_date,trx_driver" href="javascript:void(0)" id="sales_by_payment_method_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Payment Method</a>
-				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,rpt_mop,trx_date,payment_date" href="javascript:void(0)" id="sales_by_payment_method_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Summary by Payment Method</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,rpt_mop,trx_date,payment_date" href="javascript:void(0)" id="payment_summary_by_method_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Summary by Payment Method</a>
 			</div>
 		</div>
 	<?php } ?>
