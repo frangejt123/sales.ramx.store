@@ -346,10 +346,10 @@ class Report extends CI_Controller {
 			foreach(explode(",", $input_param["payment_method"]) as $key => $value) {
 				if ($method != "") $method .= ",";
 
-				$method .= (array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - MBTC"))[$value];
+				$method .= array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - MBTC")[$value];
 			}
 
-			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD[" . $input_param["payment_method"] . "]";
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD[" . $method . "]";
 		}
 		
 		print_r($report_param);
