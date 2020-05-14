@@ -277,14 +277,41 @@ class Report extends CI_Controller {
 
 		if (!isset($_SESSION["username"])) $this->output->set_status_header(401)->set_output("Unauthorize Access!");
 		
+		$from = "";
+		$to = "";
+		if(isset($param["param"]) && $param["param"] != ""){
+			$dd_param = explode(" - ", $param["param"]);
+			$from = date("Y-m-d", strtotime($dd_param[0]));
+			$to = date("Y-m-d", strtotime($dd_param[1]));
+		}
+		
+		$trx_from = "";
+		$trx_to = "";
+		if(isset($param["param_trxdate"]) && $param["param_trxdate"] != ""){
+			$trx_param = explode(" - ", $param["param_trxdate"]);
+			$trx_from = date("Y-m-d", strtotime($trx_param[0]));
+			$trx_to = date("Y-m-d", strtotime($trx_param[1]));
+		}
+		
+		
+		$payment_from = "";
+		$payment_to = "";
+		if(isset($param["param_paymentdate"]) && $param["param_paymentdate"] != ""){
+			$payment_param = explode(" - ", $param["param_paymentdate"]);
+			$payment_from = date("Y-m-d", strtotime($payment_param[0]));
+			$payment_to = date("Y-m-d", strtotime($payment_param[1]));
+		}
+		
+		$mop = isset($param["param_mop"]) ? $param["param_mop"] : "";
+		
 		$input_param = [
-			"delivery_date_from" 	=> $this->input->post("delivery_date_from", true),
-			"delivery_date_to" 		=> $this->input->post("delivery_date_to", true),
-			"txn_date_from" 		=> $this->input->post("txn_date_from", true),
-			"txn_date_to" 			=> $this->input->post("txn_date_to", true),
-			"payment_date_from" 	=> $this->input->post("payment_date_from", true),
-			"payment_date_from" 	=> $this->input->post("payment_date_to", true),
-			"payment_method"		=> $this->input->post("payment_method", true),
+			"delivery_date_from" 	=> $from,
+			"delivery_date_to" 		=> $to,
+			"txn_date_from" 		=> $trx_from,
+			"txn_date_to" 			=> $trx_to,
+			"payment_date_from" 	=> $payment_from,
+			"payment_date_from" 	=> $payment_to,
+			"payment_method"		=> $mop,
 		];
 
 		$report_param = [
