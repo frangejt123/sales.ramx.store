@@ -339,18 +339,24 @@ class Report extends CI_Controller {
 		}
 		
 		if (!is_null($input_param["payment_method"])) {
-			$report_param["CONDITION"] .= " AND payment.payment_method=" . $input_param["payment_method"];
+			$report_param["CONDITION"] .= " AND payment.payment_method IN (" . $input_param["payment_method"] . ")";
 
-			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD=" . $input_param["payment_method"];
+			$method = "";
+
+			foreach(explode(",", $input_param["payment_method"]) as $key => $value) {
+				if ($method != "") $method .= ", ";
+
+				$method .= array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - MBTC")[$value];
+			}
+
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD[" . $method . "]";
 		}
-		
-		print_r($report_param);
 	
-		/*$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
 		$report = $report_client->reportService()->runReport("/Reports/RAMX/PaymentSummaryByMethod", "pdf", null, null, $report_param);
 
 		$this->output
 			->set_content_type('application/pdf')
-			->set_output($report);*/
+			->set_output($report);
 	}
 }
