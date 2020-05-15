@@ -16,6 +16,10 @@ $btnunpaid = '<span class="pull-right span_seperator"></span><button id="unpaid_
 $btnupdate = '<span class="pull-right span_seperator"></span><button id="update_order_btn" class="btn-info pull-right">'.
 				'<i class="fa fa-pencil"></i> &nbsp; Update</button>';
 
+$btnreconcile = '<span class="pull-right span_seperator"></span>'.
+				'<button id="reconcile_order_btn" class="btn-primary pull-right">'.
+					'<i class="fa fa-balance-scale"></i> &nbsp; Reconcile</button>';
+
 $printbtn = '';
 if($_SESSION["access_level"] == 0) //admin
 	$printbtn = '<a class="dropdown-item dd-item text-success" href="#" id="print_order_btn"><i class="fa fa-print"></i> &nbsp; Print</a>';
@@ -153,6 +157,10 @@ if(!is_null($date_delivered))
 			}//if status is Pending
 		}
 
+		if($transaction["status"] == "4" && $transaction["paid"] == "1" && $transaction["reconcile"] == "0"){
+			echo $btnreconcile;
+		}
+
 		$total_payment = 0;
 		foreach($paymenthistory as $ind => $row){
 			$total_payment += $row["amount"];
@@ -231,6 +239,14 @@ if(!is_null($date_delivered))
 					</span>
 				<?php } ?>
 		</div>
+		<?php if($transaction["reconcile"] == 1){ ?>
+		<div style="clear:both"></div>
+		<div id="reconciled_label" class="pull-left" style="padding-top: 15px;">
+				<span class="text-primary">
+					<i class="fa fa-balance-scale"></i> &nbsp;Reconciled
+				</span>
+		</div>
+		<?php } ?>
 		<div class="detail_grand_total pull-right">
 			TOTAL : <?php echo number_format($transaction["total"], 2); ?>
 		</div>
@@ -393,6 +409,27 @@ if(!is_null($date_delivered))
 		</div>
 	</div>
 
+	<div id="reconcile_order" class="modal fade">
+		<div class="modal-dialog modal-confirm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="icon-box" style="border: 3px solid #0e55b5;color: #2574e0">
+						<i class="fa fa-balance-scale"></i>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<h4 class="modal-title">TAG AS RECONCILED</h4>
+				<div class="modal-body">
+					<p>This order will be tag as RECONCILED. <br />Do you want to continue?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-info" data-dismiss="modal">No</button>
+					<button type="button" class="btn btn-success" id="confirm_reconcile">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="modal fade" id="payment_history_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
@@ -452,7 +489,6 @@ if(!is_null($date_delivered))
 			</div>
 		</div>
 	</div><!-- modal -->
-
 	<!-- Modal -->
 	<div class="modal fade" id="void_detail_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog" role="document">

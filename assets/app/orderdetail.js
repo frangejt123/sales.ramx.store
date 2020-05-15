@@ -95,6 +95,31 @@ $(document).ready(function(){
 		});
 	}
 
+	$("#reconcile_order_btn").on("click", function(){
+		$("#reconcile_order").modal("show");
+	});
+
+	$("#confirm_reconcile").on("click", function(){
+		$.ajax({
+			method: 'POST',
+			data: {"id":selectedorder, "reconcile":"1"},
+			url: baseurl + '/main/updateorder',
+			success: function (res) {
+				var res = JSON.parse(res);
+				NProgress.done();
+				alert("Changes successfully saved.");
+				location.reload();
+			},
+			error: function (xhr, status, error) {
+				NProgress.done();
+				alert("Oppss! Something went wrong.");
+			},
+			beforeSend: function(){
+				NProgress.start();
+			}
+		});
+	});
+
 	$("#void_order_btn").on("click", function(){
 		$("#void_detail_modal").modal("show");
 	});

@@ -129,7 +129,7 @@ textarea{
 	font-size: 20px;
 }
 
-/*#process_order_btn, #complete_order_btn,*/ #update_order_btn{
+/*#process_order_btn, #complete_order_btn,*/ #update_order_btn, #reconcile_order_btn{
 	margin-bottom: 10px;
 	padding: 10px;
 	border-radius: 10px;

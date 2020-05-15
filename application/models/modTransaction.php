@@ -25,6 +25,7 @@ class ModTransaction extends CI_Model {
 				"haschanges" => "transaction.haschanges",
 				"location_image" => "transaction.location_image",
 				"printed" => "transaction.printed",
+				"reconcile" => "transaction.reconcile",
 				"date_printed" => "transaction.date_printed",
 				"date_revised" => "transaction.date_revised",
 				"date_delivered" => "transaction.date_delivered",
