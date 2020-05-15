@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<title>RAM-X</title>
 	<link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/app/img/favicon.jpg" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css">
 	<!-- Ionicons -->
@@ -81,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="grid_container">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Search for Customer Name" id="search_customer_name">
+			<!--<input type="text" class="form-control" placeholder="Search for Customer Name" id="search_customer_name">-->
 		</div>
 
 		<div class="box">
@@ -89,15 +90,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<table class="table table-striped table-hover" id="orderlist_table">
 					<thead>
 						<tr>
-							<!-- 0 --><th class="sortable" id="td_orderid">Order # <i class="fa fa-sort float-right"></th>
-							<!-- 1 --><th class="sortable" id="td_orderdate">Order Date <i class="fa fa-sort float-right"></th>
-							<!-- 2 --><th class="sortable" id="td_deliverydate">Delivery Date <i class="fa fa-sort float-right"></th>
-							<!-- 3 --><th class="sortable" id="td_customername">Customer Name <i class="fa fa-sort float-right"></th>
-							<!-- 4 --><th class="sortable" id="td_driver">Driver <i class="fa fa-sort float-right"></th>
-							<!-- 5 --><th class="sortable" id="td_paid_status">Paid Status <i class="fa fa-sort float-right"></th>
-							<!-- 6 --><th class="sortable" id="td_mop">Payment Method <i class="fa fa-sort float-right"></th>
-							<!-- 7 --><th class="sortable" id="td_print_status">Print Status <i class="fa fa-sort float-right"></th>
-							<!-- 8 --><th class="sortable" id="td_status">Status <i class="fa fa-sort float-right"></th>
+							<!-- 0 --><th class="sortable" id="td_orderid">Order #</th>
+							<!-- 1 --><th class="sortable" id="td_orderdate">Order Date</th>
+							<!-- 2 --><th class="sortable" id="td_deliverydate">Delivery Date</th>
+							<!-- 3 --><th class="sortable" id="td_customername">Customer Name</th>
+							<!-- 4 --><th class="sortable" id="td_driver">Driver</th>
+							<!-- 5 --><th class="sortable" id="td_paid_status">Paid Status</th>
+							<!-- 6 --><th class="sortable" id="td_mop">Payment Method</th>
+							<!-- 7 --><th class="sortable" id="td_print_status">Print Status</th>
+							<!-- 8 --><th class="sortable" id="td_status">Status<!-- <i class="fa fa-sort float-right"> --></th>
 							<!-- 9 --><th hidden></th><!-- filter -->
 						</tr>
 					</thead>
@@ -107,7 +108,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						$statusarray = array("Pending", "For Delivery", "Complete", "Voided", "Delivered");
 						$tdclass = array("text-success", "text-warning", "text-primary", "text-danger", "text-info");
 						$order = array();
-						$rowcount = 0;
+						//$rowcount = 0;
 						foreach($transaction as $ind => $row){
 							$paidclass = "";
 							$paid = "";
@@ -143,13 +144,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							echo '</tr>';
 
 							json_encode($order[$row["id"]] = $transdate.'-'.sprintf("%04s", $row["id"]));
-							$rowcount++;
+							//$rowcount++;
 						}
 
 						$orderids = json_encode($order);
 					?>
 					</tbody>
-					<caption><span id="table_rowcount"><?php echo $rowcount; ?></span> Records found</caption>
+					<!--<caption><span id="table_rowcount"><?php //echo $rowcount; ?></span> Records found</caption>-->
 				</table>
 			</div>
 			<!-- /.box-body -->
@@ -354,6 +355,8 @@ foreach($driverlist as $ind => $row){
 ?>
 <!-- jQuery 3 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/jquery.autocomplete.js"></script>
 <script src="<?php echo base_url(); ?>assets/bower_components/select2/dist/js/select2.js"></script>
 <script src="<?php echo base_url(); ?>assets/bower_components/moment/moment.js"></script>

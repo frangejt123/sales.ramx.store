@@ -1,5 +1,12 @@
 $(document).ready(function(){
 
+	var ordertable = $('#orderlist_table').DataTable({
+		"pageLength": 50,
+		"bLengthChange": false,
+		"order": [],
+		stateSave: true
+	});
+
 	$('.select2').select2()
 	$('.input_daterangepicker').daterangepicker();
 	NProgress.configure({ showSpinner: false });
@@ -78,6 +85,7 @@ $(document).ready(function(){
 					localStorage.removeItem("filter");
 					localStorage.removeItem("inverse");
 					localStorage.removeItem("thIndex");
+					ordertable.state.clear();
 					window.location = baseurl + "/login";
 				}
 			}
@@ -446,55 +454,13 @@ $(document).ready(function(){
 		$("#filter_printed").iCheck("uncheck");
 	});
 
-	var inverse = false;
-	if(localStorage["inverse"] != undefined){
-		inverse = (localStorage["inverse"] == 'true');
-		sortable(parseInt(localStorage["thIndex"]));
-	}
-
-	$("th.sortable").on("click", function(){
-		var th = $(this);
-		let isSortUp = $(th).find("i").hasClass("fa-sort-up");
-
-		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-		$(".sortable i").addClass("fa-sort");
-
-		if(isSortUp) {
-			$(th).find("i").addClass("fa-sort-down");
-		} else {
-			$(th).find("i").addClass("fa-sort-up");
-		}
-		sortable(th.index());
-	});
-
-	function sortable(thIndex){
-		$('table#orderlist_table').find('td').filter(function(){
-			return $(this).index() === thIndex;
-		}).sortElements(function(a, b){
-			if($.text([a]) > $.text([b])){
-				return inverse ? -1 : 1
-			}
-			else{
-				return inverse ? 1 : -1;
-			}
-		}, function(){
-			// parentNode is the element we want to move
-			return this.parentNode;
-
-		});
-
-		localStorage["inverse"] = inverse;
-		inverse = !inverse;
-		localStorage["thIndex"] = thIndex;
-	}
-
 	function filterlist(){
 		var rows = document.querySelector("#orderlist_table tbody").rows;
 
-		var moparray = [];
-		$("#filter_mop option:selected").each(function() {
-			moparray.push((this.text).toUpperCase());
-		});
+		var moparray = $("#filter_mop").find(':selected').map(function() {
+			return $( this ).text();
+		}).get().join("|");
+
 		var deliverydate = $("#filter_delivery_date").val();
 		var status = ($("#filter_status option:selected").text()).toUpperCase();
 		var paid = $("#filter_paid").prop('checked') ? "PAID" : "";
@@ -502,63 +468,18 @@ $(document).ready(function(){
 		var revised = $("#filter_revised").prop('checked') ? "REVISED" : "";
 		var orderid = $("#order_id_filter").val();
 
-		var statustd = "";
-		var deliverydatetd = "";
-		var paidtd = "";
-		var printedtd = "";
-		var revisedtd = "";
-		var orderidtd = "";
-		var moptd = "";
-		var rowcount = 0;
-		for (var i = 0; i < rows.length; i++) {
-			if(moparray.length > 0)
-				moptd = (rows[i].cells[6].textContent).toUpperCase();
-			else
-				moparray = "";
-			if(deliverydate != "")
-				deliverydatetd = rows[i].cells[9].textContent;
-			if(paid != "")
-				paidtd = (rows[i].cells[5].textContent).toUpperCase();
-			if(printed != "")
-				printedtd = (rows[i].cells[7].textContent).toUpperCase();
-			if(revised != "")
-				revisedtd = (rows[i].cells[7].textContent).toUpperCase();
-			if(orderid != "")
-				orderidtd = (rows[i].cells[0].textContent).toUpperCase();
-			if(status != "")
-				statustd = (rows[i].cells[8].textContent).toUpperCase();
-
-			if((moparray.includes(moptd))
-				&& (status == statustd)
-				&& (deliverydate == deliverydatetd)
-				&& (paid == paidtd)
-				&& (printed == printedtd)
-				&& (revised == revisedtd)
-				&& (orderid == orderidtd)
-			){
-				rows[i].style.display = "";
-				$(rows[i]).find("td").removeClass("display");
-				$(rows[i]).addClass("filtered");
-				rowcount++;
-			} else {
-				rows[i].style.display = "none";
-				$(rows[i]).find("td").addClass("display");
-			}
-
-			if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
-				&& (revised == "") && (orderid == "") && (moparray.length == 0)){
-				rows[i].style.display = "";
-				$(rows[i]).find("td").removeClass("display");
-			}
-			$("#table_rowcount").html(rowcount);
+		var printed_status = "";
+		if(printed != "" || revised != ""){
+			printed_status = printed == "PRINTED" ? "PRINTED" : "REVISED";
+			printed_status = printed_status != "" ? printed_status : "";
 		}
 
-		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
-			&& (revised == "") && (orderid == "") && (moparray.length == 0)){
-			$("#clear_filter_btn").hide();
-		}else{
-			$("#clear_filter_btn").show();
-		}
+		ordertable.column(0).search(orderid).draw();
+		ordertable.column(5).search(paid).draw();
+		ordertable.column(6).search(moparray, true, false).draw();
+		ordertable.column(7).search(printed_status).draw();
+		ordertable.column(8).search(status).draw();
+		ordertable.column(9).search(deliverydate).draw();
 
 		var orderfilters = {};
 		orderfilters["orderid"] = orderid;
@@ -570,6 +491,13 @@ $(document).ready(function(){
 		orderfilters["mop"] = $("#filter_mop").val();
 
 		localStorage["filter"] = JSON.stringify(orderfilters);
+
+		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
+			&& (revised == "") && (orderid == "") && (moparray.length == 0)){
+			$("#clear_filter_btn").hide();
+		}else{
+			$("#clear_filter_btn").show();
+		}
 
 		$("#filter_modal").modal("hide");
 	}
