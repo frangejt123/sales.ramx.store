@@ -1,7 +1,7 @@
 @media only screen and (min-width: 500px) {
 	.product_cont{
 		/* width: 130px; */
-		min-height: 120px;
+		min-height: 180px;
 		border: 1px solid #CCC;
 		border-radius: 10px;
 		cursor: pointer;
@@ -86,7 +86,7 @@
 		/* width: 200px; */
 		border: 1px solid #CCC;
 		border-radius: 10px;
-		min-height: 150px;
+		min-height: 230px;
 		cursor: pointer;
 	}
 
