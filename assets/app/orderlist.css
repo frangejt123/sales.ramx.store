@@ -442,6 +442,11 @@ td#payment_method_td{
 	background: #f2f2f2;
 }
 
+
+.dataTables_filter{
+	display: none;
+}
+
 #driver_name_grp, #date_delivered_grp{
 	display: none;
 }

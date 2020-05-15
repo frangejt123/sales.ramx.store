@@ -10,33 +10,8 @@ $(document).ready(function(){
 	$('.select2').select2()
 	$('.input_daterangepicker').daterangepicker();
 	NProgress.configure({ showSpinner: false });
-	$("input#search_customer_name").on("keyup", function(){
-		// Declare variables
-		var input, filter, table, tr, td, i, txtValue;
-		input = document.getElementById("search_customer_name");
-		filter = input.value.toUpperCase();
-		table = document.getElementById("orderlist_table");
-		var isfiltered = $("#clear_filter_btn").is(":visible");
-		if(isfiltered)
-			tr = $(table).find("tr.filtered");
-		else
-			tr = $(table).find("tr");
-
-		// Loop through all table rows, and hide those who don't match the search query
-		var rowcount = 0;
-		for (i = 0; i < tr.length; i++) {
-			td = tr[i].getElementsByTagName("td")[3];
-			if (td) {
-				txtValue = td.textContent || td.innerText;
-				if (txtValue.toUpperCase().indexOf(filter) > -1) {
-						tr[i].style.display = "";
-						rowcount++;
-				} else {
-					tr[i].style.display = "none";
-				}
-			}
-		}
-		$("#table_rowcount").html(rowcount);
+	$("input#search_table").on("keyup change", function(){
+		ordertable.search($(this).val()).draw();
 	});
 
 	$("button#create_order_btn").on("click", function(){

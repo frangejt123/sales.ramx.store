@@ -82,7 +82,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="grid_container">
 		<div class="form-group">
-			<!--<input type="text" class="form-control" placeholder="Search for Customer Name" id="search_customer_name">-->
+			<input type="text" class="form-control" placeholder="Search..." id="search_table">
 		</div>
 
 		<div class="box">
