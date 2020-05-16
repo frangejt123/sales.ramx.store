@@ -115,8 +115,13 @@ $(document).ready(function(){
 		if(param_status != ""){
 			$("form#report_data input#param_status").val(param_status);
 		}
+
 		if($("#rpt_param_paid").prop('checked')){
 			$("form#report_data input#param_paid").val("1");
+		}
+
+		if($("#rpt_param_unpaid").prop('checked')){
+			$("form#report_data input#param_unpaid").val("1");
 		}
 
 		if(param_trxdate != ""){
@@ -138,6 +143,7 @@ $(document).ready(function(){
 		$("form#report_data input#param_status").val("");
 		$("form#report_data input#param_mop").val("");
 		$("form#report_data input#param_paid").val("");
+		$("form#report_data input#param_unpaid").val("");
 		$("form#report_data input#param_trxdate").val("");
 		$("form#report_data input#param").val("");
 	});

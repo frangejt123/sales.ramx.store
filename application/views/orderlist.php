@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<a class="dropdown-item dd-item rpt_btn" data-filter="order_number" href="javascript:void(0)" id="payment_record_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Record</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="so_list_by_delivery_date_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales Order</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,rpt_paid" href="javascript:void(0)" id="sales_by_delivery_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Delivery Date</a>
-				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,trx_date,trx_driver" href="javascript:void(0)" id="sales_by_payment_method_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Payment Method</a>
+				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,trx_status,rpt_mop,trx_date,trx_driver,rpt_paid,rpt_unpaid" href="javascript:void(0)" id="sales_by_payment_method_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Sales by Payment Method</a>
 				<a class="dropdown-item dd-item rpt_btn" data-filter="from_to,rpt_mop,trx_date,payment_date" href="javascript:void(0)" id="payment_summary_by_method_rpt"><i class="fa fa-file-pdf-o"></i> &nbsp; Payment Summary by Payment Method</a>
 			</div>
 		</div>
@@ -328,6 +328,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							</label>
 						</div>
 					</div>
+
+					<div class="form-group rpt_unpaid filter_param">
+						<label></label>
+						<div class="checkbox icheck">
+							<label>
+								<input type="checkbox" id="rpt_param_unpaid"> &nbsp; Unpaid
+							</label>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -344,6 +353,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<input type="hidden" id="param_status" name="param_status" />
 	<input type="hidden" id="param_mop" name="param_mop" />
 	<input type="hidden" id="param_paid" name="param_paid" />
+	<input type="hidden" id="param_unpaid" name="param_unpaid" />
 	<input type="hidden" id="param_driver" name="param_driver" />
 	<input type="hidden" id="param_paymentdate" name="param_paymentdate" />
 </form>
