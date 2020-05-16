@@ -242,33 +242,66 @@ class Report extends CI_Controller {
 		$input_param["txn_unpaid"] = isset($param["param_unpaid"]) && $param["param_unpaid"] != "" ? TRUE : FALSE;
 
 		$report_param = [
-			"CONDITION" => "transaction.status!=3"
+			"CONDITION" => "transaction.status!=3",
+			"REPORT_PAYLOAD" => ""
 		];
 		
 		if (!is_null($input_param["delivery_date_from"]) && !is_null($input_param["delivery_date_to"])) {
 			$report_param["CONDITION"] .= " AND (transaction.delivery_date>='" . $input_param["delivery_date_from"]->format("Y-m-d") . "' AND transaction.delivery_date<='" . $input_param["delivery_date_to"]->format("Y-m-d") . "')";
+
+			$report_param["REPORT_PAYLOAD"] .= "DELIVERY DATE[" . $input_param["delivery_date_from"]->format("m/d/Y") . " - " . $input_param["delivery_date_to"]->format("m/d/Y") . "]; ";
 		}
 
 		if (!is_null($input_param["txn_date_from"]) && !is_null($input_param["txn_date_to"])) {
 			$report_param["CONDITION"] .= " AND (transaction.datetime>='" . $input_param["txn_date_from"]->format("Y-m-d") . "' AND transaction.datetime<='" . $input_param["txn_date_to"]->format("Y-m-d") . "')";
+
+			$report_param["REPORT_PAYLOAD"] .= "TXN DATE[" . $input_param["txn_date_from"]->format("m/d/Y") . " - " . $input_param["txn_date_to"]->format("m/d/Y") . "]; ";
 		}
 
-		if (!is_null($input_param["txn_status"]))
+		if (!is_null($input_param["txn_status"])) {
 			$report_param["CONDITION"] .= " AND transaction.status=" . $input_param["txn_status"];
+
+			$status = "";
+
+			foreach(explode(",", $input_param["txn_status"]) as $key => $value) {
+				if ($status != "") $status .= ", ";
+
+				$status .= array("Pending", "For Delivery", "Complete", "Void", "Delivered")[$value];
+			}
+
+			$report_param["REPORT_PAYLOAD"] .= "TXN STATUS[" . $status . "]";
+		}
 		
-		if (!is_null($input_param["payment_method"]))
+		if (!is_null($input_param["payment_method"])) {
 			$report_param["CONDITION"] .= " AND transaction.payment_method IN (".$input_param["payment_method"].")";
+
+			$method = "";
+
+			foreach(explode(",", $input_param["payment_method"]) as $key => $value) {
+				if ($method != "") $method .= ", ";
+
+				$method .= array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - MBTC")[$value];
+			}
+
+			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD[" . $method . "]";
+		}
+			
 		
-		if (!is_null($input_param["driver"]))
-			$report_param["CONDITION"] .= " AND driver.id=" . $input_param["driver"];
+        if (!is_null($input_param["driver"])) {
+            $report_param["CONDITION"] .= " AND driver.id=" . $input_param["driver"];
+        }
 
 
 		if ($input_param["txn_paid"] && $input_param["txn_unpaid"]) {
 			$report_param["CONDITION"] .= "";
 		} else if ($input_param["txn_paid"]) {
 			$report_param["CONDITION"] .= " AND transaction.paid=1";
+
+			$report_param["REPORT_PAYLOAD"] .= "PAID=Yes";
 		} else if ($input_param["txn_unpaid"]) {
 			$report_param["CONDITION"] .= " AND transaction.paid=0";
+
+			$report_param["REPORT_PAYLOAD"] .= "PAID=No";
 		}
 			
 		//print_r($report_param);
