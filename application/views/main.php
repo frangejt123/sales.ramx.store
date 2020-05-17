@@ -65,7 +65,7 @@ if(isset($transaction)){
 	<div class="container" style="max-width: 100% !important; padding: 0px !important;">
 		<div class="content">
 			<div class="row"><!-- button row -->
-				<div class="col-lg-3 pl-0 pr-0"><!-- left column -->
+				<div class="col-3 pl-0 pr-0"><!-- left column -->
 					<div class="bg-light pt-2 pl-4">
 						<input type="text" id="transaction_id_inp" hidden value="<?php echo isset($transaction) ? $transaction["id"] : "" ?>">
 						<button id="cancel_order_btn" class="btn-danger">
@@ -77,7 +77,7 @@ if(isset($transaction)){
 						</button >
 					</div>
 				</div><!-- left column -->
-				<div class="col-lg-6 pl-0 pr-0">
+				<div class="col-6 pl-0 pr-0">
 					<div class="bg-light pt-2 pl-4 w-100 h-100">
 						<div class="row">
 							<div class="col-12">
@@ -88,7 +88,7 @@ if(isset($transaction)){
 						</div><!-- row -->
 					</div>
 				</div><!-- center column -->
-				<div class="col-lg-3 pl-0 pr-0">
+				<div class="col-3 pl-0 pr-0">
 					<div class="bg-light pt-2 pr-4">
 						<div class="row">
 							<div class="col-1">
@@ -104,7 +104,7 @@ if(isset($transaction)){
 			</div><!-- button row -->
 		</div>
 		<div class="row"><!-- main row -->
-			<div class="col-lg-2 pl-0 pr-0"><!-- left column -->
+			<div class="col-2 pl-0 pr-0"><!-- left column -->
 				<div class="bg-light border-right">
 					<div class="pb-4">
 						<div class="mb-auto slimscrollcont2">
@@ -123,13 +123,13 @@ if(isset($transaction)){
 					</div>
 				</div>
 			</div><!-- left column -->
-			<div class="col-lg-7 pl-4 pr-4 pt-4 border-top">
+			<div class="col-7 pl-4 pr-4 pt-4 border-top">
 				<div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4" id="left_panel">
 					<?php
 					foreach($product as $ind => $row){
 
 						$availableqty = ($row["avail_qty"] != null ? $row["avail_qty"] : 0);
-						echo '<div class="col-lg-3 mb-4 main_product prodcat_'.$row["category_id"].'">';
+						echo '<div class="col mb-4 main_product prodcat_'.$row["category_id"].'">';
 						echo '<div class="product_main">';
 						echo '<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
 						echo '<div class="product_desc">'.$row["description"].'</div>';
@@ -150,7 +150,7 @@ if(isset($transaction)){
 					?>
 				</div>
 			</div><!-- center column -->
-			<div class="col-lg-3 pl-0">
+			<div class="col-3 pl-0 pr-0">
 				<div class="bg-light border-left px-2 pt-2">
 					<div class="pt-2 pb-4">
 						<div class="mb-auto slimscrollcont">
