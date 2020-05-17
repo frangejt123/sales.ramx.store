@@ -75,7 +75,7 @@ $(document).ready(function(){
 
 		var description = $("#description").val();
 		var uom = ($("#uom").val()).toUpperCase();
-		var price = $("#price").val();
+		var price = parseFloat($("#price").val().replace(",", ""));
 		var category_id = $("select#category").val();
 		var url = baseurl + '/product/addProduct';
 		var phase_out = $("#phase_out").prop('checked') ? "1" : "0";
