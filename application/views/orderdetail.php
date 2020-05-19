@@ -270,8 +270,8 @@ if(!is_null($date_delivered))
 						echo '<td>'.$row["description"].'</td>';
 						echo '<td>'.$row["uom"].'</td>';
 						echo '<td>'.$row["quantity"].'</td>';
-						echo '<td>'.number_format($row["price"], 2).'</td>';
-						echo '<td>'.number_format(($row["price"] * $row["quantity"]), 2).'</td>';
+						echo '<td>'.number_format(($row["total_price"] / $row["quantity"]), 2).'</td>';
+						echo '<td>'.number_format($row["total_price"], 2).'</td>';
 						echo '</tr>';
 					}
 					?>
