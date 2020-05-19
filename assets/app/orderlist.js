@@ -220,7 +220,7 @@ $(document).ready(function(){
 				var statusarr = ["Pending", "For Delivery", "Completed"];
 				var tdclass = ["text-success", "text-warning", "text-primary"];
 				$.each(res["orders"], function (ind, row) {
-					var paidCls = row["paid"] == "1" ? "text-success" : "";
+					//var paidCls = row["paid"] == "1" ? "text-success" : "";
 					var rowPaid = row["paid"] == "1" ? "Paid" : "";
 					var printCls = row["printed"] == "1" ? "text-success" : "";
 					var rowPrint = row["printed"] == "1" ? "Paid" : "";
@@ -228,14 +228,16 @@ $(document).ready(function(){
 					tr += "<td>" + row["formatid"] + "</td>";
 					tr += "<td>" + row["datetime"] + "</td>";
 					tr += "<td>" + row["delivery_date"] + "</td>";
-					tr += "<td width='25%'>" + row["name"] + "</td>";
+					tr += "<td>" + row["name"] + "</td>";
 					tr += "<td>" + row["driver_name"] + "</td>";
-					tr += "<td class='"+paidCls+"'>" + rowPaid + "</td>";
+					tr += "<td>" + rowPaid + "</td>";
 					tr += "<td>" + moparr[row["payment_method"]] + "</td>";
-					tr += "<td class='"+printCls+"'>" + rowPrint + "</td>";
+					tr += "<td>" + rowPrint + "</td>";
 					tr += "<td class='" + tdclass[row["status"]] + "'>" + statusarr[row["status"]] + "</td>";
 					tr += "<td hidden>"+row["delivery_date"]+"</td>";
+					tr += "<td hidden>"+row["id"]+"</td>";
 					tr += "</tr>";
+
 
 					$("table#orderlist_table tbody").prepend(tr);
 				});
