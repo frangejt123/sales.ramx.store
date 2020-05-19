@@ -46,9 +46,7 @@ class ModTransaction extends CI_Model {
 		$this->FIELDS["name"] = "customer.name";
 
 		if(isset($param["search"]) && $param["search"] != ""){
-			foreach ($this->FIELDS as $alias => $field) {
-				$this->db->or_like($field, $param["search"], "both");
-			}
+			$this->db->like($this->FIELDS["name"], $param["search"], "both");
 		}
 
 		$this->FIELDS["facebook_name"] = "customer.facebook_name";
