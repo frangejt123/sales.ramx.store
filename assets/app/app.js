@@ -216,7 +216,8 @@ $("document").ready(function(){
 					//$("#productsummary").find(".row").addClass("saved");
 					//location.reload();
 				}else{
-					alert(res["error"] + "\n" + res["product"]);
+					var product = res["product"] != undefined ? res["product"] : "";
+					alert(res["error"] + "\n" + product);
 				}
 				$("#confirm_yesopt").removeAttr("disabled");
 			},

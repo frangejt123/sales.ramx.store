@@ -265,6 +265,13 @@ class Main extends CI_Controller {
 		$this->load->model('modProduct', "", TRUE);
 		$this->load->model('modAuditTrail', "", TRUE);
 
+		if(!isset($_SESSION["id"]) || $_SESSION["id"] == ""){
+			$result["success"] = false;
+			$result["error"] = "Session expired. Please reload page.";
+			echo json_encode($result);
+			return;
+		}
+
 		$param = $this->input->post(NULL, "true");
 
 		/* UPDATE INVENTORY */
