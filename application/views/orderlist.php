@@ -76,10 +76,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<button id="filter_btn" class="btn-warning pull-right">
 		<i class="fa fa-filter"></i> &nbsp;Filter By
 	</button>
-	<span class="span_seperator pull-right"></span>
-	<button id="clear_filter_btn" class="btn-default pull-right">
-		<i class="fa fa-remove"></i> &nbsp;Clear Filter
-	</button>
+	<div class="clear_filter_div">
+		<span class="span_seperator pull-right"></span>
+		<button id="clear_filter_btn" class="btn-default pull-right">
+			<i class="fa fa-remove"></i> &nbsp;Clear Filter
+		</button>
+	</div>
+	<div class="switch_rgc_div">
+		<span class="span_seperator pull-right"></span>
+		<button id="switch_ribshack" class="switch_btn btn-danger pull-right">
+			<i class="fa fa-undo"></i> &nbsp;Switch to Ribshack
+		</button>
+	</div>
+	<div class="switch_ramx_div">
+		<span class="span_seperator pull-right"></span>
+		<button id="switch_ramx" class="switch_btn btn-info pull-right">
+			<i class="fa fa-undo"></i> &nbsp;Switch to RAM-x
+		</button>
+	</div>
 	<div style="clear: both"></div>
 
 	<div class="grid_container">

@@ -39,10 +39,6 @@ html{
 	font-size: 20px;
 }
 
-#clear_filter_btn{
-	display: none;
-}
-
 #status_btn{
 	margin-bottom: 10px;
 	padding: 10px;
@@ -441,6 +437,19 @@ td#payment_method_td{
 	font-size: 20px;
 	text-align: center;
 	background: #f2f2f2;
+}
+
+.switch_btn{
+	margin-bottom: 10px;
+	padding: 10px 25px 10px 25px;
+	border-radius: 10px;
+	border: 1px solid #d8d8d8;
+	font-size: 20px;
+	text-align: center;
+}
+
+.switch_ramx_div, .clear_filter_div{
+	display: none;
 }
 
 

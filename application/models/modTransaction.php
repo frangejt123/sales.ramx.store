@@ -55,7 +55,7 @@ class ModTransaction extends CI_Model {
 		$this->FIELDS["cust_location_image"] = "customer.location_image";
 		$this->FIELDS["sales_agent"] = "user.name";
 		$this->FIELDS["contact_number"] = "customer.contact_number";
-		$this->FIELDS["order_number"] = "CONCAT((DATE_FORMAT(transaction.datetime, '%m%d%Y')),'-', LPAD(transaction.id, '4', '0'))";
+		$this->FIELDS["order_number"] = "(CONCAT((DATE_FORMAT(transaction.datetime, '%m%d%Y')),'-', LPAD(transaction.id, '4', '0')))";
 
 		if(isset($param["no_image"]))
 			unset($this->FIELDS["location_image"]);
@@ -68,7 +68,7 @@ class ModTransaction extends CI_Model {
             $tablefield .= $field . " AS `" . $alias . "`";
             if($param)
 				if (array_key_exists($alias, $param)) {
-					$this->db->where($field, $param[$alias]);
+					$this->db->where($field.' = ', $param[$alias]);
 				}
         }
 

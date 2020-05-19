@@ -540,9 +540,9 @@ $(document).ready(function(){
 
 		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
 			&& (revised == "") && (orderid == "") && $("#filter_mop").val() == ""){
-			$("#clear_filter_btn").hide();
+			$(".clear_filter_div").hide();
 		}else{
-			$("#clear_filter_btn").show();
+			$(".clear_filter_div").show();
 		}
 
 		$("#filter_modal").modal("hide");
@@ -613,4 +613,9 @@ $(document).ready(function(){
 				return $1.toUpperCase()
 			})
 	}
+
+	/* SWITCH */
+	$("#switch_ribshack").on("click", function(){
+		alert("This feature is under maintenance.")
+	});
 });
