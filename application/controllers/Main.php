@@ -12,20 +12,138 @@ class Main extends CI_Controller {
 		if(isset($_SESSION["username"])) {
 			$this->load->model('modTransaction', "", TRUE);
 			$this->load->model('modDriver', "", TRUE);
-			$param["sort_delivery_date"] = true;
-			$param["no_image"] = true;
-			$new_transaction = $this->modTransaction->getAll($param)->result_array();
-			$new_param["old_transaction"] = true;
-			$old_transaction = $this->modTransaction->getAll($new_param)->result_array();
-			$data["transaction"] = array_merge($new_transaction, $old_transaction);
+//			$param["sort_delivery_date"] = true;
+//			$param["no_image"] = true;
+//			$new_transaction = $this->modTransaction->getAll($param)->result_array();
+//			$new_param["old_transaction"] = true;
+//			$old_transaction = $this->modTransaction->getAll($new_param)->result_array();
+//			$data["transaction"] = array_merge($new_transaction, $old_transaction);
+
+			$transaction = $this->modTransaction->getAll(NULL)->result_array();
 
 			$data["lastid"] = $this->modTransaction->getLastTransactionID(null)->row_array();
 			$drivers = $this->modDriver->getAll(null)->result_array();
 			$data["driverlist"] = $drivers;
+
+			$order = array();
+			foreach($transaction as $ind => $row){
+				$transdate = date("mdY", strtotime($row["datetime"]));
+				json_encode($order[$row["id"]] = $transdate.'-'.sprintf("%04s", $row["id"]));
+			}
+
+			$data["orderids"] = json_encode($order);
+
 			$this->load->view('orderlist', $data);
 		}else{
 			$this->load->view('login');
 		}
+	}
+
+	public function orderlist(){
+		$this->load->model('modTransaction', "", TRUE);
+
+		$param = $this->input->post(NULL, "true");
+
+		$draw = $param['draw'];
+
+		$columnIndex = "";
+		$columnName = "";
+		$columnSortOrder = "";
+		if(isset($param['order'][0]['column'])){
+			$columnIndex = $param['order'][0]['column']; // Column index
+			$columnName = $param['columns'][$columnIndex]['data']; // Column name
+			$columnSortOrder = $param['order'][0]['dir']; // asc or desc
+		}
+
+		$trxparam['columnname'] = $columnName;
+		$trxparam['columnsortorder'] = $columnSortOrder;
+		$trxparam["sort_delivery_date"] = true;
+		$trxparam["no_image"] = true;
+
+		//$srchparam["search"] = $param['search']['value']; // Search value
+
+		$trxparam["search"] = $param['search']['value']; // Search value
+
+		if($param["order_number"] != "")
+			$trxparam["order_number"] = $param["order_number"];
+		if($param["delivery_date"] != "")
+			$trxparam["delivery_date"] = $param["delivery_date"];
+		if($param["status"] != "")
+			$trxparam["status"] = $param["status"];
+		if($param["paid"] != "")
+			$trxparam["paid"] = $param["paid"];
+		if($param["printed"] != "")
+			$trxparam["printed"] = $param["printed"];
+		if(isset($param["payment_methods"]))
+			$trxparam["payment_methods"] = $param["payment_methods"];
+
+		$totalRecords = $this->modTransaction->getAll(NULL)->num_rows();
+		$totalRecordwithFilter = $this->modTransaction->getAll($trxparam)->num_rows();
+
+//		$new_transaction = $this->modTransaction->getAll($param)->result_array();
+//		$new_param["old_transaction"] = true;
+//		$old_transaction = $this->modTransaction->getAll($new_param)->result_array();
+//		$transaction = array_merge($new_transaction, $old_transaction);
+
+		$trxparam['start'] = $param["start"];
+		$trxparam['length'] = $param["length"]; // Rows display per page
+		$transaction = $this->modTransaction->getAll($trxparam)->result_array();
+
+		$moparray = array("Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
+		$statusarray = array("Pending", "For Delivery", "Complete", "Voided", "Delivered");
+		$tdclass = array("text-success", "text-warning", "text-primary", "text-danger", "text-info");
+		$order = array();
+
+		$data = array();
+
+		foreach($transaction as $ind => $row){
+			$paidclass = "";
+			$paid = "";
+			$printed = "";
+			$printCls = "";
+			$transdate = date("mdY", strtotime($row["datetime"]));
+			if($row["paid"] == 1){
+				$paid = "Paid";
+				$paidclass = "text-success";
+			}else{
+				$paid = "---";
+			}
+			if($row["printed"] == 1){
+				$printed = "Printed";
+				$printCls = "text-success";
+			}else if($row["printed"] == 2){
+				$printed = "Revised";
+				$printCls = "text-warning";
+			}else{
+				$printed = "---";
+			}
+
+			$rows = array();
+			$rows["id"] = $row["order_number"];
+			$rows["datetime"] = date("m/d/Y H:i:s", strtotime($row["datetime"]));
+			$rows["delivery_date"] = date("m/d/Y", strtotime($row["delivery_date"]));
+			$rows["name"] = $row["name"];
+			$rows["driver_name"] = ($row["driver_name"] == null ? "---" : $row["driver_name"]);
+			$rows["paid"] = $paid;
+			$rows["payment_method"] = $moparray[$row["payment_method"]];
+			$rows["printed"] = $printed;
+			$rows["status"] = $statusarray[$row["status"]];
+			$rows["frm_delivery_date"] = $row["delivery_date"];
+			$rows["transaction_id"] =  $row["id"];
+			$rows["status_class"] =  $tdclass[$row["status"]];
+
+			array_push($data, $rows);
+		}
+
+		$response = array(
+			"draw" => intval($draw),
+			"iTotalRecords" => $totalRecords,
+			"iTotalDisplayRecords" => $totalRecordwithFilter,
+			"aaData" => $data
+		);
+
+		//print_r($data);
+	 	echo json_encode($response);
 	}
 
 	public function pos(){

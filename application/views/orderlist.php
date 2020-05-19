@@ -27,7 +27,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 
 <div id="container">
+
 	<input type="text" id="order_last_id" value="<?php echo isset($lastid["id"]) ? $lastid["id"] : ""; ?>" hidden>
+
 	<button id="logout_btn" class="btn-danger pull-left">
 		<i class="fa fa-sign-out fa-flip-horizontal"></i> &nbsp;Logout
 	</button>
@@ -85,7 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<input type="text" class="form-control" placeholder="Search..." id="search_table">
 		</div>
 
-		<div class="box">
+		<div class="box" style="margin-left: -20px;">
 			<div class="box-body no-padding">
 				<table class="table table-striped table-hover" id="orderlist_table">
 					<thead>
@@ -99,55 +101,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<!-- 6 --><th class="sortable" id="td_mop">Payment Method</th>
 							<!-- 7 --><th class="sortable" id="td_print_status">Print Status</th>
 							<!-- 8 --><th class="sortable" id="td_status">Status<!-- <i class="fa fa-sort float-right"> --></th>
-							<!-- 9 --><th hidden></th><!-- filter -->
+							<!-- 9 --><th class="hide_column"></th><!-- filter -->
+							<!-- 10 --><th class="hide_column"></th><!-- filter -->
 						</tr>
 					</thead>
 					<tbody>
 					<?php
-						$moparray = array("Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
-						$statusarray = array("Pending", "For Delivery", "Complete", "Voided", "Delivered");
-						$tdclass = array("text-success", "text-warning", "text-primary", "text-danger", "text-info");
-						$order = array();
-						//$rowcount = 0;
-						foreach($transaction as $ind => $row){
-							$paidclass = "";
-							$paid = "";
-							$printed = "";
-							$printCls = "";
-							$transdate = date("mdY", strtotime($row["datetime"]));
-							if($row["paid"] == 1){
-								$paid = "Paid";
-								$paidclass = "text-success";
-							}else{
-								$paid = "---";
-							}
-							if($row["printed"] == 1){
-								$printed = "Printed";
-								$printCls = "text-success";
-							}else if($row["printed"] == 2){
-								$printed = "Revised";
-								$printCls = "text-warning";
-							}else{
-								$printed = "---";
-							}
-							echo '<tr id="tr_'.$row["id"].'">';
-								echo '<td class="td_orderid">'.$transdate.'-'.sprintf("%04s", $row["id"]).'</td>';
-								echo '<td class="td_orderdate">'.date("m/d/Y H:i:s", strtotime($row["datetime"])).'</td>';
-								echo '<td class="td_deliverydate">'.date("m/d/Y", strtotime($row["delivery_date"])).'</td>';
-								echo '<td class="td_customername" width="20%">'.$row["name"].'</td>';
-								echo '<td class="td_driver">'.($row["driver_name"] == null ? "---" : $row["driver_name"]).'</td>';
-								echo '<td class="td_paid_status '.$paidclass.'">'.$paid.'</td>';
-								echo '<td class="td_mop">'.$moparray[$row["payment_method"]].'</td>';
-								echo '<td class="td_print_status '.$printCls.'">'.$printed.'</td>';
-								echo '<td class="td_status '.$tdclass[$row["status"]].'">'.$statusarray[$row["status"]].'</td>';
-								echo '<td hidden>'.$row["delivery_date"].'</td>';
-							echo '</tr>';
-
-							json_encode($order[$row["id"]] = $transdate.'-'.sprintf("%04s", $row["id"]));
-							//$rowcount++;
-						}
-
-						$orderids = json_encode($order);
+						//echo $tablerows;
 					?>
 					</tbody>
 					<!--<caption><span id="table_rowcount"><?php //echo $rowcount; ?></span> Records found</caption>-->
@@ -235,6 +195,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							</label>
 						</div>
 					</div>
+					<input type="hidden" id="filter_printed_status">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -357,6 +318,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<input type="hidden" id="param_driver" name="param_driver" />
 	<input type="hidden" id="param_paymentdate" name="param_paymentdate" />
 </form>
+
+<div id="page_mask">
+	<div id="mask_loader">
+		<div class="spinner-grow text-success" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+		<div class="spinner-grow text-danger" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+		<div class="spinner-grow text-warning" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+		<div class="spinner-grow text-info" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+	</div>
+</div>
+
 <?php
 $driverarray = array();
 foreach($driverlist as $ind => $row){
@@ -376,6 +355,7 @@ foreach($driverlist as $ind => $row){
 <!-- iCheck -->
 <script src="<?php echo base_url(); ?>assets/plugins/iCheck/icheck.min.js"></script>
 <script>
+
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
 	var orderids = JSON.parse('<?php print_r($orderids); ?>');

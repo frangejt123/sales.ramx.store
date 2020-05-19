@@ -8,16 +8,27 @@ class Login extends CI_Controller {
 		if(isset($_SESSION["username"])) {
 			$this->load->model('modTransaction', "", TRUE);
 			$this->load->model('modDriver', "", TRUE);
-			$param["sort_delivery_date"] = true;
-			$param["no_image"] = true;
-			$new_transaction = $this->modTransaction->getAll($param)->result_array();
-			$new_param["old_transaction"] = true;
-			$old_transaction = $this->modTransaction->getAll($new_param)->result_array();
-			$data["transaction"] = array_merge($new_transaction, $old_transaction);
+//			$param["sort_delivery_date"] = true;
+//			$param["no_image"] = true;
+//			$new_transaction = $this->modTransaction->getAll($param)->result_array();
+//			$new_param["old_transaction"] = true;
+//			$old_transaction = $this->modTransaction->getAll($new_param)->result_array();
+//			$data["transaction"] = array_merge($new_transaction, $old_transaction);
+
+			$transaction = $this->modTransaction->getAll(NULL)->result_array();
 
 			$data["lastid"] = $this->modTransaction->getLastTransactionID(null)->row_array();
 			$drivers = $this->modDriver->getAll(null)->result_array();
 			$data["driverlist"] = $drivers;
+
+			$order = array();
+			foreach($transaction as $ind => $row){
+				$transdate = date("mdY", strtotime($row["datetime"]));
+				json_encode($order[$row["id"]] = $transdate.'-'.sprintf("%04s", $row["id"]));
+			}
+
+			$data["orderids"] = json_encode($order);
+
 			$this->load->view('orderlist', $data);
 		}else{
 			$this->load->view('login');

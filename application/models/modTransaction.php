@@ -41,12 +41,22 @@ class ModTransaction extends CI_Model {
 
     function getAll($param) {
         $tablefield = "";
+
+		$this->FIELDS["driver_name"] = "driver.name";
 		$this->FIELDS["name"] = "customer.name";
+
+		if(isset($param["search"]) && $param["search"] != ""){
+			foreach ($this->FIELDS as $alias => $field) {
+				$this->db->or_like($field, $param["search"], "both");
+			}
+		}
+
 		$this->FIELDS["facebook_name"] = "customer.facebook_name";
 		$this->FIELDS["cust_location_image"] = "customer.location_image";
 		$this->FIELDS["sales_agent"] = "user.name";
 		$this->FIELDS["contact_number"] = "customer.contact_number";
-		$this->FIELDS["driver_name"] = "driver.name";
+		$this->FIELDS["order_number"] = "CONCAT((DATE_FORMAT(transaction.datetime, '%m%d%Y')),'-', LPAD(transaction.id, '4', '0'))";
+
 		if(isset($param["no_image"]))
 			unset($this->FIELDS["location_image"]);
 
@@ -62,26 +72,38 @@ class ModTransaction extends CI_Model {
 				}
         }
 
+        if(isset($param["payment_methods"]))
+			$this->db->where_in("transaction.payment_method", $param["payment_methods"]);
+
         $this->db->select($tablefield);
         $this->db->from("transaction");
 		$this->db->join("customer", 'customer.customer_id = transaction.customer_id');
 		$this->db->join("user", 'user.id = transaction.user_id');
 		$this->db->join("driver", 'driver.id = transaction.driver_id', 'left');
-		if(isset($param["old_transaction"])) {
-			$this->db->where('transaction.delivery_date < ', date('Y-m-d'));
-		}
 
-		if(isset($param["sort_delivery_date"])) {
-			$this->db->where('transaction.delivery_date >= ', date('Y-m-d'));
-			$this->db->order_by('transaction.status', 'ASC');
-			$this->db->order_by('transaction.delivery_date', 'ASC');
+		if(isset($param["columnname"]) && $param["columnname"] != ""){
+			$this->db->order_by($param["columnname"], $param['columnsortorder']);
 		}else{
 			$this->db->order_by('transaction.status', 'ASC');
 			$this->db->order_by('transaction.delivery_date', 'DESC');
 		}
 
-        $query = $this->db->get();
-        return $query;
+		if(isset($param["start"]))
+			$this->db->limit( $param["length"], $param["start"]);
+
+		$query = $this->db->get();
+		return $query;
+
+//		if(isset($param["old_transaction"])) {
+//			$this->db->where('transaction.delivery_date < ', date('Y-m-d'));
+//		}
+//		if(isset($param["sort_delivery_date"])) {
+//			$this->db->where('transaction.delivery_date >= ', date('Y-m-d'));
+//			$this->db->order_by('transaction.status', 'ASC');
+//			$this->db->order_by('transaction.delivery_date', 'ASC');
+//		}else{
+//
+//		}
 	}
 	
 	function getAllNoImage($param) {

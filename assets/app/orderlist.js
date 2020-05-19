@@ -1,18 +1,71 @@
 $(document).ready(function(){
 
 	var ordertable = $('#orderlist_table').DataTable({
-		"pageLength": 50,
+		"processing": true,
+		"serverSide": true,
+		"pageLength": 20,
 		"bLengthChange": false,
 		"order": [],
-		stateSave: true
+		'serverMethod': 'post',
+		'stateSave': true,
+		'ajax': {
+			'url': baseurl + "/main/orderlist",
+			'data': function(d){
+				d.order_number = $("#order_id_filter").val();
+				d.delivery_date = $("#filter_delivery_date").val();
+				d.payment_methods =  $("#filter_mop").val();
+				d.status = $("#filter_status").val();
+				d.paid = $("#filter_paid").prop('checked') ? "1" : "";
+				d.printed = $("#filter_printed_status").val();
+
+				console.log(d);
+			}
+		},
+		"columns": [
+			{"data": "id"},
+			{"data": "datetime"},
+			{"data": "delivery_date"},
+			{"data": "name"},
+			{"data": "driver_name"},
+			{"data": "paid"},
+			{"data": "payment_method"},
+			{"data": "printed"},
+			{"data": "status"},
+			{"class": "hide_column", "data": "frm_delivery_date"},
+			{"class": "hide_column","data": "transaction_id"}
+		],
+		"createdRow": function( row, data, dataIndex, cells) {
+			$(row).attr("id", "tr_"+data["transaction_id"]);
+			$(cells[8]).addClass(data["status_class"]);
+		}
 	});
+
+	$('#orderlist_table').on('preXhr.dt', function ( e, settings, json, xhr ) {
+		$('.dataTables_processing').hide();
+		$("#page_mask").show();
+	});
+
+	$('#orderlist_table').on('xhr.dt', function ( e, settings, json, xhr ) {
+		$('.dataTables_processing').hide();
+		$("#page_mask").hide();
+	});
+
+	$('.dataTables_processing').hide();
+
+	$("#page_mask").css({"width": $(document).width(), "height":$(document).height()});
 
 	$('.select2').select2()
 	$('.input_daterangepicker').daterangepicker();
 	NProgress.configure({ showSpinner: false });
-	$("input#search_table").on("keyup change", function(){
+
+	$("input#search_table").on("change", function(){
+		localStorage["searchvalue"] = $(this).val();
 		ordertable.search($(this).val()).draw();
 	});
+
+	if(typeof (localStorage["searchvalue"]) !== 'undefined') {
+		$("input#search_table").val(localStorage["searchvalue"]);
+	}
 
 	$("button#create_order_btn").on("click", function(){
 		NProgress.start();
@@ -46,6 +99,7 @@ $(document).ready(function(){
 
 	$("table#orderlist_table tbody").on("click", "tr", function(){
 		var id = $(this).attr("id").split("_")[1];
+		//var id = "889";
 		NProgress.start();
 		window.location = baseurl + "/main/orderdetail/"+btoa(id);
 	});
@@ -405,6 +459,7 @@ $(document).ready(function(){
 				$("#filter_printed").iCheck("check");
 			if (orderfilters["revised"] == "REVISED")
 				$("#filter_revised").iCheck("check");
+			$("#filter_printed_status").val(orderfilters["filter_printed_status"]);
 			$("#order_id_filter").val(orderfilters["orderid"]);
 			$("#filter_mop").select2().val(orderfilters["mop"]).trigger("change");
 			filterlist();
@@ -422,6 +477,7 @@ $(document).ready(function(){
 		$("#filter_printed").iCheck('uncheck');
 		$("#filter_revised").iCheck('uncheck');
 		$("#order_id_filter").val("");
+		$("#filter_printed_status").val("");
 		$("#filter_mop").val([]).trigger('change');
 
 		$("#confirm_filter").trigger("click");
@@ -436,31 +492,35 @@ $(document).ready(function(){
 	});
 
 	function filterlist(){
-		var rows = document.querySelector("#orderlist_table tbody").rows;
 
-		var moparray = $("#filter_mop").find(':selected').map(function() {
-			return $( this ).text();
-		}).get().join("|");
+		//var rows = document.querySelector("#orderlist_table tbody").rows;
+
+		// var moparray = $("#filter_mop").find(':selected').map(function() {
+		// 	return $( this ).text();
+		// }).get().join("|");
 
 		var deliverydate = $("#filter_delivery_date").val();
-		var status = ($("#filter_status option:selected").text()).toUpperCase();
-		var paid = $("#filter_paid").prop('checked') ? "PAID" : "";
-		var printed = $("#filter_printed").prop('checked') ? "PRINTED" : "";
-		var revised = $("#filter_revised").prop('checked') ? "REVISED" : "";
+		var status = $("#filter_status").val();
+		var paid = $("#filter_paid").prop('checked') ? "1" : "";
+		var printed = $("#filter_printed").prop('checked') ? $("#filter_printed_status").val("1") : "";
+		var revised = $("#filter_revised").prop('checked') ? $("#filter_printed_status").val("2") : "";
 		var orderid = $("#order_id_filter").val();
 
-		var printed_status = "";
-		if(printed != "" || revised != ""){
-			printed_status = printed == "PRINTED" ? "PRINTED" : "REVISED";
-			printed_status = printed_status != "" ? printed_status : "";
-		}
 
-		ordertable.column(0).search(orderid).draw();
-		ordertable.column(5).search(paid).draw();
-		ordertable.column(6).search(moparray, true, false).draw();
-		ordertable.column(7).search(printed_status).draw();
-		ordertable.column(8).search(status).draw();
-		ordertable.column(9).search(deliverydate).draw();
+		// var printed_status = "";
+		// if(printed != "" || revised != ""){
+		// 	printed_status = printed == "PRINTED" ? "PRINTED" : "REVISED";
+		// 	printed_status = printed_status != "" ? printed_status : "";
+		// }
+		//
+		// ordertable.column(0).search(orderid).draw();
+		// ordertable.column(5).search(paid).draw();
+		// ordertable.column(6).search(moparray, true, false).draw();
+		// ordertable.column(7).search(printed_status).draw();
+		// ordertable.column(8).search(status).draw();
+		// ordertable.column(9).search(deliverydate).draw();
+
+		ordertable.ajax.reload();
 
 		var orderfilters = {};
 		orderfilters["orderid"] = orderid;
@@ -469,12 +529,13 @@ $(document).ready(function(){
 		orderfilters["paid"] = paid;
 		orderfilters["printed"] = printed;
 		orderfilters["revised"] = revised;
+		orderfilters["filter_printed_status"] = $("#filter_printed_status").val();
 		orderfilters["mop"] = $("#filter_mop").val();
 
 		localStorage["filter"] = JSON.stringify(orderfilters);
 
 		if((deliverydate == "") && (status == "") && (paid == "") && (printed == "")
-			&& (revised == "") && (orderid == "") && (moparray.length == 0)){
+			&& (revised == "") && (orderid == "") && $("#filter_mop").val() == ""){
 			$("#clear_filter_btn").hide();
 		}else{
 			$("#clear_filter_btn").show();

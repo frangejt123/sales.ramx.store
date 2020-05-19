@@ -4,6 +4,7 @@ html{
 
 #container{
 	padding: 20px;
+	overflow-x: hidden;
 }
 
 .voided{
@@ -451,3 +452,25 @@ td#payment_method_td{
 	display: none;
 }
 
+table#orderlist_table tr .hide_column{
+	display: none;
+}
+
+#page_mask{
+	background: rgba(207, 207, 207, 0.3);
+	position: fixed;
+	top:0;
+	left:0;
+	z-index: 9999;
+	display: none;
+}
+
+#mask_loader{
+	width: 150px;
+	height: 40px;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	margin-left: -75px;
+	margin-top: -20px;
+}
