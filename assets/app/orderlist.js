@@ -115,6 +115,8 @@ $(document).ready(function(){
 					localStorage.removeItem("inverse");
 					localStorage.removeItem("thIndex");
 					ordertable.state.clear();
+					localStorage.removeItem("searchvalue");
+					localStorage.removeItem("filter");
 					window.location = baseurl + "/login";
 				}
 			}
