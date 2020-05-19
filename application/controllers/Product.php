@@ -9,8 +9,12 @@ class Product extends CI_Controller {
 			$param = $this->input->post(NULL, "true");
 			$this->load->model('modProduct', "", TRUE);
 			$this->load->model('modCategory', "", TRUE);
-			$data["product"] = $this->modProduct->getAll(null)->result_array();
-			$data["category"] = $this->modCategory->getAll(null)->result_array();
+			$param["store_id"] = $_SESSION["store_id"];
+
+			$data["product"] = $this->modProduct->getAll($param)->result_array();
+			$data["category"] = $this->modCategory->getAll($param)->result_array();
+			$data["store_id"] = $_SESSION["store_id"];
+
 			$this->load->view('product', $data);
 		}else{
 			$this->load->view('login');

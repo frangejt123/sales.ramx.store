@@ -29,7 +29,8 @@ class ModTransaction extends CI_Model {
 				"date_printed" => "transaction.date_printed",
 				"date_revised" => "transaction.date_revised",
 				"date_delivered" => "transaction.date_delivered",
-				"driver_id" => "transaction.driver_id"
+				"driver_id" => "transaction.driver_id",
+				"store_id" => "transaction.store_id"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void", "Delivered");
 	public $PAYMENT_METHOD = array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
@@ -181,7 +182,7 @@ class ModTransaction extends CI_Model {
         return $res;
     }
 
-    function getNewTrasaction($id){
+    function getNewTrasaction($param){
 		$sql = "SELECT transaction.id,
 					transaction.datetime,
 					transaction.paid,
@@ -191,9 +192,9 @@ class ModTransaction extends CI_Model {
 					driver.name as driver_name,
 					DATE_FORMAT(transaction.delivery_date, '%m/%d/%Y') as delivery_date,
 					customer.name from transaction 
-					INNER JOIN customer ON customer.customer_id = transaction.
+					INNER JOIN customer ON customer.customer_id = transaction.customer_id
 					LEFT JOIN driver ON driver.id = transaction.driver_id
-					WHERE transaction.id > ".$id."
+					WHERE transaction.id > ".$param["lastid"]." AND transaction.store_id = ".$param["store_id"]."
 					ORDER BY transaction.status ASC, 
 					transaction.datetime DESC";
 		return $this->db->query($sql);

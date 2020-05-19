@@ -32,6 +32,13 @@ if(isset($transaction)){
 	$tnxdt =  date("mdY", strtotime($transaction["datetime"]));
 	$ordernumber = $tnxdt."-".$orderid;
 }
+
+$pagetitle = "RAM-X";
+$pageicon = "favicon.jpg";
+if($store_id == "2"){
+	$pagetitle = "RIBSHACK";
+	$pageicon = "favicon2.jpg";
+}
 ?>
 
 
@@ -41,9 +48,9 @@ if(isset($transaction)){
 <head>
 
 	<meta charset="utf-8">
-	<title>RAM-X</title>
+	<title><?php echo $pagetitle; ?></title>
 	<meta name="viewport" content=" user-scalable=0"/>
-	<link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/app/img/favicon.jpg" />
+	<link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/app/img/<?php echo $pageicon; ?>" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css">

@@ -170,7 +170,9 @@ $("document").ready(function(){
 			haschanges = 1;
 		}
 
-		var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0};
+
+		var store_id = localStorage["store_id"];
+		var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0,store_id};
 		var product = $("#productsummary").find(".row.haschanges");
 
 		$.each(product, function(ind, row){
@@ -358,15 +360,14 @@ $("document").ready(function(){
 	});
 
 	$("#confirm_cancel_transaction").on("click", function(){
-		if($("#confirmcancelmodal").data("mode") == "new")
-			location.reload();
-		else{
+		 if($("#confirmcancelmodal").data("mode") == "new")
+				window.location = baseurl+"/main/pos";
+		 else{
 			if($("#transaction_id_inp").val() == "")
 				window.location = baseurl;
 			else
 				window.location = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
 		}
-
 	});
 
 	$("#cancel_save_new_customer").on("click", function(){

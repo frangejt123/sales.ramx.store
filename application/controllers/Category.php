@@ -6,7 +6,8 @@ class Category extends CI_Controller {
 	public function index(){
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modCategory', "", TRUE);
-		$category = $this->modCategory->getAll(null)->result_array();
+
+		$category = $this->modCategory->getAll($param)->result_array();
 		echo json_encode($category);
 	}
 

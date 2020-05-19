@@ -91,7 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="switch_ramx_div">
 		<span class="span_seperator pull-right"></span>
 		<button id="switch_ramx" class="switch_btn btn-info pull-right">
-			<i class="fa fa-undo"></i> &nbsp;Switch to RAM-x
+			<i class="fa fa-undo"></i> &nbsp;Switch to RAM-X
 		</button>
 	</div>
 	<div style="clear: both"></div>
@@ -332,6 +332,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<input type="hidden" id="param_driver" name="param_driver" />
 	<input type="hidden" id="param_paymentdate" name="param_paymentdate" />
 </form>
+
+<!--<form id="form_store_id" method="post" action="">-->
+<!--	<input type="hidden" id="input_store_id" name="store_id" value="1"/>-->
+<!--</form>-->
 
 <div id="page_mask">
 	<div id="mask_loader">

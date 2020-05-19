@@ -58,6 +58,7 @@ class Main extends CI_Controller {
 		$trxparam['columnname'] = $columnName;
 		$trxparam['columnsortorder'] = $columnSortOrder;
 		$trxparam["sort_delivery_date"] = true;
+		$trxparam["store_id"] = $param["store_id"];
 		$trxparam["no_image"] = true;
 
 		//$srchparam["search"] = $param['search']['value']; // Search value
@@ -77,7 +78,9 @@ class Main extends CI_Controller {
 		if(isset($param["payment_methods"]))
 			$trxparam["payment_methods"] = $param["payment_methods"];
 
-		$totalRecords = $this->modTransaction->getAll(NULL)->num_rows();
+		$storeidparam["store_id"] = $param["store_id"];
+
+		$totalRecords = $this->modTransaction->getAll($storeidparam)->num_rows();
 		$totalRecordwithFilter = $this->modTransaction->getAll($trxparam)->num_rows();
 
 //		$new_transaction = $this->modTransaction->getAll($param)->result_array();
@@ -150,10 +153,17 @@ class Main extends CI_Controller {
 		$this->load->model('modProduct', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
 		$this->load->model('modCategory', "", TRUE);
+		$param = $this->input->post(NULL, "true");
+		session_start();
 
-		$product_product["phase_out"] = "0";
-		$data["category"] = $this->modCategory->getAll(null)->result_array();
-		$data["product"] = $this->modProduct->getAll($product_product)->result_array();
+		$product_param["phase_out"] = "0";
+		$product_param["store_id"] = $_SESSION["store_id"];
+
+		$data["category"] = $this->modCategory->getAll($product_param)->result_array();
+		$data["product"] = $this->modProduct->getAll($product_param)->result_array();
+
+		$data["store_id"] = $_SESSION["store_id"];
+
 		$customer = $this->modCustomer->getAll(null)->result_array();
 		$customerarray = array();
 		$nameopt = array();
@@ -169,8 +179,6 @@ class Main extends CI_Controller {
 
 		$data["customerdetail"] = json_encode($customerarray);
 		$data["namelist"] = json_encode($nameopt);
-
-		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->view('main', $data);
 		}else{
@@ -199,7 +207,10 @@ class Main extends CI_Controller {
 		$data["paymenthistory"] = $payment;
 		$data["orderhistory"] = $audittrail;
 		$data["driverlist"] = $drivers;
+
 		session_start();
+		$data["store_id"] = $_SESSION["store_id"];
+
 		if(isset($_SESSION["username"])) {
 			$this->load->view('orderdetail', $data);
 		}else{
@@ -215,7 +226,9 @@ class Main extends CI_Controller {
 		while(true){
 			$newlastid = $this->modTransaction->getLastTransactionID(null)->row_array();
 			if($newlastid["id"] != $lastid){
-				$data["transaction"]["orders"] = $this->modTransaction->getNewTrasaction($lastid)->result_array();
+				session_start();
+				$param["store_id"] = $_SESSION["store_id"];
+				$data["transaction"]["orders"] = $this->modTransaction->getNewTrasaction($param)->result_array();
 				foreach($data["transaction"]["orders"] as $ind => $row){
 					$transdate = date("mdY", strtotime($row["datetime"]));
 					$formatID = $transdate.'-'.sprintf("%04s", $row["id"]);
@@ -468,11 +481,16 @@ class Main extends CI_Controller {
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->load->model('modCategory', "", TRUE);
+		session_start();
 
-		$product_product["phase_out"] = "0";
-		$data["category"] = $this->modCategory->getAll(null)->result_array();
-		$data["product"] = $this->modProduct->getAll($product_product)->result_array();
+		$product_param["phase_out"] = "0";
+		$product_param["store_id"] = $_SESSION["store_id"];
+
+		$data["category"] = $this->modCategory->getAll($product_param)->result_array();
+		$data["product"] = $this->modProduct->getAll($product_param)->result_array();
 		$customer = $this->modCustomer->getAll(null)->result_array();
+
+		$data["store_id"] = $_SESSION["store_id"];
 
 		$id = base64_decode($id);
 
@@ -497,7 +515,6 @@ class Main extends CI_Controller {
 		$data["namelist"] = json_encode($nameopt);
 		$data["update"] = true;
 
-		session_start();
 		if(isset($_SESSION["username"])) {
 			$this->load->view('main', $data);
 		}else{
@@ -665,6 +682,12 @@ class Main extends CI_Controller {
 	public function completetrans($id){
 		$this->load->model('modTransaction', "", TRUE);
 		$this->modTransaction->complete($id);
+	}
+
+	public function changeStoreid(){
+		$param = $this->input->post(NULL, "true");
+		session_start();
+		$_SESSION["store_id"] = $param["store_id"];
 	}
 
 	/*public function printtest(){

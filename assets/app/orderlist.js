@@ -1,4 +1,14 @@
 $(document).ready(function(){
+	var burl = baseurl.replace("/index.php", "");
+
+	NProgress.configure({ showSpinner: false });
+
+	if(typeof (localStorage["store_id"]) !== 'undefined') {
+		localStorage["store_id"] = localStorage["store_id"];
+		switchpage(localStorage["store_id"]);
+	}else{
+		localStorage["store_id"] = "1";
+	}
 
 	var ordertable = $('#orderlist_table').DataTable({
 		"processing": true,
@@ -17,8 +27,7 @@ $(document).ready(function(){
 				d.status = $("#filter_status").val();
 				d.paid = $("#filter_paid").prop('checked') ? "1" : "";
 				d.printed = $("#filter_printed_status").val();
-
-				console.log(d);
+				d.store_id = localStorage["store_id"];
 			}
 		},
 		"columns": [
@@ -56,7 +65,6 @@ $(document).ready(function(){
 
 	$('.select2').select2()
 	$('.input_daterangepicker').daterangepicker();
-	NProgress.configure({ showSpinner: false });
 
 	$("input#search_table").on("change", function(){
 		localStorage["searchvalue"] = $(this).val();
@@ -69,6 +77,11 @@ $(document).ready(function(){
 
 	$("button#create_order_btn").on("click", function(){
 		NProgress.start();
+
+		// $("form#form_store_id input#input_store_id").val(localStorage["store_id"]);
+		// $('#form_store_id').attr("action", baseurl + "/main/pos");
+		// document.getElementById('form_store_id').submit();
+
 		window.location = baseurl + "/main/pos";
 	});
 
@@ -117,6 +130,7 @@ $(document).ready(function(){
 					ordertable.state.clear();
 					localStorage.removeItem("searchvalue");
 					localStorage.removeItem("filter");
+					localStorage.removeItem("store_id");
 					window.location = baseurl + "/login";
 				}
 			}
@@ -231,7 +245,7 @@ $(document).ready(function(){
 					tr += "<td>" + row["datetime"] + "</td>";
 					tr += "<td>" + row["delivery_date"] + "</td>";
 					tr += "<td>" + row["name"] + "</td>";
-					tr += "<td>" + row["driver_name"] + "</td>";
+					tr += "<td>" + (row["driver_name"] != "null" ? "---" : row["driver_name"]) + "</td>";
 					tr += "<td>" + rowPaid + "</td>";
 					tr += "<td>" + moparr[row["payment_method"]] + "</td>";
 					tr += "<td>" + rowPrint + "</td>";
@@ -616,6 +630,44 @@ $(document).ready(function(){
 
 	/* SWITCH */
 	$("#switch_ribshack").on("click", function(){
-		alert("This feature is under maintenance.")
+		localStorage.setItem("store_id", "2");
+		switchpage("2");
 	});
+
+	/* SWITCH */
+	$("#switch_ramx").on("click", function(){
+		localStorage.setItem("store_id", "1");
+		switchpage("1");
+	});
+
+	function switchpage(store_id){
+		$.ajax({
+			url: baseurl + "/main/changeStoreid",
+			data: {store_id},
+			type: "POST",
+			success: function(){
+				ordertable.ajax.reload();
+				NProgress.done();
+			},
+			error: function (xhr, status, error) {
+				NProgress.done();
+			},
+			beforeSend: function(){
+				NProgress.start();
+			}
+		});
+
+
+		if(store_id == "1"){
+			$(".switch_ramx_div").hide();
+			$(".switch_rgc_div").show();
+			document.title = "RAM-X";
+			$('link[rel="shortcut icon"]').attr('href',  burl + "/assets/app/img/favicon.jpg")
+		}else{
+			$(".switch_rgc_div").hide();
+			$(".switch_ramx_div").show();
+			document.title = "RIBSHACK";
+			$('link[rel="shortcut icon"]').attr('href',  burl + "/assets/app/img/favicon2.jpg")
+		}
+	}
 });

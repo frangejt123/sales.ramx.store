@@ -9,7 +9,8 @@ class ModCategory extends CI_Model {
 	private $TABLE = "product_category",
 		$FIELDS = array(
 		"id" => "product_category.id",
-		"name" => "product_category.name"
+		"name" => "product_category.name",
+		"store_id" => "product_category.store_id"
 	);
 
 	function __construct() {

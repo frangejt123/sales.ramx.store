@@ -80,7 +80,8 @@ $(document).ready(function(){
 		var url = baseurl + '/product/addProduct';
 		var phase_out = $("#phase_out").prop('checked') ? "1" : "0";
 
-		var data = {description, uom, price, category_id, phase_out};
+		var store_id = localStorage["store_id"];
+		var data = {description, uom, price, category_id, phase_out, store_id};
 		if(product_id != "") {//update
 			data["id"] = product_id;
 			url = baseurl + '/product/update';
@@ -153,6 +154,7 @@ $(document).ready(function(){
 	$("#product_category_btn").on("click", function(){
 		$.ajax({
 			method: 'POST',
+			data: {"store_id": localStorage["store_id"]},
 			url: baseurl + '/category',
 			success: function (res) {
 				var res = JSON.parse(res);
@@ -286,7 +288,9 @@ $(document).ready(function(){
 			else
 				status = "delete";
 
-			var json = {"id":id,name,status};
+			var store_id = localStorage["store_id"];
+
+			var json = {"id":id,name,status,store_id};
 			data.push(json);
 		});
 
