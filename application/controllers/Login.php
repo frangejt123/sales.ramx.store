@@ -47,6 +47,7 @@ class Login extends CI_Controller {
 			$_SESSION["username"] = $param["username"];
 			$_SESSION["name"] = $res["name"];
 			$_SESSION["id"] = $res["id"];
+			$_SESSION["store_id"] = "1";
 			$_SESSION["access_level"] = $res["access_level"];
 		}
 
@@ -56,6 +57,7 @@ class Login extends CI_Controller {
 	function logout(){
 		session_start();
 		unset($_SESSION["username"]);
+		unset($_SESSION["store_id"]);
 		session_destroy();
 		echo "success";
 	}
