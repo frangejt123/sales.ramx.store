@@ -260,6 +260,9 @@ $(document).ready(function(){
 
 		var balance = $("#balance").val();
 
+		if($(this).hasClass("disabled"))
+			return;
+
 		setTimeout(function(){
 			if(imghaschanges) {
 				$('#payment_img_preview').croppie("result", {
@@ -272,6 +275,7 @@ $(document).ready(function(){
 		}, 500);
 
 		NProgress.start();
+		$("#confirm_tag_as_paid").addClass("disabled");
 		setTimeout(function(){
 			var payment_img = croppieimg;
 			$.ajax({
@@ -281,14 +285,17 @@ $(document).ready(function(){
 				success: function (res) {
 					var res = JSON.parse(res);
 					alert("Changes successfully saved!");
+					$("#confirm_tag_as_paid").removeClass("disabled");
 					NProgress.done();
 					location.reload();
 				},
 				error: function (xhr, status, error) {
 					NProgress.done();
+					$("#confirm_tag_as_paid").removeClass("disabled");
 					alert("Oppss! Something went wrong.");
 				},
 				beforeSend: function(){
+					$("#confirm_tag_as_paid").addClass("disabled");
 				}
 			});
 
