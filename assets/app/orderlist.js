@@ -110,6 +110,11 @@ $(document).ready(function(){
 		window.location = baseurl + "/product";
 	});
 
+	$("#rgc_dispatch").on("click", function(){
+		NProgress.start();
+		window.location = baseurl + "/dispatch";
+	});
+
 	$("table#orderlist_table tbody").on("click", "tr", function(){
 		var id = $(this).attr("id").split("_")[1];
 		//var id = "889";

@@ -3,14 +3,14 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-class ModDriver extends CI_Model {
+class ModDispatchDetail extends CI_Model {
 
-	public $NAMESPACE = "driver";
-	private $TABLE = "driver",
+	public $NAMESPACE = "dispatch_detail";
+	private $TABLE = "dispatch_detail",
 		$FIELDS = array(
-		"id" => "driver.id",
-		"name" => "driver.name",
-		"status" => "driver.status"
+		"id" => "dispatch_detail.id",
+		"dispatch_id" => "dispatch_detail.dispatch_id",
+		"transaction_id" => "dispatch_detail.transaction_id",
 	);
 
 	function __construct() {
@@ -20,6 +20,8 @@ class ModDriver extends CI_Model {
 
 	function getAll($param) {
 		$tablefield = "";
+		$this->FIELDS["customer_name"] = "customer.name";
+		$this->FIELDS["transaction_date"] = "transaction.datetime";
 
 		foreach ($this->FIELDS as $alias => $field) {
 			if ($tablefield != "") {
@@ -34,8 +36,10 @@ class ModDriver extends CI_Model {
 		}
 
 		$this->db->select($tablefield);
-		$this->db->from("driver");
-		$this->db->order_by('name', 'ASC');
+		$this->db->from("dispatch_detail");
+		$this->db->join("transaction", 'transaction.id = dispatch_detail.transaction_id', 'inner');
+		$this->db->join("customer", 'transaction.customer_id = customer.customer_id', 'inner');
+		$this->db->order_by('transaction_id', 'ASC');
 
 		$query = $this->db->get();
 		return $query;
@@ -55,7 +59,7 @@ class ModDriver extends CI_Model {
 			}
 		}
 
-		if ($this->db->insert('driver', $data)) {
+		if ($this->db->insert('dispatch_detail', $data)) {
 			//$result_row = $this->db->query("SELECT LAST_INSERT_ID() AS `id`")->result_object();
 			$result["id"] = $this->db->insert_id();
 			$result["success"] = true;
@@ -82,7 +86,7 @@ class ModDriver extends CI_Model {
 
 		$this->db->where($this->FIELDS['id'], $id);
 
-		if ($this->db->update('driver', $data)) {
+		if ($this->db->update('dispatch_detail', $data)) {
 			$result["success"] = true;
 		} else {
 			$result["success"] = false;
@@ -94,7 +98,7 @@ class ModDriver extends CI_Model {
 	}
 
 	function delete($param){
-		$sql = "DELETE FROM `driver` WHERE `driver`.`id` = '".$param["id"]."'";
+		$sql = "DELETE FROM `dispatch_detail` WHERE `dispatch_detail`.`id` = '".$param["id"]."'";
 		$result = array();
 		if($this->db->query($sql)){
 			$result["success"] = true;

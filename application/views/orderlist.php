@@ -90,6 +90,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 	<div class="switch_ramx_div">
 		<span class="span_seperator pull-right"></span>
+		<button id="rgc_dispatch" class="switch_btn btn-primary pull-right">
+			<i class="fa fa-truck"></i> &nbsp; Dispatch
+		</button>
+		<span class="span_seperator pull-right"></span>
 		<button id="switch_ramx" class="switch_btn btn-info pull-right">
 			<i class="fa fa-undo"></i> &nbsp;Switch to RAM-X
 		</button>

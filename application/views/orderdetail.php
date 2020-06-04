@@ -93,6 +93,8 @@ $pageicon = "favicon.jpg";
 if($store_id == "2"){
 	$pagetitle = "RIBSHACK";
 	$pageicon = "favicon2.jpg";
+
+	$btnstatus = "";
 }
 
 ?><!DOCTYPE html>
@@ -117,15 +119,20 @@ if($store_id == "2"){
 <body>
 
 <div id="container">
+
 	<input type="text" hidden id="selected_order" value="<?php echo $transaction["id"]; ?>">
+	<?php
+		if($transaction["paid"] == "0")
+			$paidClass = "hidden";
+
+		if(!isset($nobutton)){
+	?>
+
 	<button id="cancel_orderlist_btn" class="btn-danger pull-left">
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>
 
 	<?php
-		if($transaction["paid"] == "0")
-			$paidClass = "hidden";
-
 		if($_SESSION["access_level"] == 1) { // sales agent
 			echo $btnmoreaction;//$btnprint;
 
@@ -167,6 +174,8 @@ if($store_id == "2"){
 		if($transaction["status"] == "4" && $transaction["paid"] == "1" && $transaction["reconcile"] == "0"){
 			echo $btnreconcile;
 		}
+
+		}//if !isset(no button)
 
 		$total_payment = 0;
 		foreach($paymenthistory as $ind => $row){
@@ -829,7 +838,11 @@ if($store_id == "2"){
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/nprogress.js"></script>
+<?php
+	if(!isset($nobutton)){
+?>
 <script src="<?php echo base_url(); ?>assets/app/orderdetail.js"></script>
+<?php } ?>
 
 </body>
 </html>
