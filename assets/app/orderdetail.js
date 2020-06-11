@@ -246,11 +246,24 @@ $(document).ready(function(){
 		$("select#mode_of_payment").val(transmop);
 		$("#payment_confirmation_detail").val(transpcd);
 		$("#paid_amount").val($("#balance").val());
+
+		if(transmop == "4"){
+			$("#payment_check_detail").show();
+		}
+
 		$("#tag_as_paid_modal").modal("show");
 	});
 
 	$("#unpaid_order_btn").on("click", function(){
 		$("#unpaid_modal").modal("show");
+	});
+
+	$(".sel_mode_of_payment").on("change", function(e){
+		var val = $(this).val();
+		if(val == "4")//check
+			$("#payment_check_detail, #payment_check_detail_update").show();
+		else
+			$("#payment_check_detail, #payment_check_detail_update").hide();
 	});
 
 	$("#confirm_tag_as_paid").on("click", function(){
@@ -274,13 +287,37 @@ $(document).ready(function(){
 			}
 		}, 500);
 
+		var postdata = {"transaction_id":selectedorder, payment_method, payment_confirmation_detail, amount, balance};
+
+		if(payment_method == "4"){
+			var checkinfo = $("#payment_check_detail").find("input");
+			var checkerr = 0;
+			$.each(checkinfo, function(ind, row){
+				if($(row).val() == ""){
+					checkerr++;
+				}
+			});
+			if(checkerr > 0){
+				alert("Please fill in empty fields.");
+				return;
+			}
+
+			var bank = $("#chk_bank_name").val();
+			var accnt_num = $("#chk_acc_num").val();
+			var accnt_name = $("#chk_acc_name").val();
+			var check_num = $("#chk_num").val();
+			var chk_amount = $("#paid_amount").val();
+			postdata["check_detail"] = {bank, accnt_num, accnt_name, check_num, "amount": chk_amount}
+		}
+
 		NProgress.start();
 		$("#confirm_tag_as_paid").addClass("disabled");
 		setTimeout(function(){
 			var payment_img = croppieimg;
+			postdata["payment_img"] = payment_img;
 			$.ajax({
 				method: 'POST',
-				data: {"transaction_id":selectedorder, payment_method, payment_confirmation_detail, amount, balance, payment_img},
+				data: postdata,
 				url: baseurl + '/main/insertpayment',
 				success: function (res) {
 					var res = JSON.parse(res);
@@ -305,7 +342,7 @@ $(document).ready(function(){
 	$("#confirm_unpaid").on("click", function(){
 		$.ajax({
 			method: 'POST',
-			data: {"id":selectedorder, "paid":"0"},
+			data: {"id":selectedorder, "paid":"0", "unpaid_order": "1"},
 			url: baseurl + '/main/updateorder',
 			success: function (res) {
 				var res = JSON.parse(res);
@@ -396,6 +433,14 @@ $(document).ready(function(){
 
 		var bsurl = baseurl.replace("index.php", "");
 
+		var chkdetail = checkdetail[id];
+		if(chkdetail != null){
+			$.each(chkdetail, function(i, r){
+				$("#update_"+i).val(r);
+			});
+			$("#payment_check_detail_update").show();
+		}
+
 		$("#update_mode_of_payment").val(mop);
 		$("#update_paid_amount").val(parseFloat(amount));
 		$("#update_payment_confirmation_detail").val(pcd);
@@ -419,6 +464,10 @@ $(document).ready(function(){
 		var newbalance = oldbalance - parseFloat(amount);
 		$("input#balance").val(newbalance);
 
+		if($(this).hasClass("disabled"))
+			return;
+
+		var postdata = {id, amount, payment_method, payment_confirmation_detail, newbalance, transaction_id, oldimgname}
 		setTimeout(function(){
 			if(imghaschanges) {
 				$('#payment_img_preview_update').croppie("result", {
@@ -430,25 +479,51 @@ $(document).ready(function(){
 			}
 		}, 500);
 
+		if(payment_method == "4"){
+			var checkinfo = $("#payment_check_detail_update").find("input");
+			var checkerr = 0;
+			$.each(checkinfo, function(ind, row){
+				if($(row).val() == ""){
+					checkerr++;
+				}
+			});
+			if(checkerr > 0){
+				alert("Please fill in empty fields.");
+				return;
+			}
+
+			var bank = $("#update_bank").val();
+			var accnt_num = $("#update_accnt_num").val();
+			var accnt_name = $("#update_accnt_name").val();
+			var check_num = $("#update_check_num").val();
+			var chk_amount = $("#update_paid_amount").val();
+			postdata["check_detail"] = {bank, accnt_num, accnt_name, check_num, "amount": chk_amount}
+		}
+
 		NProgress.start();
+		$("#confirm_updatepayment").addClass("disabled");
 		setTimeout(function() {
 			var payment_img = croppieimg;
+			postdata["payment_img"] = payment_img;
 			$.ajax({
 				method: 'POST',
-				data: {id, amount, payment_method, payment_confirmation_detail, newbalance, transaction_id, payment_img, oldimgname},
+				data: postdata,
 				url: baseurl + '/main/updatepayment',
 				success: function (res) {
 					var res = JSON.parse(res);
 					$("#update_payment_modal").modal("hide");
 					alert("Changes successfully saved");
+					$("#confirm_updatepayment").removeClass("disabled");
 					location.reload();
 					NProgress.done();
 				},
 				error: function (xhr, status, error) {
 					NProgress.done();
 					alert("Oppss! Something went wrong.");
+					$("#confirm_updatepayment").removeClass("disabled");
 				},
 				beforeSend: function(){
+					$("#confirm_updatepayment").addClass("disabled");
 				}
 			});
 		}, 800);

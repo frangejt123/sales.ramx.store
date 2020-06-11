@@ -33,7 +33,7 @@ class ModTransaction extends CI_Model {
 				"store_id" => "transaction.store_id"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void", "Delivered");
-	public $PAYMENT_METHOD = array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
+	public $PAYMENT_METHOD = array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank", "Check");
 
     function __construct() {
         // Call the Model constructor

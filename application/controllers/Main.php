@@ -92,7 +92,7 @@ class Main extends CI_Controller {
 		$trxparam['length'] = $param["length"]; // Rows display per page
 		$transaction = $this->modTransaction->getAll($trxparam)->result_array();
 
-		$moparray = array("Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
+		$moparray = array("Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank", "Check");
 		$statusarray = array("Pending", "For Delivery", "Complete", "Voided", "Delivered");
 		$tdclass = array("text-success", "text-warning", "text-primary", "text-danger", "text-info");
 		$order = array();
@@ -193,6 +193,7 @@ class Main extends CI_Controller {
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modAuditTrail', "", TRUE);
 		$this->load->model('modDriver', "", TRUE);
+		$this->load->model('modCheckDetail', "", TRUE);
 		$param["id"] = $orderid;
 		$detailparam["transaction_id"] = $orderid;
 		$transaction = $this->modTransaction->getAll($param)->row_array();
@@ -202,9 +203,17 @@ class Main extends CI_Controller {
 		$audittrail = $this->modAuditTrail->getAll($detailparam)->result_array();
 		$drivers = $this->modDriver->getAll(null)->result_array();
 
+		$chkdetail = array();
+		foreach($payment as $ind => $row){
+			$pmntid_param["payment_id"] = $row["id"];
+			$chk = $this->modCheckDetail->getAll($pmntid_param)->row_array();
+			$chkdetail[$row["id"]] = $chk;
+		}
+
 		$data["transaction"] = $transaction;
 		$data["transactiondetail"] = $transactiondetail;
 		$data["paymenthistory"] = $payment;
+		$data["checkdetail"] = $chkdetail;
 		$data["orderhistory"] = $audittrail;
 		$data["driverlist"] = $drivers;
 
@@ -329,7 +338,7 @@ class Main extends CI_Controller {
 
 		$param["trans"]["delivery_date"] = date("Y-m-d", strtotime($param["trans"]["delivery_date"]));
 		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
-		$moparray = ["Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank"];
+		$moparray = ["Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank", "Check"];
 
 		$updatenewvalue = array();
 		$detailparam["transaction_id"] = $param["trans"]["transaction_id"];
@@ -574,6 +583,20 @@ class Main extends CI_Controller {
 		if(isset($param["print_date"]))
 			$param["date_printed"] = date("Y-m-d H:i:s");
 
+		if(isset($param["unpaid_order"])){
+			$this->load->model('modPayment', "", TRUE);
+			$this->load->model('modCheckDetail', "", TRUE);
+
+			$pmtnparam["transaction_id"] = $param["id"];
+			$payments = $this->modPayment->getAll($pmtnparam)->result_array();
+			foreach($payments as $ind => $row){
+				$p["id"] = $row["id"];
+				$p["payment_id"] = $row["id"];
+				$this->modPayment->delete($p);
+				$this->modCheckDetail->delete($p);
+			}
+		}
+
 		$res = $this->modTransaction->update($param);
 
 		echo json_encode($res);
@@ -585,6 +608,7 @@ class Main extends CI_Controller {
 
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modTransaction', "", TRUE);
+		$this->load->model('modCheckDetail', "", TRUE);
 
 		$image = $param["payment_img"];
 		$imgname = md5(uniqid());
@@ -603,6 +627,13 @@ class Main extends CI_Controller {
 		$param["user_id"] = $_SESSION["id"];
 		$res = $this->modPayment->insert($param);
 
+		if($res["success"]){
+			if(isset($param["check_detail"])){
+				$param["check_detail"]["payment_id"] = $res["id"];
+				$this->modCheckDetail->insert($param["check_detail"]);
+			}
+		}
+
 		$transparam["id"] = $param["transaction_id"];
 		$transparam["payment_method"] = $param["payment_method"];
 		$transparam["payment_confirmation_detail"] = $param["payment_confirmation_detail"];
@@ -619,7 +650,13 @@ class Main extends CI_Controller {
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modTransaction', "", TRUE);
+		$this->load->model('modCheckDetail', "", TRUE);
 		$res = $this->modPayment->delete($param);
+		if($res["success"]){
+			$param["check_detail"]["payment_id"] = $param["id"];
+			$this->modCheckDetail->delete($param["check_detail"]);
+		}
+
 		$paidparam["id"] = $param["transaction_id"];
 		$paidparam["paid"] = "0";
 		$this->modTransaction->update($paidparam);
@@ -632,6 +669,7 @@ class Main extends CI_Controller {
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modPayment', "", TRUE);
 		$this->load->model('modTransaction', "", TRUE);
+		$this->load->model('modCheckDetail', "", TRUE);
 
 		$image = $param["payment_img"];
 		$oldimagename = $param["oldimgname"];
@@ -653,6 +691,14 @@ class Main extends CI_Controller {
 
 		$param["user_id"] = $_SESSION["id"];
 		$res = $this->modPayment->update($param);
+
+		if($res["success"]){
+			if(isset($param["check_detail"])){
+				$param["check_detail"]["payment_id"] = $param["id"];
+				$this->modCheckDetail->update($param["check_detail"]);
+			}
+		}
+
 		$paidparam["id"] = $param["transaction_id"];
 		$transparam["transaction_id"]  = $param["transaction_id"];
 		if($param["newbalance"] == 0)

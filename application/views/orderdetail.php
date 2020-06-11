@@ -211,7 +211,7 @@ if($store_id == "2"){
 				<td>Facebook Name : <?php echo $transaction["facebook_name"]; ?></td>
 				<td class="sep"></td>
 				<?php
-					$paymentmethodarray = array("Cash on Delivery (COD)", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank");
+					$paymentmethodarray = array("Cash on Delivery (COD)", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank", "Check");
 				?>
 				<td>
 					Payment Method : <?php echo $paymentmethodarray[$transaction["payment_method"]]; ?>
@@ -366,12 +366,13 @@ if($store_id == "2"){
 						<div class="col-5">
 							<div class="form-group">
 								<label>Mode of Payment</label>
-								<select class="form-control" id="mode_of_payment">
+								<select class="form-control sel_mode_of_payment" id="mode_of_payment">
 									<?php $pm = $transaction["payment_method"]; ?>
 									<option value="0" <?php echo $pm == 0 ? 'selected="selected"' : ''; ?>>Cash On Delivery (COD)</option>
 									<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer - BPI</option>
 									<option value="3" <?php echo $pm == 3 ? 'selected="selected"' : ''; ?>>Bank Transfer - Metrobank</option>
 									<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
+									<option value="4" <?php echo $pm == 4 ? 'selected="selected"' : ''; ?>>Check</option>
 								</select>
 							</div>
 
@@ -384,6 +385,30 @@ if($store_id == "2"){
 								<label>Payment Confirmation Detail</label>
 								<textarea class="form-control" rows="5" id="payment_confirmation_detail"><?php echo $pm = $transaction["payment_confirmation_detail"]; ?></textarea>
 							</div>
+
+
+							<div id="payment_check_detail">
+
+								<div class="form-group">
+									<label>Bank Name</label>
+									<input type="text" class="form-control" id="chk_bank_name" value="">
+								</div>
+								<div class="form-group">
+									<label>Account #</label>
+									<input type="text" class="form-control" id="chk_acc_num" value="">
+								</div>
+								<div class="form-group">
+									<label>Account Name</label>
+									<input type="text" class="form-control" id="chk_acc_name" value="">
+								</div>
+								<div class="form-group">
+									<label>Check #</label>
+									<input type="text" class="form-control" id="chk_num" value="">
+								</div>
+
+							</div><!-- check detail -->
+
+
 						</div><!-- left -->
 						<div class="col-7">
 							<div class="form-group">
@@ -554,11 +579,12 @@ if($store_id == "2"){
 						<div class="col-5">
 							<div class="form-group">
 								<label>Mode of Payment</label>
-								<select class="form-control" id="update_mode_of_payment">
+								<select class="form-control sel_mode_of_payment" id="update_mode_of_payment">
 									<option value="0">Cash On Delivery (COD)</option>
 									<option value="1">Bank Transfer - BPI</option>
 									<option value="3">Bank Transfer - Metrobank</option>
 									<option value="2">GCash</option>
+									<option value="4">Check</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -569,6 +595,28 @@ if($store_id == "2"){
 								<label>Payment Confirmation Detail</label>
 								<textarea class="form-control" rows="2" id="update_payment_confirmation_detail"></textarea>
 							</div>
+
+							<div id="payment_check_detail_update">
+
+								<div class="form-group">
+									<label>Bank Name</label>
+									<input type="text" class="form-control" id="update_bank" value="">
+								</div>
+								<div class="form-group">
+									<label>Account #</label>
+									<input type="text" class="form-control" id="update_accnt_num" value="">
+								</div>
+								<div class="form-group">
+									<label>Account Name</label>
+									<input type="text" class="form-control" id="update_accnt_name" value="">
+								</div>
+								<div class="form-group">
+									<label>Check #</label>
+									<input type="text" class="form-control" id="update_check_num" value="">
+								</div>
+
+							</div><!-- check detail -->
+
 						</div>
 						<div class="col-7">
 							<div class="form-group">
@@ -834,6 +882,7 @@ if($store_id == "2"){
 	var transmop = '<?php echo $transaction["payment_method"]; ?>';
 	var transpcd = '<?php echo preg_replace("/\r\n|\r|\n/",'<br/>', $transaction["payment_confirmation_detail"]); ?>';
 	var driverlist = JSON.parse('<?php echo json_encode($driverarray); ?>');
+	var checkdetail = JSON.parse('<?php echo json_encode($checkdetail); ?>');
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

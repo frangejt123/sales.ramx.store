@@ -317,6 +317,7 @@ if($store_id == "2"){
 									<option value="1" <?php echo $pm == 1 ? 'selected="selected"' : ''; ?>>Bank Transfer - BPI</option>
 									<option value="3" <?php echo $pm == 3 ? 'selected="selected"' : ''; ?>>Bank Transfer - Metrobank</option>
 									<option value="2" <?php echo $pm == 2 ? 'selected="selected"' : ''; ?>>GCash</option>
+									<option value="4" <?php echo $pm == 4 ? 'selected="selected"' : ''; ?>>Check</option>
 								</select>
 							</div>
 							<div class="form-group">
