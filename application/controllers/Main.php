@@ -218,9 +218,9 @@ class Main extends CI_Controller {
 		$data["driverlist"] = $drivers;
 
 		session_start();
-		$data["store_id"] = $_SESSION["store_id"];
 
 		if(isset($_SESSION["username"])) {
+			$data["store_id"] = $_SESSION["store_id"];
 			$this->load->view('orderdetail', $data);
 		}else{
 			$this->load->view('login');

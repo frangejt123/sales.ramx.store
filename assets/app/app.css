@@ -375,3 +375,8 @@ textarea#clipboard{
 @media only screen and (min-width: 500px) {
 
 }
+
+.prodsumrow .delbtn {
+	height: 50px;
+	width: 50px
+}

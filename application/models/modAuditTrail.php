@@ -10,6 +10,7 @@ class ModAuditTrail extends CI_Model {
 		$FIELDS = array(
 		"id" => "user_audit_trails.id",
 		"user_id" => "user_audit_trails.user_id",
+		"user_type" => "user_audit_trails.user_type",
 		"transaction_id" => "user_audit_trails.transaction_id",
 		"event" => "user_audit_trails.event",
 		"table_name" => "user_audit_trails.table_name",

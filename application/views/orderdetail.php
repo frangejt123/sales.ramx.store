@@ -97,6 +97,22 @@ if($store_id == "2"){
 	$btnstatus = "";
 }
 
+function getUser($row) {
+	if($row["user_type"] == 'User') {
+		return $row["user_name"];
+	} else {
+		return 'Customer Encoded';
+	}
+}
+
+function getSalesAgent($transaction) {
+	if(empty($transaction["sales_agent"])  && empty($transaction["user_id"]) ) {
+		return 'CUSTOMER ENCODED';
+	} else {
+		return $transaction["sales_agent"];
+	}
+}
+
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -228,7 +244,7 @@ if($store_id == "2"){
 						echo ' &mdash;&mdash; Date Delivered : '.$date_delivered; ?>
 				</td>
 				<td class="sep"></td>
-				<td>Sales Agent : <?php echo $transaction["sales_agent"]; ?></td>
+				<td>Sales Agent : <?php echo getSalesAgent($transaction) ; ?></td>
 			</tr>
 			<tr>
 				<td>Delivery Address : <?php echo $transaction["delivery_address"]; ?></td>
@@ -680,7 +696,7 @@ if($store_id == "2"){
 								foreach($orderhistory as $ind => $row){
 									echo '<tr id="tr_'.$row["id"].'" class="order_history_tr">';
 									echo '<td>'.date("m/d/Y H:i:s", strtotime($row["created_at"])).'</td>';
-									echo '<td>'.$row["user_name"].'</td>';
+									echo '<td>'. getUser($row).'</td>';
 									echo '<td>'.ucfirst($row["event"]).'</td>';
 									echo '<td width="120px"><button id="historydetail_'.$row["id"].'" type="button" class="btn btn-secondary grid-btn view_history_detail">
 													Details

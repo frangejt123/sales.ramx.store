@@ -77,7 +77,7 @@ class ModTransaction extends CI_Model {
         $this->db->select($tablefield);
         $this->db->from("transaction");
 		$this->db->join("customer", 'customer.customer_id = transaction.customer_id');
-		$this->db->join("user", 'user.id = transaction.user_id');
+		$this->db->join("user", 'user.id = transaction.user_id', 'left');
 		$this->db->join("driver", 'driver.id = transaction.driver_id', 'left');
 
 		if(isset($param["columnname"]) && $param["columnname"] != ""){
