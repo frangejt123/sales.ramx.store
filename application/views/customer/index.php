@@ -33,35 +33,16 @@
 				<table class="table table-striped table-hover mb-0" id="customer_tbl">
 					<thead>
 						<tr>
-							<th  class="border-top-0 sortable">ID <i class="fa fa-sort float-right"></i></th>
-							<th class="border-top-0 sortable">Name <i class="fa fa-sort float-right"></i></th>
-							<th class="border-top-0 sortable">Facebook Name <i class="fa fa-sort float-right"></i></th>
-							<th class="border-top-0 sortable">Contact Number <i class="fa fa-sort float-right"></i></th>
-							<th class="border-top-0 sortable">Delivery Address <i class="fa fa-sort float-right"></i></th>
+							<th  class="border-top-0 sortable">ID</th>
+							<th class="border-top-0 sortable">Name </th>
+							<th class="border-top-0 sortable">Facebook Name </th>
+							<th class="border-top-0 sortable">Contact Number </th>
+							<th class="border-top-0 sortable">City </th>
+							<th class="border-top-0 sortable">Delivery Address </th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php
 					
-						if (count($customers) > 0) {
-					
-							foreach ($customers as $ind => $row) {
-								$id = $row["id"];
-								
-								echo "<tr id='tr_$id' class='routing-btn' data-route-to='/customer/detail/$id'>";
-								echo 	'<td>' . sprintf("%04s", $id) . '</td>';
-								echo 	'<td>' . $row["name"] . '</td>';
-								echo 	'<td>' . $row["facebook_name"]. '</td>';
-								echo 	'<td>' . $row["contact_number"] . '</td>';
-								echo 	'<td>' . $row["delivery_address"] . '</td>';
-								echo '</tr>';
-							}
-						} else  { ?>
-								<tr>
-									  <td colspan='5' class='text-center'>No records found</td>
-								</tr>
-						
-						<?php } ?>
 					</tbody>
 				</table>
 			</div>
@@ -72,7 +53,7 @@
 <div class="modal fade" id="customer_detail_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
-				<form class="needs-validation" method="post" id="customer_form" novalidate>
+				<form class="needs-validation" method="post" id="customer_form" novalidate data-mode='new'>
 				<div class="modal-header">
 					<h4 class="modal-title" id="exampleModalLabel">Add New Customer</h4>
 				</div>
@@ -102,7 +83,25 @@
 										Please input `Contact Number`.
 									</div>
 								</div>
-							
+
+								<div class="form-group ">
+									<label >City</label>
+								
+										<select class="form-control input" id="city" required  data-model="city_id">
+											<option value=""></option>
+											<?php 
+											foreach($city as $c) {
+												$selected = $c["id"] == $city_id ? 'selected="selected"' : "";
+												echo '<option value="'.$c["id"].'" '.$selected.' >'.$c['name'].'</option>';
+											}
+											?>
+										</select>
+										<div class="invalid-feedback">
+												Please select `City`.
+											</div>
+										
+								</div>
+								
 								<div class="form-group">
 									<label>Delivery Address</label>
 									<textarea data-model="delivery_address" class="form-control input" rows="3" required id="cust_delivery_address"></textarea>
@@ -139,5 +138,7 @@
 	</div>
 
 
-
+<script>
+	var cities = <?=json_encode($city)?>
+</script>
 

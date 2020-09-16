@@ -159,6 +159,7 @@ $("document").ready(function(){
 		var facebook_name = $("input#facebook_name").val();
 		var delivery_address = ucwords($("#cust_delivery_address").val());
 		var delivery_date = $("input#delivery_date").val();
+		var city_id = $("select#city").val();
 		var payment_method = $("#payment_method").val();
 		var payment_confirmation_detail = ucwords($("#payment_confirmation_detail").val());
 		var contact_number = $("input#cust_contact_number").val();
@@ -172,7 +173,7 @@ $("document").ready(function(){
 
 
 		var store_id = localStorage["store_id"];
-		var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0,store_id};
+		var transdata = {transaction_id,customer_name,facebook_name,customer_id,total,delivery_address,delivery_date,remarks,payment_method,payment_confirmation_detail,haschanges,"status":0,store_id,city_id};
 		var product = $("#productsummary").find(".row.haschanges");
 
 		$.each(product, function(ind, row){
@@ -200,7 +201,7 @@ $("document").ready(function(){
 		if(newcustomer !== undefined){
 			data["newcustomer"] = newcustomer;
 		}else{
-			data["customerdetail"] = {customer_id,contact_number,delivery_address};
+			data["customerdetail"] = {customer_id,contact_number,delivery_address,city_id};
 		}
 
 		$.ajax({
@@ -328,14 +329,17 @@ $("document").ready(function(){
 		var cname = ucwords($("input#customer_name").val());
 		var cnumber = $("input#cust_contact_number").val();
 		var address = ucwords($("#cust_delivery_address").val());
+		var city = $("select#city").val();
 		$("#savecustomerdetailmodal").modal("hide");
 		namelist["temp_id"] = cname;
 
 		customerdetail["temp_id"] = {
 			"name":cname,
 			"contact_number":cnumber,
-			"delivery_address":address
+			"delivery_address":address,
+			"city_id": city
 		};
+
 
 		newcustomer = customerdetail["temp_id"];
 		$("#customer_detail_modal").modal("hide");

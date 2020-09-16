@@ -14,13 +14,40 @@
  
   </head>
   <body class="bg-light">
-    <div class="container pb-5">
-		<div class="py-5 text-center">
-			<a href="<?php echo site_url();?>/order"><img class="d-block mx-auto mb-4" src="<?php echo base_url(); ?>assets/app/img/ramx.png" alt=""  height="72"></a>
-			<h2>Thank you for placing an order with us, <?=$transaction['name']?>! </h2>
-			<p class="lead">This is your order confirmation. Please take note of your order number. </p>
-			
-		</div>
+	  
+  <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+ 	 <a class="navbar-brand  mr-auto mr-lg-0" href="<?php echo site_url() . '/order' ?>">
+		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+			<span class="d-lg-inline-block d-none">RAM-X Meatshop</span>
+			<span class=" d-lg-none d-md-inline-block ">My Purchases</span>
+	</a>
+	
+	<button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+
+  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item ">
+	 	 <a class="nav-link" href="<?=site_url()?>/order/new">New Order <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+	 	 <a class="nav-link" href="<?=site_url()?>/order/purchases">My Purchases</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+        <div class="dropdown-menu dropdown-menu-left" style="left: -5rem !important" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" href="#" id="logout">Logout</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div class="container pb-5 pt-5">
+	
 
 		<div class="row">
     <div class="col-md-4 order-md-2 mb-4">
@@ -87,7 +114,10 @@
           <label for="email">Delivery Date</label>
           <input type="text" class="form-control form-readonly" readonly value="<?= date('m/d/Y', strtotime( $transaction['delivery_date']))?> ">
         </div>
-
+		<div class="mb-3">
+		  <label for="address">City</label>
+		  <textarea class="form-control form-readonly" readonly><?=$transaction['delivery_address']?></textarea>
+        </div>	
         <div class="mb-3">
 		  <label for="address">Delivery Address</label>
 		  <textarea class="form-control form-readonly" readonly><?=$transaction['delivery_address']?></textarea>
@@ -153,6 +183,8 @@ Thank you very much </p>
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
 	</script>
 	   <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+	   <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	   <script src="<?php echo base_url(); ?>assets/app/order/common.js"></script>
 	   <script src="<?php echo base_url(); ?>assets/app/order/track.js"></script>
 	</body>
 </html>

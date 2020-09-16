@@ -8,22 +8,7 @@
 
     <!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/order/common.css">
  
   </head>
   <body class="bg-light">
@@ -83,6 +68,6 @@
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
 	</script>
 	   <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
-	   <script src="<?php echo base_url(); ?>assets/app/track.js"></script>
+	   <script src="<?php echo base_url(); ?>assets/app/order/track.js"></script>
 	</body>
 </html>

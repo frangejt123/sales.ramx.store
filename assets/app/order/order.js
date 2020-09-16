@@ -6,7 +6,7 @@ $("document").ready(function(){
 	if(tommorow_day == 'Sunday') {
 		delivery_date = tommorow_date.add(1, 'days').format('YYYY-MM-DD');
 	} else {
-		delivery_date = tommorow_date.add(1, 'days').format('YYYY-MM-DD');
+		delivery_date = tommorow_date.format('YYYY-MM-DD');
 	}
 
 	$('#delivery_date').val(delivery_date)
@@ -208,23 +208,29 @@ $("document").ready(function(){
 
 		var data = {"trans":transdata, "detail": detail, locationimg, inventorydata};
 
-		if(newcustomer !== undefined){
-			data["newcustomer"] = newcustomer;
-		}else{
+	
 			data["customerdetail"] = {customer_id,contact_number,delivery_address};
-		}
+		
 
 		$.ajax({
 			method: 'POST',
 			data: data,
-			url: baseurl+'/order/settle',
+			url: siteURL+'/order/settle',
 			success: function(res){
-				var res = JSON.parse(res);
+			
 				NProgress.done();
+				
+				res = JSON.parse(res);
+
 				if(res["success"]){
 					// alert("Transaction Successfully Settled!");
 					//new_transaction_id = res["transaction_id"];
-					window.location = baseurl + "/order/success/"+btoa(res["id"]);
+
+					//clear prod summary
+					$("#productsummary").html("");
+
+
+					window.location = siteURL + "/order/success/"+btoa(res["id"]);
 					//$("#confirmmodal").modal("hide");
 					//$("#productsummary").find(".row").addClass("saved");
 					//location.reload();
@@ -235,6 +241,7 @@ $("document").ready(function(){
 				$("#confirm_yesopt").removeAttr("disabled");
 			},
 			error: function(xhr, status, error){
+				console.log(xhr, status, error)
 				$("#confirm_yesopt").removeAttr("disabled");
 				NProgress.done();
 				alert("Oppss!. Something went wrong!.")
@@ -257,7 +264,7 @@ $("document").ready(function(){
 		if(products.length > 0){
 			$("#confirmcancelmodal").modal("show").data("mode", "new");
 		}else{
-			window.location = baseurl + "/main/pos";
+			window.location = siteURL + "/main/pos";
 		}
 	});
 
@@ -321,46 +328,28 @@ $("document").ready(function(){
 			});
 		}
 
-		if(customerdetail[cid] == undefined){
-			$("#savecustomerdetailmodal").modal("show");
-			$("span#new_customer_name").text(cname);
-		}else{
+		// if(customerdetail[cid] == undefined){
+		// 	$("#savecustomerdetailmodal").modal("show");
+		// 	$("span#new_customer_name").text(cname);
+		// }else{
 			$("#customer_details_main_btn").text(cname);
 			$("#customer_detail_modal").modal("hide");
-		}
+		// }
 
-		if(customerdetail["temp_id"] !== undefined){
-			customerdetail["temp_id"]["contact_number"] = cnumber;
-			customerdetail["temp_id"]["delivery_address"] = address;
-		}
+		// if(customerdetail["temp_id"] !== undefined){
+		// 	customerdetail["temp_id"]["contact_number"] = cnumber;
+		// 	customerdetail["temp_id"]["delivery_address"] = address;
+		// }
 	});
 
-	$("#confirm_save_new_customer").on("click", function(){
-		var cname = ucwords($("input#customer_name").val());
-		var cnumber = $("input#cust_contact_number").val();
-		var address = ucwords($("#cust_delivery_address").val());
-		$("#savecustomerdetailmodal").modal("hide");
-		namelist["temp_id"] = cname;
-
-		customerdetail["temp_id"] = {
-			"name":cname,
-			"contact_number":cnumber,
-			"delivery_address":address
-		};
-
-		newcustomer = customerdetail["temp_id"];
-		$("#customer_detail_modal").modal("hide");
-		$("#customer_details_main_btn").text(cname);
-		//reinitialize selection
-		inputautocomplete();
-	});
+	
 
 	$("button#cancel_order_btn").on("click", function(){
 		var products = $("#productsummary").find(".row.haschanges");
-		var url = baseurl;
+		var url = siteURL;
 
 		if($("#transaction_id_inp").val() != "")
-			url = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
+			url = siteURL + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
 
 		if(products.length > 0){
 			$("#confirmcancelmodal").modal("show").data("mode", "back");
@@ -372,18 +361,16 @@ $("document").ready(function(){
 
 	$("#confirm_cancel_transaction").on("click", function(){
 		 if($("#confirmcancelmodal").data("mode") == "new")
-				window.location = baseurl+"/main/pos";
+				window.location = siteURL+"/main/pos";
 		 else{
 			if($("#transaction_id_inp").val() == "")
-				window.location = baseurl;
+				window.location = siteURL;
 			else
-				window.location = baseurl + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
+				window.location = siteURL + "/main/orderdetail/"+btoa($("#transaction_id_inp").val());
 		}
 	});
 
-	$("#cancel_save_new_customer").on("click", function(){
-		$("#savecustomerdetailmodal").modal("hide");
-	});
+
 
 	$("#cancel_suspend_transaction").on("click", function(){
 		$("#confirmcancelmodal").modal("hide");
@@ -406,66 +393,7 @@ $("document").ready(function(){
 		$(this).addClass("active");
 	});
 
-	inputautocomplete();
-	function inputautocomplete() {
-		// Initialize ajax autocomplete:
-		var customernameArray = $.map(namelist, function (value, key) {
-			return {value: value, data: key};
-		});
-		$('#customer_name').autocomplete({
-			lookup: customernameArray,
-			lookupLimit: 5,
-			lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
-				var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
-				return re.test(suggestion.value);
-			},
-			onSelect: function (suggestion) {
-				//$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
-				var id = suggestion.data;
-				var contactnumber = customerdetail[id]["contact_number"];
-				var deliveryaddress = customerdetail[id]["delivery_address"];
-				var facebookname = customerdetail[id]["fb_name"];
-
-				$("#cust_contact_number").val(contactnumber);
-				$("#cust_delivery_address").val(deliveryaddress);
-				$("#facebook_name").val(facebookname);
-				$("#customer_id").val(id);
-
-				var bsurl = baseurl.replace("index.php", "");
-
-				if(customerdetail[id]["cust_location_image"] !== ""){
-					if (!croppieready) {
-						croppie = $('#map_img_preview').croppie({
-							"viewport": {
-								width: $("#map_preview").width() + "px",
-								height: '200px',
-								type: 'square'
-							}
-						});
-						croppieready = true;
-					}
-					imghaschanges = true;
-					croppie.croppie('bind', {
-						url: bsurl+"assets/location_image/"+customerdetail[id]["cust_location_image"]
-					});
-				}else{
-					$(".cr-boundary").remove();
-					$(".cr-slider-wrap").remove();
-					croppieready = false;
-					imghaschanges = false;
-				}
-			},
-			onHint: function (hint) {
-				$('#name_autocomplete_hint').val(hint);
-			},
-			onInvalidateSelection: function () {
-				$("#cust_contact_number").val("");
-				$("#cust_delivery_address").val("");
-				$("#customer_id").val("");
-			}
-		});
-	}
-
+	
 	function ucwords (str) {
 		return (str + '')
 			.replace(/^(.)|\s+(.)/g, function ($1) {
@@ -590,6 +518,43 @@ $("document").ready(function(){
 	}
 
 
-	$("#customer_details_main_btn").trigger('click')
+	if(cust_location_image !== ""){
+		if (!croppieready) {
+			croppie = $('#map_img_preview').croppie({
+				"viewport": {
+					width: $("#map_preview").width() + "px",
+					height: '200px',
+					type: 'square'
+				}
+			});
+			croppieready = true;
+		}
+		imghaschanges = true;
+		croppie.croppie('bind', {
+			url: baseURL+"/assets/location_image/"+cust_location_image
+		});
+	}else{
+		$(".cr-boundary").remove();
+		$(".cr-slider-wrap").remove();
+		croppieready = false;
+		imghaschanges = false;
+	}
 
+	// $("#customer_details_main_btn").trigger('click')
+
+
+
+});
+
+
+window.addEventListener("beforeunload", function (e) {
+
+	var products = $("#productsummary").find(".row.haschanges");
+	if(products.length > 0) {
+		var confirmationMessage = "\o/";
+  
+		(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+		return confirmationMessage;        
+	}
+	                    //Webkit, Safari, Chrome
 });

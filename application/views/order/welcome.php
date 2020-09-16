@@ -8,25 +8,9 @@
 
     <!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/welcome.css">
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="product.css" rel="stylesheet">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/order/welcome.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/order/common.css">
+  
   </head>
   <body>
   
@@ -52,7 +36,7 @@
   <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden" style="transform: rotate(0)">
     <div class="my-3 py-3">
       <h2 class="display-5">
-	  <a href="order/new" class="card-link text-white stretched-link">	Order Now! </a>
+	  <a href="<?=site_url().'/order/new'?>" class="card-link text-white stretched-link">	Order Now! </a>
 	  </h2>
       <p class="lead"></p>
     </div>
@@ -65,7 +49,7 @@
   <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden"  style="transform: rotate(0)">
     <div class="my-3 p-3">
      	<h2 class="display-5">
-	  		<a href="order/track" class="card-link text-reset  stretched-link">	Track your Order</a>
+	  		<a href="<?=site_url().'/order/purchases'?>" class="card-link text-reset  stretched-link">	Track your Order</a>
 		</h2>
       <p class="lead"></p>
     </div>

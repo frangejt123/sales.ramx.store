@@ -8,6 +8,13 @@ class Report extends CI_Controller {
 	public function index(){
 		session_start();
 		if(isset($_SESSION["username"])) {
+				//prevent customer from logging in admin side
+			
+					if ($_SESSION['access_level'] == 2) {
+						redirect('/order');
+					}
+			
+
 			$param = $this->input->post(NULL, "true");
 			$condition = [
 				"CONDITION" => "id=".$param["id"]

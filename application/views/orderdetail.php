@@ -247,9 +247,12 @@ function getSalesAgent($transaction) {
 				<td>Sales Agent : <?php echo getSalesAgent($transaction) ; ?></td>
 			</tr>
 			<tr>
-				<td>Delivery Address : <?php echo $transaction["delivery_address"]; ?></td>
+				<td>City : <?php echo $transaction["city"]; ?></td>
 				<td class="sep"></td>
 				<td>Remarks : <?php echo $transaction["remarks"]; ?></td>
+			</tr>
+			<tr>
+				<td>Delivery Address : <?php echo $transaction["delivery_address"]; ?></td>
 			</tr>
 		</table>
 	</div>

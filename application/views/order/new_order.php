@@ -29,6 +29,12 @@ if(isset($transaction)){
 	$orderid = sprintf("%04s", $transaction["id"]);
 	$tnxdt =  date("mdY", strtotime($transaction["datetime"]));
 	$ordernumber = $tnxdt."-".$orderid;
+} else {
+	$name = $customer["name"];
+	$fb_name = $customer["facebook_name"];
+	$cn = $customer["contact_number"];
+	$cust_location_image = $customer["location_image"];
+	$delivery_add = $customer["delivery_address"];
 }
 
 $pagetitle = "RAM-X";
@@ -46,10 +52,8 @@ if($store_id == "2"){
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v4.1.1">
-    <title>RAMX-X Meatshop | New Order</title>
+   
+    <title>RAM-X Meatshop | New Order</title>
 	<link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/app/img/favicon.jpg" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<!-- Font Awesome -->
@@ -61,42 +65,57 @@ if($store_id == "2"){
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/nprogress.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/croppie.css">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/dashboard.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/order/dashboard.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/order/common.css">
 
  
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
    
   </head>
   <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadows">
-		<a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="<?php echo site_url() . '/order' ?>">RAM-X Meatshop</a>
-		<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-			<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-				<path fill-rule="evenodd" d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
-			</svg>
-		</button>
 
-	
-		
-	</nav>
 
-<div class="container-fluid mt-5">
+
+  <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+ 	 <a class="navbar-brand  mr-auto mr-lg-0" href="<?php echo site_url() . '/order' ?>">
+		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<span class="d-lg-inline-block d-none">RAM-X Meatshop</span>
+		<span class=" d-lg-none d-md-inline-block ">New Order</span>
+	</a>
+
+	<button class="navbar-toggler p-0 border-0 mr-3 mb-1  d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			<path fill-rule="evenodd" d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
+		</svg>
+	</button>
+	<button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+
+  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item active">
+	 	 <a class="nav-link" href="#">New Order <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+	 	 <a class="nav-link" href="<?=site_url()?>/order/purchases">My Purchases</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+        <div class="dropdown-menu dropdown-menu-left" style="left: -5rem !important" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" href="#" id="logout">Logout</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+<div class="container-fluid ">
   <div class="row">
 
     <main role="main" class="col-md-8  col-lg-9 px-md-4 order-1">
@@ -133,7 +152,6 @@ if($store_id == "2"){
     	<div class="container-fluid">
 
       <div class="row">
-
 	  <?php
 		foreach($product as $ind => $row){
 
@@ -255,27 +273,6 @@ if($store_id == "2"){
 	</div>
 </div>
 
-<div id="savecustomerdetailmodal" class="modal fade" style="z-index: 9999;">
-	<div class="modal-dialog modal-confirm border shadow">
-		<div class="modal-content">
-			<div class="modal-header">
-				<div class="icon-box" style="border: 3px solid #5cb85c; color: #5cb85c">
-					<i class="fa fa-save"></i>
-				</div>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			</div>
-			<h4 class="modal-title">ADD NEW CUSTOMER</h4>
-			<div class="modal-body">
-				<p><b><span id="new_customer_name"></span></b> is not on the customer list. Would you like to add his/her detail?.</p>
-			</div>
-			<div class="">
-				<button type="button" class="btn btn-info" id="cancel_save_new_customer">No</button>
-				<button type="button" class="btn btn-success" id="confirm_save_new_customer">Yes</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <div id="confirmcancelmodal" class="modal fade">
 	<div class="modal-dialog modal-confirm">
 		<div class="modal-content">
@@ -314,7 +311,6 @@ if($store_id == "2"){
 								<input type="text" id="customer_id" hidden value="<?php echo $custid; ?>">
 								<div style="position: relative; height: 34px;">
 									<input type="text" class="form-control" placeholder="Customer Name"  autocomplete="off" id="customer_name" style="position: absolute; z-index: 2; background: transparent;" value="<?php echo $name; ?>">
-									<input type="text" class="form-control" id="name_autocomplete_hint"  disabled style="color: #CCC; position: absolute; background: transparent; z-index: 1;">
 								</div>
 							</div>
 							<div class="form-group">
@@ -377,19 +373,15 @@ if($store_id == "2"){
 <textarea id="clipboard" area-hidden="true" style="display:none"></textarea>
 
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/app/jquery.autocomplete.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/popper.js"></script>
 
 <script src="<?php echo base_url(); ?>assets/app/slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/moment.js"></script>
 <script>
-	//$.widget.bridge('uibutton', $.ui.button);
-	var baseurl = '<?php echo base_url(); ?>'+'index.php';
-	var namelist = <?php print_r($namelist); ?>;
-	var customerdetail = <?php print_r($customerdetail); ?>;
-	var newcustomer;
+	var siteURL = "<?=site_url()?>"
+	var baseURL = "<?=base_url()?>"
 	var ordernumber = '<?php echo $ordernumber; ?>';
-
+    var cust_location_image = "<?=$cust_location_image?>"
 	$(document).ready(function(){
 		$('a#click-a').click(function(){
 			$('.nav').toggleClass('nav-view');
@@ -400,7 +392,7 @@ if($store_id == "2"){
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/nprogress.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/croppie.js"></script>
-<script src="<?php echo base_url(); ?>assets/app/order.js"></script>
-
-<script src="<?php echo base_url(); ?>assets/app/dashboard.js"></script></body>
+<script src="<?php echo base_url(); ?>assets/app//order/order.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/order/common.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/order/dashboard.js"></script></body>
 </html>

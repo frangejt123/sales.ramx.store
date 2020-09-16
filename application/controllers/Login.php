@@ -6,8 +6,15 @@ class Login extends CI_Controller {
 	public function index(){
 		session_start();
 		if(isset($_SESSION["username"])) {
+			
+			if ($_SESSION['access_level'] == 2) {
+				redirect('/order');
+			}
+
 			$this->load->model('modTransaction', "", TRUE);
 			$this->load->model('modDriver', "", TRUE);
+			$this->load->model('modCity', "", TRUE);
+
 //			$param["sort_delivery_date"] = true;
 //			$param["no_image"] = true;
 //			$new_transaction = $this->modTransaction->getAll($param)->result_array();
@@ -16,7 +23,7 @@ class Login extends CI_Controller {
 //			$data["transaction"] = array_merge($new_transaction, $old_transaction);
 
 			$transaction = $this->modTransaction->getAll(NULL)->result_array();
-
+			$data["city"] = $this->modCity->getAll(null)->result_array();
 			$data["lastid"] = $this->modTransaction->getLastTransactionID(null)->row_array();
 			$drivers = $this->modDriver->getAll(null)->result_array();
 			$data["driverlist"] = $drivers;

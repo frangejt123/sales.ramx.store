@@ -6,6 +6,12 @@ class User extends CI_Controller {
 	public function index(){
 		session_start();
 		if(isset($_SESSION["username"])) {
+				//prevent customer from logging in admin side
+				
+					if ($_SESSION['access_level'] == 2) {
+						redirect('/order');
+					}
+			
 			$this->load->model('modUser', "", TRUE);
 			$param = $this->input->post(NULL, "true");
 			$data["userlist"] = $this->modUser->getAll(null)->result_array();

@@ -5,7 +5,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Order extends CI_Controller
 {
 	public function index() {
-		$this->load->view('order/welcome');
+
+		 session_start();
+		 if(isset($_SESSION['username'])) {
+			$this->load->view('order/welcome');
+		 } else {
+			redirect('/order/login');
+		 }
+			
+		
 	}
 
 	public function track() {
@@ -15,43 +23,47 @@ class Order extends CI_Controller
 
 
 	public function new() {
-		$store_id = 1;
 
-		$this->load->model('modProduct', "", TRUE);
-		$this->load->model('modCustomer', "", TRUE);
-		$this->load->model('modCategory', "", TRUE);
-		$param = $this->input->post(NULL, "true");
-		
+		session_start();
+		if (isset($_SESSION["username"])) {
+	
+			$store_id = 1;
+			$user_id = $_SESSION["id"];
 
-		$product_param["phase_out"] = "0";
-		$product_param["store_id"] = $store_id;
+			$this->load->model('modProduct', "", TRUE);
+			$this->load->model('modCustomer', "", TRUE);
+			$this->load->model('modCategory', "", TRUE);
+			$param = $this->input->post(NULL, "true");
+			
 
-		$data["category"] = $this->modCategory->getAll($product_param)->result_array();
-		$data["product"] = $this->modProduct->getAll($product_param)->result_array();
+			$product_param["phase_out"] = "0";
+			$product_param["store_id"] = $store_id;
 
-		$data["store_id"] = $store_id;
+			$data["category"] = $this->modCategory->getAll($product_param)->result_array();
+			$data["product"] = $this->modProduct->getAll($product_param)->result_array();
 
-		$customer = $this->modCustomer->getAll(null)->result_array();
-		$customerarray = array();
-		$nameopt = array();
-		foreach($customer as $ind => $row){
-			$customerarray[$row["id"]] = array();
-			$customerarray[$row["id"]]["name"] = $row["name"];
-			$customerarray[$row["id"]]["fb_name"] = $row["facebook_name"];
-			$customerarray[$row["id"]]["contact_number"] = $row["contact_number"];
-			$customerarray[$row["id"]]["delivery_address"] = $row["delivery_address"];
-			$customerarray[$row["id"]]["cust_location_image"] = $row["location_image"];
-			json_encode($nameopt[$row["id"]] = $row["name"]);
+			$data["store_id"] = $store_id;
+
+			$customer = $this->modCustomer->getAll(["user_id" => $user_id])->row_array();
+	
+			$data["customer"] = $customer;
+	
+
+			$this->load->view('order/new_order', $data);
+		} else {
+			redirect('/order/login');
 		}
 
-		$data["customerdetail"] = json_encode($customerarray);
-		$data["namelist"] = json_encode($nameopt);
-		
-
-		$this->load->view('order/new_order', $data);
 	}
 
 	public function settle() {
+
+		$param = $this->input->post(NULL, "true");
+		session_start();
+		if(count($_POST) == 0) {
+			redirect('/order');
+		}
+
 		date_default_timezone_set("Asia/Manila");
 	
 		$this->load->model('modTransaction', "", TRUE);
@@ -61,7 +73,6 @@ class Order extends CI_Controller
 		$this->load->model('modAuditTrail', "", TRUE);
 
 
-		$param = $this->input->post(NULL, "true");
 
 		/* UPDATE INVENTORY */
 		$noavailqty = false;
@@ -105,6 +116,8 @@ class Order extends CI_Controller
 
 		$param["trans"]["delivery_date"] = date("Y-m-d", strtotime($param["trans"]["delivery_date"]));
 		$param["trans"]["location_image"] = str_replace("data:image/jpeg;base64,", "", $image);
+		$param["trans"]["customer_id"] = $_SESSION["customer_id"];
+		$param["trans"]["user_id"] = $_SESSION["id"];
 		$moparray = ["Cash on Delivery", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank", "Check"];
 
 		$updatenewvalue = array();
@@ -248,7 +261,12 @@ class Order extends CI_Controller
 
 		$this->modAuditTrail->insert($audit_trails);
 
+
+
 		$result["transaction_id"] = date("mdY")."-".sprintf("%04s", $result["id"]);
+		
+		
+		$this->output->set_status_header(201);
 		echo json_encode($result);
 	}
 
@@ -259,64 +277,17 @@ class Order extends CI_Controller
 
 		$search = $this->modTransaction->getAll(array('name' => $param["customerName"], "order_number" => $param["transId"]))->result_array();
 		
-		if(count($search) > 0) {
-			
-			$trans = $search[0];
-			
-			if($trans["status"] == 0) {
-				if($trans["printed"] == 1) {
-					$result = [
-						"success" => true,
-						"message" => 'Your order has been packed and is being handed over to our delivery team.',
-						"status" => 200
-					];
-		
-					
-				} else {
-					$result = [
-						"success" => true,
-						"message" => 'Order is still pending for verification',
-						"status" => 200
-					];
-		
-				}
-			} else if($trans["status"] == 1) {
-				$result = [
-					"success" => true,
-					"message" => 'Your order is ready for delivery.',
-					"status" => 200
-				];
-			} else if( $trans["status"] == 4) {
-				$result = [
-					"success" => true,
-					"message" => 'Your order has been succesfuly delivered.',
-					"status" => 200
-				];
-			}  else if( $trans["status"] == 2) {
-				$result = [
-					"success" => true,
-					"message" => 'Your order is now completed. Thank you for purchasing at RAMX-X Meatshop and see you on your next purchase!',
-					"status" => 200
-				];
-			} else if( $trans["status"] == 3) {
-				$result = [
-					"success" => true,
-					"message" => 'Your order has been voided',
-					"status" => 200
-				];
-			} 
-
-		} else {
+        if (count($search) > 0) {
+            $trans = $search[0];
+            
+            $result = $this->getStatus($trans);
+        } else {
 			$result = [
 				"success" => false,
 				"message" => 'Order not found. Check your Transaction number and try again.',
 				"status" => 404
 			];
-
-		
 		}
-
-
 		echo json_encode($result);
 	}
 
@@ -328,7 +299,8 @@ class Order extends CI_Controller
 		$paramtrans["id"] = $id;
 		$data["transaction"] = $this->modTransaction->getAll($paramtrans)->row_array();
 		$data["payment_method"] = $this->modTransaction->PAYMENT_METHOD;
-		if(empty($data["transaction"])) {
+
+		if(is_null($data["transaction"])) {
 			redirect('/order');
 		} else {
 
@@ -337,7 +309,217 @@ class Order extends CI_Controller
 			$this->load->view("order/success", $data);
 		}
 
+	}
 
+	public function detail($id) {
+		$this->load->model('modTransaction', "", TRUE);
+		$this->load->model('modTransactionDetail', "", TRUE);
+
+		$id = base64_decode($id);
+		$paramtrans["id"] = $id;
+		$data["transaction"] = $this->modTransaction->getAll($paramtrans)->row_array();
+		$data["payment_method"] = $this->modTransaction->PAYMENT_METHOD;
+
+
+	
+		if(is_null($data["transaction"])) {
+			redirect('/order');
+		} else {
+
+			$data["detail"] = $this->modTransactionDetail->getAll(array("transaction_id" => $id))->result_array();
+
+			$this->load->view("order/detail", $data);
+		}
+	}
+
+	public function login() {
+		if(!isset($_SESSION['username'])) {
+			$this->load->view("order/login");
+		} else {
+			redirect('/order');
+		}
 		
+	}
+
+	public function auth(){
+		$param = $this->input->post(NULL, "true");
+		$this->load->model('modUser', "", TRUE);
+		$this->load->model('modCustomer', '', TRUE);
+		$param["password"] = md5($param["password"]);
+		$param["access_level"] = 2;
+		$res = $this->modUser->getAll($param)->row_array();
+		
+		if(!empty($res)) {
+			$customer = $this->modCustomer->getAll(["user_id" => $res["id"]])->row_array();
+			
+			session_start();
+			$_SESSION["username"] = $param["username"];
+			$_SESSION["name"] = $res["name"];
+			$_SESSION["id"] = $res["id"];
+			$_SESSION["store_id"] = "1";
+			$_SESSION["access_level"] = $res["access_level"];
+			$_SESSION["customer_id"] = $customer["id"];
+			unset($res["password"]);
+		} else {
+			$res["success"] = false;
+			$this->output->set_status_header(401);
+
+		}
+
+		echo json_encode($res);
+	}
+
+	public function logout(){
+		session_start();
+		unset($_SESSION["username"]);
+		session_destroy();
+		$this->output->set_content_type('application/json')
+					->set_output(json_encode(["loggedOut" => true]));
+	}
+
+	private function getStatus($trans) {
+
+		if($trans["status"] == 0) {
+			if($trans["printed"] == 1) {
+				$result = [
+					"success" => true,
+					"message" => 'Your order has been packed and is being handed over to our delivery team.',
+					"status" => 'Process',
+					"date" => $trans["date_printed"],
+					"color" => '#ff9800'
+				];					
+			} else {
+				$result = [
+					"success" => true,
+					"message" => 'Order is still pending for verification',
+					"status" => 'Pending',
+					"date" => $trans["datetime"],
+					"color" => "#28a745"
+				];
+	
+			}
+		} else if($trans["status"] == 1) {
+				$result = [
+					"success" => true,
+					"message" => 'Your order is ready for delivery.',
+					"status" => 'To Receive',
+					"date" => null,
+					"color" => "#00bcd4"
+				];
+		} else if( $trans["status"] == 4) {
+			$result = [
+				"success" => true,
+				"message" => 'Your order has been succesfuly delivered.',
+				"status" => 'Delivered',
+				'date' => $trans["date_delivered"],
+				"color" => "#2196f3"
+			];
+		}  else if( $trans["status"] == 2) {
+			$result = [
+				"success" => true,
+				"message" => 'Your order is now completed. Thank you for purchasing at RAMX-X Meatshop!',
+				"status" => 'Completed',
+				"date" => null,
+				"color" => "#3f51b5"
+			];
+		} else if( $trans["status"] == 3) {
+			$result = [
+				"success" => true,
+				"message" => 'Your order has been voided',
+				"status" => 'Cancelled',
+				"date" => null,
+				"color" => "#f44336"
+			];
+		} 
+
+		return $result;
+	}
+
+	public function purchases() {
+		session_start();
+		if(isset($_SESSION['username'])) {
+		
+		   	$this->load->model('modTransaction', "", TRUE);
+			$this->load->model('modTransactionDetail', "", TRUE);
+
+		   	$param = [
+				"customer_id" => $_SESSION["customer_id"],
+				"no_image" => true,
+				"columnname" => 'id',
+				"columnsortorder" => 'DESC',
+				"length" => 5,
+				"start" => 0
+		   ];
+		   $transaction = $this->modTransaction->getAll($param)->result_array();
+		   $purchases = [];
+		   foreach($transaction as $row) {
+				$row["tracking"] = $this->getStatus($row);
+				$detail =  $this->modTransactionDetail->getAll(["transaction_id" => $row["id"]]);
+				$row["detail"] = $detail->result_array();
+				$row["detail_count"] = $detail->num_rows();
+				$purchases[] = $row;
+		   }
+		   $payment_method = $this->modTransaction->PAYMENT_METHOD;
+
+
+		   $this->load->view('order/purchases', ["purchases" => $purchases, "payment_method" => $payment_method]);
+		} else {
+		   redirect('/order/login');
+		}
+
+	}
+
+	public function transaction() {
+		session_start();
+        if (isset($_SESSION['username'])) {
+			$param = $this->input->get(NULL, "true");
+			$this->load->model('modTransaction', "", TRUE);
+			$this->load->model('modTransactionDetail', "", TRUE);
+
+			$getParam = [
+				"customer_id" => $_SESSION["customer_id"],
+				"no_image" => true,
+				"columnname" => 'id',
+				"columnsortorder" => 'DESC',
+				"length" => $param["length"],
+				"start" => $param["start"]
+		   ];
+			if($param["type"] == 'all') {
+			   
+			} else if($param["type"] == 'topay') {
+				$getParam["paid"] = 0;
+				$getParam["void_user"] = "";
+			} else if($param["type"] == 'toreceive') {
+				$getParam["status"] = 1;
+			} else if($param["type"] == "completed") {
+				$getParam["status"] = 2;
+			}  else if($param["type"] == "cancelled") {
+				$getParam["status"] = 3;
+			} else if($param["type"] == "delivered") {
+				$getParam["status"] = 4;
+			}  else if($param["type"] == "packing") {
+				$getParam["status"] = 0;
+				$getParam["printed"] = 1;
+			}
+
+
+			$transaction = $this->modTransaction->getAll($getParam)->result_array();
+			   $purchases = [];
+			   foreach($transaction as $row) {
+					$row["tracking"] = $this->getStatus($row);
+					$detail =  $this->modTransactionDetail->getAll(["transaction_id" => $row["id"]]);
+					$row["detail"] = $detail->result_array();
+					$row["detail_count"] = $detail->num_rows();
+					$purchases[] = $row;
+			   }
+
+			$this->output->set_content_type('application/json')
+			->set_output(json_encode($purchases));
+
+
+        } else {
+			redirect('/order/login');
+		}
+
 	}
 }

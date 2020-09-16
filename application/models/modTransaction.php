@@ -30,7 +30,8 @@ class ModTransaction extends CI_Model {
 				"date_revised" => "transaction.date_revised",
 				"date_delivered" => "transaction.date_delivered",
 				"driver_id" => "transaction.driver_id",
-				"store_id" => "transaction.store_id"
+				"store_id" => "transaction.store_id",
+				"city_id" => "transaction.city_id"
 	);
 	public $STATUS = array("Pending", "For Delivery", "Completed", "Void", "Delivered");
 	public $PAYMENT_METHOD = array("COD", "Bank Transfer - BPI", "GCash", "Bank Transfer - Metrobank", "Check");
@@ -55,7 +56,8 @@ class ModTransaction extends CI_Model {
 		$this->FIELDS["sales_agent"] = "user.name";
 		$this->FIELDS["contact_number"] = "customer.contact_number";
 		$this->FIELDS["order_number"] = "(CONCAT((DATE_FORMAT(transaction.datetime, '%m%d%Y')),'-', LPAD(transaction.id, '4', '0')))";
-
+		$this->FIELDS["city"] = "city.name";
+		
 		if(isset($param["no_image"]))
 			unset($this->FIELDS["location_image"]);
 
@@ -79,6 +81,7 @@ class ModTransaction extends CI_Model {
 		$this->db->join("customer", 'customer.customer_id = transaction.customer_id');
 		$this->db->join("user", 'user.id = transaction.user_id', 'left');
 		$this->db->join("driver", 'driver.id = transaction.driver_id', 'left');
+		$this->db->join("city", 'city.id = transaction.city_id', 'left');
 
 		if(isset($param["columnname"]) && $param["columnname"] != ""){
 			$this->db->order_by($param["columnname"], $param['columnsortorder']);

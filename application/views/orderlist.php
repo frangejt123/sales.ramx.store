@@ -177,6 +177,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						</select>
 					</div>
 
+					<div class="form-group ">
+						<label >City</label>
+					
+							<select class="form-control input" id="city" required  data-model="city_id">
+								<option value=""></option>
+								<?php 
+								foreach($city as $c) {
+									$selected = $c["id"] == $city_id ? 'selected="selected"' : "";
+									echo '<option value="'.$c["id"].'" '.$selected.' >'.$c['name'].'</option>';
+								}
+								?>
+							</select>
+							<div class="invalid-feedback">
+									Please select `City`.
+							</div>
+					</div>
+
 					<div class="form-group">
 						<label>Status</label>
 						<select class="form-control" id="filter_status">

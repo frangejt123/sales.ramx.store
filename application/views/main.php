@@ -15,6 +15,7 @@ $custid = "";
 $locationimage = "#";
 $fb_name = "";
 $ordernumber = "";
+$city_id="";
 
 if(isset($transaction)){
 	$name = $transaction["name"];
@@ -31,6 +32,7 @@ if(isset($transaction)){
 	$orderid = sprintf("%04s", $transaction["id"]);
 	$tnxdt =  date("mdY", strtotime($transaction["datetime"]));
 	$ordernumber = $tnxdt."-".$orderid;
+	$city_id = $transaction["city_id"];
 }
 
 $pagetitle = "RAM-X";
@@ -302,6 +304,22 @@ if($store_id == "2"){
 							</div>
 						</div><!-- col 6 / left panel -->
 						<div class="col-md-6">
+							<div class="form-group ">
+								<label >City</label>
+							
+									<select class="form-control input" id="city" required  data-model="city_id">
+										<option value=""></option>
+										<?php 
+										foreach($city as $c) {
+											$selected = $c["id"] == $city_id ? 'selected="selected"' : "";
+											echo '<option value="'.$c["id"].'" '.$selected.' >'.$c['name'].'</option>';
+										}
+										?>
+									</select>
+									<div class="invalid-feedback">
+											Please select `City`.
+									</div>
+							</div>
 							<div class="form-group">
 								<label>Delivery Address</label>
 								<textarea class="form-control" rows="2" id="cust_delivery_address"><?php echo $delivery_add; ?></textarea>

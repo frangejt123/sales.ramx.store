@@ -28,6 +28,7 @@ $(document).ready(function(){
 				d.paid = $("#filter_paid").prop('checked') ? "1" : "";
 				d.printed = $("#filter_printed_status").val();
 				d.store_id = localStorage["store_id"];
+				d.city_id = $("#city").val();
 			}
 		},
 		"columns": [
@@ -528,7 +529,7 @@ $(document).ready(function(){
 		var printed = $("#filter_printed").prop('checked') ? $("#filter_printed_status").val("1") : "";
 		var revised = $("#filter_revised").prop('checked') ? $("#filter_printed_status").val("2") : "";
 		var orderid = $("#order_id_filter").val();
-
+		var city_id = $("select#city").val();
 
 		// var printed_status = "";
 		// if(printed != "" || revised != ""){
@@ -554,6 +555,7 @@ $(document).ready(function(){
 		orderfilters["revised"] = revised;
 		orderfilters["filter_printed_status"] = $("#filter_printed_status").val();
 		orderfilters["mop"] = $("#filter_mop").val();
+		orderfilters["city_id"] = city_id;
 
 		localStorage["filter"] = JSON.stringify(orderfilters);
 

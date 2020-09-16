@@ -6,12 +6,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 
 class Main extends CI_Controller {
-
+	
 	public function index(){
 		session_start();
 		if(isset($_SESSION["username"])) {
+
+			if ($_SESSION['access_level'] == 2) {
+				redirect('/order');
+			}
 			$this->load->model('modTransaction', "", TRUE);
 			$this->load->model('modDriver', "", TRUE);
+			$this->load->model('modCity', "", TRUE);
 //			$param["sort_delivery_date"] = true;
 //			$param["no_image"] = true;
 //			$new_transaction = $this->modTransaction->getAll($param)->result_array();
@@ -24,7 +29,7 @@ class Main extends CI_Controller {
 			$data["lastid"] = $this->modTransaction->getLastTransactionID(null)->row_array();
 			$drivers = $this->modDriver->getAll(null)->result_array();
 			$data["driverlist"] = $drivers;
-
+			$data["city"] = $this->modCity->getAll(null)->result_array();
 			$order = array();
 			foreach($transaction as $ind => $row){
 				$transdate = date("mdY", strtotime($row["datetime"]));
@@ -33,7 +38,7 @@ class Main extends CI_Controller {
 
 			$data["orderids"] = json_encode($order);
 
-			$this->load->view('orderlist', $data);
+			 $this->load->view('orderlist', $data);
 		}else{
 			$this->load->view('login');
 		}
@@ -77,6 +82,8 @@ class Main extends CI_Controller {
 			$trxparam["printed"] = $param["printed"];
 		if(isset($param["payment_methods"]))
 			$trxparam["payment_methods"] = $param["payment_methods"];
+		if($param["city_id"] != "")
+			$trxparam["city_id"] = $param["city_id"];
 
 		$storeidparam["store_id"] = $param["store_id"];
 
@@ -153,15 +160,23 @@ class Main extends CI_Controller {
 		$this->load->model('modProduct', "", TRUE);
 		$this->load->model('modCustomer', "", TRUE);
 		$this->load->model('modCategory', "", TRUE);
+		$this->load->model('modCity', "", TRUE);
 		$param = $this->input->post(NULL, "true");
 		session_start();
+
+			//prevent customer from logging in admin side
+			if (isset($_SESSION["username"])) {
+				if ($_SESSION['access_level'] == 2) {
+					redirect('/order');
+				}
+			}
 
 		$product_param["phase_out"] = "0";
 		$product_param["store_id"] = $_SESSION["store_id"];
 
 		$data["category"] = $this->modCategory->getAll($product_param)->result_array();
 		$data["product"] = $this->modProduct->getAll($product_param)->result_array();
-
+		$data["city"] = $this->modCity->getAll(null)->result_array();
 		$data["store_id"] = $_SESSION["store_id"];
 
 		$customer = $this->modCustomer->getAll(null)->result_array();
@@ -187,6 +202,13 @@ class Main extends CI_Controller {
 	}
 
 	public function orderdetail($orderid){
+		session_start();
+        if (isset($_SESSION["username"])) {
+            if ($_SESSION['access_level'] == 2) {
+                redirect('/order');
+            }
+		}
+		
 		$orderid = base64_decode($orderid);
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
@@ -217,8 +239,7 @@ class Main extends CI_Controller {
 		$data["orderhistory"] = $audittrail;
 		$data["driverlist"] = $drivers;
 
-		session_start();
-
+		
 		if(isset($_SESSION["username"])) {
 			$data["store_id"] = $_SESSION["store_id"];
 			$this->load->view('orderdetail', $data);
@@ -490,13 +511,22 @@ class Main extends CI_Controller {
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$this->load->model('modCategory', "", TRUE);
+		$this->load->model('modCity', "", TRUE);
 		session_start();
+
+		//prevent customer from logging in admin side
+        if (isset($_SESSION["username"])) {
+            if ($_SESSION['access_level'] == 2) {
+                redirect('/order');
+            }
+        }
 
 		$product_param["phase_out"] = "0";
 		$product_param["store_id"] = $_SESSION["store_id"];
 
 		$data["category"] = $this->modCategory->getAll($product_param)->result_array();
 		$data["product"] = $this->modProduct->getAll($product_param)->result_array();
+		$data["city"] = $this->modCity->getAll(null)->result_array();
 		$customer = $this->modCustomer->getAll(null)->result_array();
 
 		$data["store_id"] = $_SESSION["store_id"];
@@ -526,12 +556,12 @@ class Main extends CI_Controller {
 
 		if(isset($_SESSION["username"])) {
 			$this->load->view('main', $data);
-		}else{
+		} else {
 			$this->load->view('login');
 		}
 	}
 
-	public function gettransactionslip(){
+	public function gettransactionslip() { 
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modTransactionDetail', "", TRUE);
 		$param["complete"] = "0";
@@ -542,7 +572,7 @@ class Main extends CI_Controller {
 			$detailparam["transaction_id"] = $row["id"];
 			$transaction[$ind]["details"] = $this->modTransactionDetail->getAll($detailparam)->result_array();
 		}
-
+		
 		echo json_encode($transaction);
 	}
 

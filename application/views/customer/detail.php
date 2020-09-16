@@ -8,6 +8,7 @@
 		$delivery_address = $customer["delivery_address"];
 		$location_image = $customer["location_image"];
 		$status_class = array("success", "warning", "primary", "danger", "info");
+		$city_id = $customer["city_id"];
 	}
 
 	if(isset($transactions)) {
@@ -36,7 +37,7 @@
 
 
 	<div class="container-fluid">
-		<form class="needs-validation" novalidate id="customer_form" method="post">
+		<form class="needs-validation" novalidate id="customer_form" method="post" data-mode='edit'>
 			<button type="submit" class="d-none"></button>
 		<div class="row">
 			<div class="col-6">
@@ -75,6 +76,24 @@
 							Please input `Contact Number`.
 						</div>
 					</div>
+				</div>
+
+				<div class="form-group row">
+				<label class="col-sm-3 col-form-label">City</label>
+				<div class="col-sm-9">
+					<select class="form-control input" id="city" required  data-model="city_id">
+						<option value=""></option>
+						<?php 
+						  foreach($city as $c) {
+							  $selected = $c["id"] == $city_id ? 'selected="selected"' : "";
+							  echo '<option value="'.$c["id"].'" '.$selected.' >'.$c['name'].'</option>';
+						  }
+						  ?>
+					</select>
+					<div class="invalid-feedback">
+							Please select `City`.
+						</div>
+						</div>
 				</div>
 
 				<div class="form-group row">

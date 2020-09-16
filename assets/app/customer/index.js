@@ -22,6 +22,7 @@
 hasError = false;
 
 function routeTo(e) {
+	console.log("asdf")
 	NProgress.start();
 	let to = $(e.currentTarget).data("route-to");
 	window.location = baseurl + to;
@@ -57,6 +58,7 @@ function addRow() {
 					<td>${form.name}</td>
 					<td>${form.facebook_name}</td>
 					<td>${form.contact_number}</td>
+					<td>${getCity(form.city_id)}</td>
 					<td>${form.delivery_address}</td>
 				</tr>
 		`);
@@ -67,6 +69,17 @@ function addRow() {
 	}
 }
 
+function getCity(id) {
+	if(!cities) {
+		return ""
+	}
+	
+	let city = cities.find((i) => i.id == id);
+
+	return city.name;
+	
+}
+
 if(!window.form) {
 	window.form = {};
 }
@@ -75,7 +88,10 @@ $(document).ready(() => {
 	/*
 	 *	ROUTING BUTTONS
 	 */
-	$(".routing-btn").click(routeTo);
+	$(".routing-btn").on('click',routeTo);
+	
+   $("#customer_tbl").delegate('tr.routing-btn', 'click', routeTo)	
+
 
 	$(".input").change(e => {
 		let model = $(e.currentTarget).data("model");
@@ -83,47 +99,48 @@ $(document).ready(() => {
 	}); 
 
 
+	var customer_tbl = $('#customer_tbl').DataTable({
+		"processing": true,
+		"serverSide": true,
+		"pageLength": 20,
+		"bLengthChange": false,
+		"order": [],
+		'serverMethod': 'post',
+		'stateSave': false,
+		'ajax': {
+			'url': baseurl + "/customer/list"
+		},
+		"columns": [
+			{"data": "id"},
+			{"data": "name"},
+			{"data": "facebook_name"},
+			{"data": "contact_number"},
+			{"data": "city"},
+			{"data": "delivery_address"}
+		],
+		"createdRow": function( row, data, dataIndex, cells) {
+			$(row).attr("id", "tr_"+data["id"]);
+			$(row).addClass('routing-btn');
+			$(row).data('route-to', `/customer/detail/${data["id"]}`);
+		}
+	});
+
+	$('#customer_tbl').on('preXhr.dt', function ( e, settings, json, xhr ) {
+		$('.dataTables_processing').hide();
+		$("#page_mask").show();
+	});
+
+	$('#customer_tbl').on('xhr.dt', function ( e, settings, json, xhr ) {
+		$('.dataTables_processing').hide();
+		$("#page_mask").hide();
+	});
+
+	$('.dataTables_processing').hide();
+
+	$("#page_mask").css({"width": $(document).width(), "height":$(document).height()});
+
 	$("input#search").on("keyup", function(e){
-	
-		let tbl = $(this).data("table");
-
-		// Declare variables
-		var input, filter, table, tr, td, i, txtValue;
-		input = $(e.currentTarget);
-		
-		if(input.val() == "") {
-			$(`#${tbl} tbody tr`).css("display", "");
-			return;
-		}
-
-		filter = input.val().toUpperCase();
-		table = document.getElementById(tbl);
-		tr = $(`#${tbl} tbody tr`);
-
-	
-		// Loop through all table rows, and hide those who don't match the search query
-		for (i = 0; i < tr.length; i++) {
-			let tds = tr[i].getElementsByTagName("td");
-			let exists = true;
-			for(let j = 0; j < tds.length; j++) {
-				if(tds[j]) {
-					txtValue = tds[j].textContent || tds[j].innerText;
-					if (txtValue.toUpperCase().indexOf(filter) > -1) {
-						exists = true;
-						console.log("td break", j)
-						break;
-					} else {
-						exists = false;
-					}
-					console.log(txtValue, filter, exists);
-				}
-			}
-			if(exists) {
-				tr[i].style.display = "";
-			} else {
-				tr[i].style.display = "none";
-			}
-		}
+		customer_tbl.search($(this).val()).draw();
 	});
 
 
@@ -153,6 +170,7 @@ $(document).ready(() => {
 	$("#customer_form").submit(e => {
 		e.preventDefault();
 		
+		let mode = $('#customer_form').data('mode');
 		
 		if(!$(e.currentTarget)[0].checkValidity()) {
 			return;
@@ -172,9 +190,12 @@ $(document).ready(() => {
 					showMessage("Customer details has been saved succesfuly.")
 					$("#customer_form").removeClass("was-validated");
 					form.id = res.id;
-					addRow();
-					clearForm();
-					$("#customer_detail_modal").modal("hide");
+					if(mode == 'new') {
+						addRow();
+						clearForm();
+					   $("#customer_detail_modal").modal("hide");
+					}
+					
 				} else {
 				
 				}
@@ -204,7 +225,6 @@ $(document).ready(() => {
 			return $.post(baseurl+'/customer/delete',  {id:form.id},  (res) => {
 				if (!res["success"]) {
 					throw new Error(response.statusText);
-					return false;
 				  }
 				  return response;
 			})
@@ -292,80 +312,6 @@ $(document).ready(() => {
 	}
 
 
-	$(".sortable").click(function(e) {
-		let ind = e.currentTarget.cellIndex;
-		let tbl = $(e.currentTarget.offsetParent).attr("id");
-		let isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
-
-		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-		$(".sortable i").addClass("fa-sort");
-
-		$(e.currentTarget).find("i").removeClass("fa-sort");
-
-		if(isSortUp) {
-			$(e.currentTarget).find("i").addClass("fa-sort-down");
-		} else {
-			$(e.currentTarget).find("i").addClass("fa-sort-up");
-		}
-		
-		sortTable(ind, tbl);
-	});
 	
 });
-
-
-function sortTable(n, tableId) {
-	var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-	table = document.getElementById(tableId);
-	switching = true;
-	// Set the sorting direction to ascending:
-	dir =  "asc";
-	/* Make a loop that will continue until
-	no switching has been done: */
-	while (switching) {
-	  // Start by saying: no switching is done:
-	  switching = false;
-	  rows = table.rows;
-	  /* Loop through all table rows (except the
-	  first, which contains table headers): */
-	  for (i = 1; i < (rows.length - 1); i++) {
-		// Start by saying there should be no switching:
-		shouldSwitch = false;
-		/* Get the two elements you want to compare,
-		one from current row and one from the next: */
-		x = rows[i].getElementsByTagName("TD")[n];
-		y = rows[i + 1].getElementsByTagName("TD")[n];
-		/* Check if the two rows should switch place,
-		based on the direction, asc or desc: */
-		if (dir == "asc") {
-		  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-			// If so, mark as a switch and break the loop:
-			shouldSwitch = true;
-			break;
-		  }
-		} else if (dir == "desc") {
-		  if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-			// If so, mark as a switch and break the loop:
-			shouldSwitch = true;
-			break;
-		  }
-		}
-	  }
-	  if (shouldSwitch) {
-		/* If a switch has been marked, make the switch
-		and mark that a switch has been done: */
-		rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-		switching = true;
-		// Each time a switch is done, increase this count by 1:
-		switchcount ++;
-	  } else {
-		/* If no switching has been done AND the direction is "asc",
-		set the direction to "desc" and run the while loop again. */
-		if (switchcount == 0 && dir == "asc") {
-		  dir = "desc";
-		  switching = true;
-		}
-	  }
-	}
-  }
 

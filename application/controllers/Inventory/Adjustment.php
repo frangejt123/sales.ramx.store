@@ -21,6 +21,11 @@ class Adjustment extends CI_Controller {
 	function __construct() {
         parent::__construct();
 		session_start();
+		if (isset($_SESSION["username"])) {
+			if ($_SESSION['access_level'] == 2) {
+				redirect('/order');
+			}
+		}
     }
 
 
