@@ -149,6 +149,61 @@ $(document).ready(() => {
 	}
 
 
+	let status = ["", "Pending", "Approved"];
+	let type = ["", "IN", "OUT"];
+	let status_color = ["", "text-success", "text-primary"];
+	var inventory_adjustment_tbl = $('#inventory_adjustment_tbl').DataTable({
+		"processing": true,
+		"serverSide": true,
+		"pageLength": 20,
+		"bLengthChange": false,
+		"order": [],
+		'serverMethod': 'post',
+		'stateSave': false,
+		'ajax': {
+			'url': baseurl + "/inventory/adjustment/list"
+		},
+		"columns": [
+			{"data": "id"},
+			{"data": "date"},
+			{"data": "type"},
+			{"data": "status"}
+		],
+		"createdRow": function( row, data, dataIndex, cells) {
+		
+
+			$(row).attr("id", "tr_"+data["id"]);
+			$(row).addClass('routing-btn');
+			$(row).data('route-to', `/inventory/adjustment/detail/${data["id"]}`);
+			
+			//type
+			$(cells[2]).html(type[data['type']]); 
+			//status
+			$(cells[3]).html(status[data['status']])
+				.addClass(status_color[data['status']]);			
+		
+		}
+	});
+
+	$('#inventory_adjustment_tbl').on('preXhr.dt', function ( e, settings, json, xhr ) {
+		$('.dataTables_processing').hide();
+		$("#page_mask").show();
+	});
+
+	$('#inventory_adjustment_tbl').on('xhr.dt', function ( e, settings, json, xhr ) {
+		$('.dataTables_processing').hide();
+		$("#page_mask").hide();
+	});
+
+	$('.dataTables_processing').hide();
+
+	$("#page_mask").css({"width": $(document).width(), "height":$(document).height()});
+
+	$("input#search").on("keyup", function(e){
+		inventory_adjustment_tbl.search($(this).val()).draw();
+	});
+
+	$("#inventory_adjustment_tbl").delegate('tr.routing-btn', 'click', routeTo)	
 
 
 
@@ -408,123 +463,29 @@ $(document).ready(() => {
 	});
 
 
-	$("input#search").on("keyup", function(e){
-		let tbl = $(this).data("table");
-
-		// Declare variables
-		var input, filter, table, tr, td, i, txtValue;
-		input = $(e.currentTarget);
-
-		if(input.val() == "") {
-			$(`#${tbl} tbody tr`).css("display", "");
-			return;
-		}
-
-		filter = input.val().toUpperCase();
-		table = document.getElementById(tbl);
-		tr = $(`#${tbl} tbody tr`);
+	
 
 
-		// Loop through all table rows, and hide those who don't match the search query
-		for (i = 0; i < tr.length; i++) {
-			let tds = tr[i].getElementsByTagName("td");
-			let exists = true;
-			for(let j = 0; j < tds.length; j++) {
-				if(tds[j]) {
-					txtValue = tds[j].textContent || tds[j].innerText;
-					if (txtValue.toUpperCase().indexOf(filter) > -1) {
-						exists = true;
-						console.log("td break", j)
-						break;
-					} else {
-						exists = false;
-					}
-					console.log(txtValue, filter, exists);
+	$("#logout").on("click", function(){
+		NProgress.start();
+		$.ajax({
+			method: 'POST',
+			url: baseurl + '/login/logout',
+			success: function (res) {
+				if(res == "success"){
+					localStorage.removeItem("filter");
+					localStorage.removeItem("inverse");
+					localStorage.removeItem("thIndex");
+				
+					localStorage.removeItem("searchvalue");
+					localStorage.removeItem("filter");
+					localStorage.removeItem("store_id");
+					window.location = baseurl + "/login";
 				}
 			}
-			if(exists) {
-				tr[i].style.display = "";
-			} else {
-				tr[i].style.display = "none";
-			}
-		}
+		});
 	});
-
-
-	$(".sortable").click(function(e) {
-		let ind = e.currentTarget.cellIndex;
-		let tbl = $(e.currentTarget.offsetParent).attr("id");
-		let isSortUp = $(e.currentTarget).find("i").hasClass("fa-sort-up");
-
-		$(".sortable i").removeClass("fa-sort-up fa-sort-down");
-		$(".sortable i").addClass("fa-sort");
-
-		$(e.currentTarget).find("i").removeClass("fa-sort");
-
-		if(isSortUp) {
-			$(e.currentTarget).find("i").addClass("fa-sort-down");
-		} else {
-			$(e.currentTarget).find("i").addClass("fa-sort-up");
-		}
-
-		sortTable(ind, tbl);
-	});
-
 });
 
-function sortTable(n, tableId) {
-	var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-	table = document.getElementById(tableId);
-	switching = true;
-	// Set the sorting direction to ascending:
-	dir =  "asc";
-	/* Make a loop that will continue until
-	no switching has been done: */
-	while (switching) {
-		// Start by saying: no switching is done:
-		switching = false;
-		rows = table.rows;
-		/* Loop through all table rows (except the
-		first, which contains table headers): */
-		for (i = 1; i < (rows.length - 1); i++) {
-			// Start by saying there should be no switching:
-			shouldSwitch = false;
-			/* Get the two elements you want to compare,
-			one from current row and one from the next: */
-			x = rows[i].getElementsByTagName("TD")[n];
-			y = rows[i + 1].getElementsByTagName("TD")[n];
-			/* Check if the two rows should switch place,
-			based on the direction, asc or desc: */
-			if (dir == "asc") {
-				if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-					// If so, mark as a switch and break the loop:
-					shouldSwitch = true;
-					break;
-				}
-			} else if (dir == "desc") {
-				if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-					// If so, mark as a switch and break the loop:
-					shouldSwitch = true;
-					break;
-				}
-			}
-		}
-		if (shouldSwitch) {
-			/* If a switch has been marked, make the switch
-			and mark that a switch has been done: */
-			rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-			switching = true;
-			// Each time a switch is done, increase this count by 1:
-			switchcount ++;
-		} else {
-			/* If no switching has been done AND the direction is "asc",
-			set the direction to "desc" and run the while loop again. */
-			if (switchcount == 0 && dir == "asc") {
-				dir = "desc";
-				switching = true;
-			}
-		}
-	}
-}
 
 

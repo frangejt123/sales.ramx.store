@@ -15,6 +15,8 @@ class ModUser extends CI_Model {
 		"access_level" => "user.access_level"
 	);
 
+	public $ACCESS_LEVEL = ['ADMIN', 'SALES AGENT', 'CUSTOMER'];
+
 	function __construct() {
 		// Call the Model constructor
 		parent::__construct();

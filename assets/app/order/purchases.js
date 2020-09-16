@@ -86,8 +86,8 @@ $(document).ready(() => {
 		}
 		showEmpty()
 	})
-
-	$(".order-card").click((e) => {
+ 
+	 $('.tab-content').delegate(".order-card", 'click',  (e) => {
 		let id = $(e.currentTarget).data('id');
 		window.location = siteURL + '/order/detail/' + btoa(id.toString());
 	});

@@ -34,13 +34,14 @@ $(document).ready(function(){
 
 	$("#userlist_table").on("click", "tr", function(){
 		var td = $(this).find("td");
-		var access_level = td[2].textContent == "Admin" ? "0" : "1";
+
+		let access_lvl = $(td[2]).data('access-level');
 		$("#detail_username").val(td[0].textContent);
 		$("#detail_name").val(td[1].textContent);
-		$("#detail_access_level").val(access_level);
+		$("#detail_access_level").val(access_lvl);
 		$("#old_password").val(td[3].textContent);
 		$("#userid").val(td[4].textContent);
-
+		
 		$("#user_detail").modal("show");
 	});
 
@@ -228,4 +229,24 @@ $(document).ready(function(){
 				return $1.toUpperCase()
 			})
 	}
+
+	$("#logout").on("click", function(){
+		NProgress.start();
+		$.ajax({
+			method: 'POST',
+			url: baseurl + '/login/logout',
+			success: function (res) {
+				if(res == "success"){
+					localStorage.removeItem("filter");
+					localStorage.removeItem("inverse");
+					localStorage.removeItem("thIndex");
+				
+					localStorage.removeItem("searchvalue");
+					localStorage.removeItem("filter");
+					localStorage.removeItem("store_id");
+					window.location = baseurl + "/login";
+				}
+			}
+		});
+	});
 });

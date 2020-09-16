@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RAM-X | Log in</title>
+	<title><?=$this->config->item('branch') ?> | Log in </title>
 	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/app/img/favicon.jpg" />
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -40,14 +40,16 @@
 	}
 </style>
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page d-flex">
 <div class="login-box">
 	<div class="login-logo">
 		<a href="#"><img src="<?php echo base_url(); ?>assets/app/img/ramx.png" id="login_logo"/></a>
 	</div>
 	<!-- /.login-logo -->
 	<div class="login-box-body">
-		<p class="login-box-msg">Sign in to start your session</p>
+		<h3 class="text-center"><?=$this->config->item("branch")?></h3>
+		<hr />
+		<p class="login-box-msg text-muted">Sign in to start your session</p>
 
 		<form action="#" method="post">
 			<div class="form-group has-feedback">
@@ -62,13 +64,7 @@
 				Invalid Username and Password
 			</div>
 			<div class="row" id="login_btn_container">
-				<div class="col-xs-8">
-					<div class="checkbox icheck">
-						<label>
-							<input type="checkbox"> Remember Me
-						</label>
-					</div>
-				</div>
+			
 				<!-- /.col -->
 				<div class="col-xs-4">
 					<button type="button" id="login_btn" class="btn btn-primary btn-block btn-flat">Sign In</button>

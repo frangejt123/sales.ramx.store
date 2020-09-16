@@ -123,6 +123,11 @@ $(document).ready(function(){
 		window.location = baseurl + "/main/orderdetail/"+btoa(id);
 	});
 
+	$("#logout").click((e) => {
+		e.preventDefault();
+		
+		$("#logout_btn").trigger('click')
+	})
 	$("#logout_btn").on("click", function(){
 		NProgress.start();
 		$.ajax({

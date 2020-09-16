@@ -68,33 +68,33 @@ if($store_id == "2"){
 </head>
 
 <body>
-
 <div class="d-flex" id="wrapper">
 
 	<div class="container" style="max-width: 100% !important; padding: 0px !important;">
 		<div class="content">
 			<div class="row"><!-- button row -->
-				<div class="col-3 pl-0 pr-0"><!-- left column -->
-					<div class="bg-light pt-2 pl-4">
-						<input type="text" id="transaction_id_inp" hidden value="<?php echo isset($transaction) ? $transaction["id"] : "" ?>">
-						<button id="cancel_order_btn" class="btn-danger">
-							<i class="fa fa-arrow-left"></i> &nbsp; Back
-						</button>
-						&nbsp; &nbsp;
-						<button id = "new_order_btn" class="btn-info" >
-							<i class="fa fa-undo" ></i > &nbsp; New Order
-						</button >
-					</div>
-				</div><!-- left column -->
-				<div class="col-6 pl-0 pr-0">
-					<div class="bg-light pt-2 pl-4 w-100 h-100">
-						<div class="row">
-							<div class="col-12">
-								<button id="copy_details" class="btn-secondary pull-right" data-toggle="tooltip" data-placement="bottom" title="Copy details to clipboard">
-									<i class="fa fa-copy"></i>
-								</button>
-							</div>
-						</div><!-- row -->
+				<div class="col-9 pl-0 pr-0"><!-- left column -->
+					<div class="d-flex bg-light justify-content-between">
+						<div class="bg-light pt-2 pl-4">
+							<input type="text" id="transaction_id_inp" hidden value="<?php echo isset($transaction) ? $transaction["id"] : "" ?>">
+							<button id="cancel_order_btn" class="btn-danger">
+								<i class="fa fa-arrow-left"></i> &nbsp; Back
+							</button>
+							&nbsp; &nbsp;
+							<button id = "new_order_btn" class="btn-info" >
+								<i class="fa fa-undo" ></i > &nbsp; New Order
+							</button >
+						</div>
+
+						<div class='my-auto text-muted'><h5><?=$this->config->item("branch")?></h5></div>
+	
+						<div class="bg-light pt-2 pl-4 ">
+							
+							<button id="copy_details" class="btn-secondary pull-right" data-toggle="tooltip" data-placement="bottom" title="Copy details to clipboard">
+								<i class="fa fa-copy"></i>
+							</button>
+							
+						</div>
 					</div>
 				</div><!-- center column -->
 				<div class="col-3 pl-0 pr-0">

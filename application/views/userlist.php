@@ -20,8 +20,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </head>
 <body>
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">
+		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<?=$this->config->item('branch') ?>
+	</a>
 
-<div id="container">
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">	<span<b><i class="fa fa-user"></i> &nbsp; <?php echo $_SESSION["name"]; ?></b></span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">|</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="logout" href="#" tabindex="-1" aria-disabled="true">Logout</a>
+        </li>
+      </ul>
+     
+    </div>
+  </nav>
+</header>
+<div id="container" class="mt-5">
 	<button id="cancel_userlist_btn" class="btn-danger pull-left lg-btn">
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>
@@ -33,7 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<div class="grid_container">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Search for Name" id="search_user">
+			<input type="text" class="form-control" autocomplete='off' placeholder="Search" id="search_user">
 		</div>
 
 		<div class="box">
@@ -49,12 +72,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</thead>
 					<tbody>
 						<?php
-							$access_level = ["Admin", "Sales Agent"];
 							foreach($userlist as $ind => $row){
 								echo '<tr>';
 								echo '<td>'.$row["username"].'</td>';
 								echo '<td>'.$row["name"].'</td>';
-								echo '<td>'.$access_level[$row["access_level"]].'</td>';
+								echo '<td data-access-level="'.$row["access_level"].'">'.$access_level[$row["access_level"]].'</td>';
 								echo '<td hidden>'.$row["password"].'</td>';
 								echo '<td hidden>'.$row["id"].'</td>';
 								echo '</tr>';
@@ -114,6 +136,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<select class="form-control" id="access_level">
 							<option value="0">Admin</option>
 							<option value="1">Sales Agent</option>
+							<option value="2">Customer</option>
 						</select>
 					</div>
 				</div>
@@ -149,6 +172,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<select class="form-control" id="detail_access_level">
 							<option value="0">Admin</option>
 							<option value="1">Sales Agent</option>
+							<option value="2">Customer</option>
 						</select>
 					</div>
 
@@ -233,6 +257,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
 	var baseurl = '<?php echo base_url(); ?>'+'index.php';
+
 	$(function () {
 		$('input').iCheck({
 			checkboxClass: 'icheckbox_square-blue',

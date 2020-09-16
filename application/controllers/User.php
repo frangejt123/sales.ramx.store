@@ -14,6 +14,7 @@ class User extends CI_Controller {
 			
 			$this->load->model('modUser', "", TRUE);
 			$param = $this->input->post(NULL, "true");
+			$data["access_level"] = $this->modUser->ACCESS_LEVEL;
 			$data["userlist"] = $this->modUser->getAll(null)->result_array();
 			$this->load->view('userlist', $data);
 		}else{

@@ -113,7 +113,8 @@ function getSalesAgent($transaction) {
 	}
 }
 
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -133,8 +134,31 @@ function getSalesAgent($transaction) {
 
 </head>
 <body>
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">
+		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<?=$this->config->item('branch') ?>
+	</a>
 
-<div id="container">
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">	<span<b><i class="fa fa-user"></i> &nbsp; <?php echo $_SESSION["name"]; ?></b></span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">|</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="logout" href="#" tabindex="-1" aria-disabled="true">Logout</a>
+        </li>
+      </ul>
+     
+    </div>
+  </nav>
+</header>
+<div id="container" class='mt-5'>
 
 	<input type="text" hidden id="selected_order" value="<?php echo $transaction["id"]; ?>">
 	<?php

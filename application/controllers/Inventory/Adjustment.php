@@ -35,7 +35,7 @@ class Adjustment extends CI_Controller {
 		$this->load->model('modInventoryAdjustment', "", TRUE);
 
 		$data = [
-			"adjustments" => $this->modInventoryAdjustment->getAll(null)->result_array()
+			"adjustments" => []
 		];
 
 
@@ -44,6 +44,44 @@ class Adjustment extends CI_Controller {
 		}else{
 			$this->load->view('login');
 		}
+
+	}
+
+	public function list() {
+		
+		$this->load->model('modInventoryAdjustment', "", TRUE);
+
+		
+        $column = ["id", "date", "type", "status"];
+
+		$param = $this->input->post(NULL, "true");
+
+		$draw = $param['draw'];
+		
+		$totalRecords = $this->modInventoryAdjustment->getAll(null)->num_rows();
+
+        if(isset($param["order"])) {
+			$param["order_by"] = $param["order"][0]["column"];
+			$param["sort_order"] = $param["order"][0]["dir"];
+		}
+
+
+		$data  = $this->modInventoryAdjustment->getAll($param)->result_array();
+		
+		unset($param["start"]);
+		$totalDisplayRecords =  $this->modInventoryAdjustment->getAll($param)->num_rows();
+	
+        
+
+		$response = array(
+			"draw" => intval($draw),
+			"recordsTotal" => $totalRecords,
+			"recordsFiltered" => $totalDisplayRecords,
+			"data" => $data
+		);
+
+		//print_r($data);
+	 	echo json_encode($response);
 
 	}
 

@@ -25,16 +25,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </head>
 <body>
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="#">
+		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<?=$this->config->item('branch') ?>
+	</a>
 
-<div id="container">
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">	<span<b><i class="fa fa-user"></i> &nbsp; <?php echo $_SESSION["name"]; ?></b></span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">|</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="logout" href="#" tabindex="-1" aria-disabled="true">Logout</a>
+        </li>
+      </ul>
+     
+    </div>
+  </nav>
+</header>
+
+<div id="container" class="mt-5">
 
 	<input type="text" id="order_last_id" value="<?php echo isset($lastid["id"]) ? $lastid["id"] : ""; ?>" hidden>
 
-	<button id="logout_btn" class="btn-danger pull-left">
+	<button id="logout_btn" class="btn-danger pull-left d-none">
 		<i class="fa fa-sign-out fa-flip-horizontal"></i> &nbsp;Logout
 	</button>
 	<span class="span_seperator pull-left"></span>
-	<div id="current_logged_user" class="pull-left">
+	<div id="current_logged_user" class="pull-left d-none">
 		<span<b><i class="fa fa-user"></i> &nbsp; <?php echo $_SESSION["name"]; ?></b></span>
 	</div>
 

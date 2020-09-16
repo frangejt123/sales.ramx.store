@@ -3,8 +3,7 @@
 
 ?>
 
-<body>
-<div id="container">
+<div id="container" class="mt-5">
 	<button class="btn-danger routing-btn lg-btn" data-route-to="/">
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>

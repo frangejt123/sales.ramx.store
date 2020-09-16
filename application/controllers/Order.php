@@ -7,7 +7,7 @@ class Order extends CI_Controller
 	public function index() {
 
 		 session_start();
-		 if(isset($_SESSION['username'])) {
+		 if(isset($_SESSION['customer_id'])) {
 			$this->load->view('order/welcome');
 		 } else {
 			redirect('/order/login');
@@ -25,7 +25,7 @@ class Order extends CI_Controller
 	public function new() {
 
 		session_start();
-		if (isset($_SESSION["username"])) {
+		if (isset($_SESSION["customer_id"])) {
 	
 			$store_id = 1;
 			$user_id = $_SESSION["id"];
@@ -333,12 +333,11 @@ class Order extends CI_Controller
 	}
 
 	public function login() {
-		if(!isset($_SESSION['username'])) {
+		if(!isset($_SESSION['customer_id'])) {
 			$this->load->view("order/login");
 		} else {
 			redirect('/order');
 		}
-		
 	}
 
 	public function auth(){
@@ -372,6 +371,7 @@ class Order extends CI_Controller
 	public function logout(){
 		session_start();
 		unset($_SESSION["username"]);
+		unset($_SESSION["customer_id"]);
 		session_destroy();
 		$this->output->set_content_type('application/json')
 					->set_output(json_encode(["loggedOut" => true]));
@@ -437,7 +437,7 @@ class Order extends CI_Controller
 
 	public function purchases() {
 		session_start();
-		if(isset($_SESSION['username'])) {
+		if(isset($_SESSION['customer_id'])) {
 		
 		   	$this->load->model('modTransaction', "", TRUE);
 			$this->load->model('modTransactionDetail', "", TRUE);
@@ -461,7 +461,6 @@ class Order extends CI_Controller
 		   }
 		   $payment_method = $this->modTransaction->PAYMENT_METHOD;
 
-
 		   $this->load->view('order/purchases', ["purchases" => $purchases, "payment_method" => $payment_method]);
 		} else {
 		   redirect('/order/login');
@@ -471,7 +470,7 @@ class Order extends CI_Controller
 
 	public function transaction() {
 		session_start();
-        if (isset($_SESSION['username'])) {
+        if (isset($_SESSION['customer_id'])) {
 			$param = $this->input->get(NULL, "true");
 			$this->load->model('modTransaction', "", TRUE);
 			$this->load->model('modTransactionDetail', "", TRUE);

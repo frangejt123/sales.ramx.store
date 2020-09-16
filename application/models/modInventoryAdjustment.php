@@ -33,16 +33,28 @@ class ModInventoryAdjustment extends CI_Model {
             }
             //Construct table field selection
             $tablefield .= $field . " AS `" . $alias . "`";
-            if($param)
-            if (array_key_exists($alias, $param)) {
-                $this->db->where($field, $param[$alias]);
+         
+			
+			if ($param) {
+                if (array_key_exists($alias, $param)) {
+                    $this->db->where($field, $param[$alias]);
+                } else if(array_key_exists('search', $param) && !empty($param["search"]["value"])) {
+					$this->db->or_like($field, $param["search"]["value"]);
+				}
             }
         }
 
         $this->db->select($tablefield);
         $this->db->from($this->TABLE);
-		$this->db->order_by('inventory_adjustment.`date`', 'DESC');
-		$this->db->order_by('inventory_adjustment.status', 'ASC');
+		
+		if(isset($param["order_by"]) && $param["order_by"] != ""){
+			$this->db->order_by($param["order_by"], $param['sort_order']);
+		}else{
+			$this->db->order_by('id', 'DESC');
+		}
+
+		if(isset($param["start"]))
+			$this->db->limit( $param["length"], $param["start"]);
 
         $query = $this->db->get();
         return $query;
