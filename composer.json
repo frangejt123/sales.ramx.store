@@ -12,7 +12,8 @@
 	},
 	"require": {
 		"php": ">=5.4",
-		"jaspersoft/rest-client": "^2.0"
+		"jaspersoft/rest-client": "^2.0",
+		"vlucas/phpdotenv": "^5.2"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

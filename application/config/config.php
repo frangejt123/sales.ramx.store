@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '/sales.ramx.store';
+$config['base_url'] = getenv('BASE_URL');
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -522,4 +522,4 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
-$config['branch'] = 'RAM-X Iloilo';
+$config['branch'] = getenv('BRANCH');

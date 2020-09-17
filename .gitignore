@@ -37,3 +37,5 @@ assets/location_image/test2.jpeg
 assets/location_image/test3.jpeg
 application/config/config.php
 application/config/database.php
+.env
+.env.development
