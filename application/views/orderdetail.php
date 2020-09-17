@@ -120,7 +120,7 @@ function getSalesAgent($transaction) {
 	<meta charset="utf-8">
 	<title><?php echo $pagetitle; ?></title>
 	<meta name="viewport" content=" user-scalable=0"/>
-	<link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/app/img/<?php echo $pageicon; ?>" />
+	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/app/img/<?php echo $pageicon; ?>" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css">
@@ -138,7 +138,7 @@ function getSalesAgent($transaction) {
   <!-- Fixed navbar -->
   <nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="#">
-		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<img src="<?=base_url()?>assets/app/img/favicon.png" width="20"  />
 		<?=$this->config->item('branch') ?>
 	</a>
 

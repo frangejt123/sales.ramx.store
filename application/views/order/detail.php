@@ -17,7 +17,7 @@
 	  
   <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
  	 <a class="navbar-brand  mr-auto mr-lg-0" href="<?php echo site_url() . '/order' ?>">
-		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<img src="<?=base_url()?>assets/app/img/favicon.png" width="20"  />
 			<span class="d-lg-inline-block d-none">RAM-X Meatshop</span>
 			<span class=" d-lg-none d-md-inline-block ">My Purchases</span>
 	</a>

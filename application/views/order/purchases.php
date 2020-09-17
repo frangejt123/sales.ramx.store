@@ -9,9 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/app/img/favicon.jpg" />
     <title>RAM-X Meatshop | My Purchases</title>
-	<link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/app/img/favicon.jpg" />
+	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/app/img/favicon.jpg" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
 
 	<!-- Slimscroll -->
@@ -28,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
   <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
  	 <a class="navbar-brand  mr-auto mr-lg-0" href="<?php echo site_url() . '/order' ?>">
-		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<img src="<?=base_url()?>assets/app/img/favicon.png" width="20"  />
 			<span class="d-lg-inline-block d-none">RAM-X Meatshop</span>
 			<span class=" d-lg-none d-md-inline-block ">My Purchases</span>
 	</a>
@@ -173,7 +172,7 @@ echo '		</div>
 			<div id="empty" class="d-none mt-5">
 				<div class=" d-flex flex-column my-auto">
 					<h3 class="text-muted mx-auto">No Results Found</h3>
-					<img src="<?=base_url()?>/assets/app/img/empty.png" class='img-fluid mx-auto' width="150" />
+					<img src="<?=base_url()?>assets/app/img/empty.png" class='img-fluid mx-auto' width="150" />
 				</div>
 			</div>
 		</div>

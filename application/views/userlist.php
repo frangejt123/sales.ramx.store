@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 	<meta charset="utf-8">
 	<title>RAM-X</title>
-	<link rel="shortcut icon" href="<?php echo base_url(); ?>/assets/app/img/favicon.jpg" />
+	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/app/img/favicon.jpg" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css">
@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <!-- Fixed navbar -->
   <nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="#">
-		<img src="<?=base_url()?>/assets/app/img/favicon.png" width="20"  />
+		<img src="<?=base_url()?>assets/app/img/favicon.png" width="20"  />
 		<?=$this->config->item('branch') ?>
 	</a>
 

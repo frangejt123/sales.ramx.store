@@ -50,4 +50,24 @@ $(document).ready(function(){
 				return $1.toUpperCase()
 			})
 	}
+
+	$("#logout").on("click", function(){
+		NProgress.start();
+		$.ajax({
+			method: 'POST',
+			url: baseurl + '/login/logout',
+			success: function (res) {
+				if(res == "success"){
+					localStorage.removeItem("filter");
+					localStorage.removeItem("inverse");
+					localStorage.removeItem("thIndex");
+				
+					localStorage.removeItem("searchvalue");
+					localStorage.removeItem("filter");
+					localStorage.removeItem("store_id");
+					window.location = baseurl + "/login";
+				}
+			}
+		});
+	});
 });

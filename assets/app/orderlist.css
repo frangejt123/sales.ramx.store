@@ -152,7 +152,7 @@ textarea{
 
 .void_notif{
 	position: fixed;
-	top: 20px;
+	top: 4rem;
 	left: 50%;
 	margin-left: -150px;
 	width: 300px;
