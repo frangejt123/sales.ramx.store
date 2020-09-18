@@ -7,7 +7,13 @@ use Jaspersoft\Client\Client;
 class Report extends CI_Controller
 {
 
-	private $REPORT_PATH = "/Reports/RAMX_Iloilo";
+	private $REPORT_PATH;
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->REPORT_PATH = getenv("REPORT_PATH");
+	}
 
 	public function index()
 	{
