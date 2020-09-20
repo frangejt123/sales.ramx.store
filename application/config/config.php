@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = $_ENV["BASE_URL"];
+$config['base_url'] = array_key_exists("BASE_URL", $_ENV) ? $_ENV["BASE_URL"] : getenv("BASE_URL");
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -377,7 +377,7 @@ $config['encryption_key'] = '';
 |
 */
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = $_ENV["SESSION_COOKIE_NAME"];
+$config['sess_cookie_name'] = array_key_exists("SESSION_COOKIE_NAME", $_ENV) ? $_ENV["SESSION_COOKIE_NAME"] : getenv("SESSION_COOKIE_NAME");
 $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
@@ -522,4 +522,4 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
-$config['branch'] = $_ENV["BRANCH"];
+$config['branch'] = array_key_exists("BRANCH", $_ENV) ? $_ENV["BRANCH"] : getenv("BRANCH");

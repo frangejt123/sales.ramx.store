@@ -14,10 +14,10 @@ class Report extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->REPORT_HOST = $_ENV["JASPER_HOST"];
-		$this->REPORT_PATH = $_ENV["JASPER_PATH"];
-		$this->REPORT_USER = $_ENV["JASPER_USER"];
-		$this->REPORT_PASSWORD = $_ENV["JASPER_PASSWORD"];
+		$this->REPORT_HOST = array_key_exists("JASPER_HOST", $_ENV) ? $_ENV["JASPER_HOST"] : getenv("JASPER_HOST");
+		$this->REPORT_PATH = array_key_exists("JASPER_PATH", $_ENV) ? $_ENV["JASPER_PATH"] : getenv("JASPER_PATH");
+		$this->REPORT_USER = array_key_exists("JASPER_USER", $_ENV) ? $_ENV["JASPER_USER"] : getenv("JASPER_USER");
+		$this->REPORT_PASSWORD = array_key_exists("JASPER_PASSWORD", $_ENV) ? $_ENV["JASPER_PASSWORD"] : getenv("JASPER_PASSWORD");
 	}
 
 	public function index()
