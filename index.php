@@ -323,7 +323,7 @@ switch (ENVIRONMENT)
 	 */
 	require_once BASEPATH . 'dotenv/autoloader.php';
 	
-	$dotenv = new Dotenv\Dotenv(__DIR__);
+	$dotenv = new Dotenv\Dotenv(APPPATH);
 	$dotenv->load();
 	
 require_once BASEPATH.'core/CodeIgniter.php';

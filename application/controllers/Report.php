@@ -1,18 +1,23 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-require_once "../sales.ramx.store/vendor/autoload.php";
+//require_once "../sales.ramx.store/vendor/autoload.php";
 
 use Jaspersoft\Client\Client;
 
 class Report extends CI_Controller
 {
-
+	private $REPORT_HOST;
 	private $REPORT_PATH;
+	private $REPORT_USER;
+	private $REPORT_PASSWORD;
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->REPORT_PATH = getenv("REPORT_PATH");
+		$this->REPORT_HOST = $_ENV["JASPER_HOST"];
+		$this->REPORT_PATH = $_ENV["JASPER_PATH"];
+		$this->REPORT_USER = $_ENV["JASPER_USER"];
+		$this->REPORT_PASSWORD = $_ENV["JASPER_PASSWORD"];
 	}
 
 	public function index()
@@ -31,7 +36,7 @@ class Report extends CI_Controller
 				"CONDITION" => "id=" . $param["id"]
 			];
 
-			$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+			$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 			$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/SalesOrder", "pdf", null, null, $condition);
 
 			$this->output
@@ -54,7 +59,7 @@ class Report extends CI_Controller
 				"DELIVERY_DATE_TO" => $to
 			];
 
-			$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+			$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 			$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/ItemSummary", "pdf", null, null, $condition);
 
 			$this->output
@@ -81,7 +86,7 @@ class Report extends CI_Controller
 				"CONDITION" => "transaction.delivery_date>='" . $from . "' AND transaction.delivery_date<='" . $to . "'"
 			];
 
-			$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+			$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 			$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/ItemSummaryDetail", "pdf", null, null, $condition);
 
 			$this->output
@@ -99,7 +104,7 @@ class Report extends CI_Controller
 				"TRANSACTION_ID" => $param["param"]
 			];
 
-			$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+			$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 			$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/PaymentRecord", "pdf", null, null, $condition);
 
 			$this->output
@@ -158,7 +163,7 @@ class Report extends CI_Controller
 		}
 
 
-		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+		$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 		$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/SalesByDeliveryDate", "pdf", null, null, $report_param);
 
 		$this->output
@@ -215,7 +220,7 @@ class Report extends CI_Controller
 			$report_param["CONDITION"] .= " AND transaction.payment_method IN (" . $input_param["payment_method"] . ")";
 		}
 
-		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+		$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 		$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/SalesOrderListByDeliveryDate", "pdf", null, null, $report_param);
 
 		$this->output
@@ -328,7 +333,7 @@ class Report extends CI_Controller
 
 		//print_r($report_param);
 
-		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+		$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 		$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/SalesByPaymentMethod", "pdf", null, null, $report_param);
 
 		$this->output
@@ -417,7 +422,7 @@ class Report extends CI_Controller
 			$report_param["REPORT_PAYLOAD"] .= "PAYMENT METHOD[" . $method . "]";
 		}
 
-		$report_client = new Client("https://jasper.ribshack.info", "jasperadmin", "dsscRGC2019", "");
+		$report_client = new Client($this->REPORT_HOST, $this->REPORT_USER, $this->REPORT_PASSWORD, "");
 		$report = $report_client->reportService()->runReport($this->REPORT_PATH . "/PaymentSummaryByMethod", "pdf", null, null, $report_param);
 
 		$this->output
