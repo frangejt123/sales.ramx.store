@@ -385,7 +385,7 @@ $(document).ready(() => {
 		$.ajax({
 			method: 'POST',
 			data: data,
-			url: siteURL + '/customer/save_user/'+form.user_id,
+			url: siteURL + '/customer/save_user/'+ (form.user_id || ''),
 			success(resp) {
 				if(typeof resp == 'string') {
 					resp = JSON.parse(resp);
