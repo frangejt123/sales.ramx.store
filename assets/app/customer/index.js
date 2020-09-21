@@ -330,6 +330,83 @@ $(document).ready(() => {
 			}
 		});
 	});
+
+
+	$("button#create_user_btn").on("click", function(){
+		$("#create_user").modal("show");
+	});
+
+	$(".show_password").on("click", function(){
+		var id = $(this).attr("id");
+		showhidepassword(id);
+	});
+
+	function showhidepassword(id){
+		var x = document.getElementById(id.split("_")[1]);
+		$("#"+id+" i").removeClass("fa-eye fa-eye-slash");
+		if (x.type === "password") {
+			x.type = "text";
+			$("#"+id+" i").addClass("fa-eye-slash");
+		} else {
+			x.type = "password";
+			$("#"+id+" i").addClass("fa-eye");
+		}
+	}
+
+	$('#default-user').click(function() {
+		//make username
+		let password = form.name.replace(/\s/g, '').toLowerCase()
+		let username =  password + form.id;
+		
+
+		$('#username').val(username);
+		$('#password').val(password);
+		$('#confirmpassword').val(password);
+	})
+
+	$("#save_user").click(function() {
+
+		if($('#password').val() != $("#confirmpassword").val()) {
+			alert('Passwords did not match!')
+			return;
+		}
+
+
+		let data  = {
+			name: form.name,
+			username: $('#username').val(),
+			password: $('#password').val(),
+			cpassword: $("#confirmpassword").val(),
+			access_level: 2,
+			customer_id: form.id,
+			id: form.user_id
+		}
+
+		$.ajax({
+			method: 'POST',
+			data: data,
+			url: siteURL + '/customer/save_user/'+form.user_id,
+			success(resp) {
+				if(typeof resp == 'string') {
+					resp = JSON.parse(resp);
+				}
+
+				if(!form.user_id) {
+					form.user_id = resp.user.id || null
+				}
+			
+				showMessage(resp.message);
+				$("#create_user").modal("hide");
+			},
+			error(err) {
+				alert('Oops! Something wrong happened!')
+				console.log(err);
+			}
+			
+		})
+	});
+
+
 	
 });
 

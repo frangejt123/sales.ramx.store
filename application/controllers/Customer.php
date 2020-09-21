@@ -126,6 +126,7 @@ class Customer extends CI_Controller {
 		$this->load->model('modCustomer', "", TRUE);
 		$this->load->model('modTransaction', "", TRUE);
 		$this->load->model('modCity', "", TRUE);
+		$this->load->model('modUser', "", TRUE);
 
 		$data = array(
 			"customer" => $this->modCustomer->getAll(["id" => $id])->row_array(),
@@ -135,6 +136,7 @@ class Customer extends CI_Controller {
 			"city" => $this->modCity->getAll(null)->result_array()
 		);
 
+		$data["user"] = $this->modUser->getAll(["id" => $data["customer"]["user_id"]])->row_array();
 	
 		
 
@@ -157,6 +159,47 @@ class Customer extends CI_Controller {
 		
 		echo json_encode($result);
 	}
+
+	public function save_user($id = false) {
+	
+        if (isset($_SESSION['username'])) {
+			$post = $this->input->post(NULL, TRUE);
+			$this->load->model('modCustomer', '', TRUE);
+			$this->load->model('modUser', '', TRUE);
+			if(!$id) {
+				//create user
+				
+				if($post["password"] != $post["cpassword"]) {
+					$this->output->set_status_header(400)
+							->set_output(json_encode(["success" => false, "message" => "Password did not match"]));
+					return;
+				}
+				$post["password"] = md5($post["password"]);
+				$user = $this->modUser->insert($post);
+
+				if($user["success"]) {
+					$customer = $this->modCustomer->update(["id" => $post["customer_id"], "user_id" => $user["id"]]);
+				}
+
+				$this->output->set_status_header(201)
+				->set_output(json_encode(["success" => true, "message" => "User created successfuly", "customer" => $customer ?? null, "user" => $user]));
+
+			} else {
+				if($post["password"] != $post["cpassword"]) {
+					$this->output->set_status_header(400)
+							->set_output(json_encode(["success" => false, "message" => "Password did not match"]));
+					return;
+				}
+				$post["password"] = md5($post["password"]);
+			   $user =$this->modUser->update($post);
+			   $this->output->set_status_header(200)
+			   ->set_output(json_encode(["success" => true, "message" => "User has been updated successfuly", "user" => $user]));
+
+			}
+        }  else {
+			redirect('/login');
+		}
+	} 
 	
 
 }
