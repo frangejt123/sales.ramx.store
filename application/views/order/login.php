@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>RAM-X Meatshop |  Login</title>
+    <title><?=$this->config->item('branch') ?> |  Login</title>
 	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/app/img/favicon.jpg" />
     <!-- Bootstrap core CSS -->
 	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/app/img/favicon.jpg" />
@@ -22,7 +22,7 @@
 		<input type="password" id="password" class="form-control" placeholder="Password" required>
 		<p class='text-danger d-none error-message'>Incorrect login details, please try again.</p>
 		<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-		<p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+		<p class="mt-5 mb-3 text-muted"><?=$this->config->item('branch') ?> &copy; 2020</p>
 	</form>
 	<script>
 		const siteUrl = "<?=site_url()?>"
