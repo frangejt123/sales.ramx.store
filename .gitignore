@@ -39,3 +39,4 @@ application/config/config.php
 application/config/database.php
 .env
 .env.development
+/vendor/*

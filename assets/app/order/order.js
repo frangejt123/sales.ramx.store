@@ -60,9 +60,9 @@ $("document").ready(function(){
 		if(new_qty < 0 || qty <= 0)
 			return;
 
-		var html = '<div class="row prodsumrow new haschanges d-flex flex-row mb-2" id="'+id+'">'
+		var html = '<div class="row prodsumrow new haschanges d-flex flex-row mb-2" data-price="'+price+'" id="'+id+'">'
 			+ '<div class=" summary_desc mr-auto">'
-			+ description
+			+		 description
 			+ '</div>'
 			+ '<div class=" summary_qty mr-5 ">'
 			+ qty
@@ -102,7 +102,7 @@ $("document").ready(function(){
 	$("div#productsummary").on("click", ".delbtn", function(){
 		var id = $(this).attr("id").split("_")[1];
 		var row = $("div#productsummary").find(".prodsumrow#"+id);
-		console.log(row);
+	
 		var availqty = parseFloat($(".product_main #qty_"+id+" span").html());
 		var inputqty = parseFloat($("div.prodsumrow#"+id+" div.summary_qty").text());
 
@@ -131,7 +131,8 @@ $("document").ready(function(){
 		$.each(products, function(ind, row){
 			var id = $(row).attr("id");
 			var qty = $(row).find(".summary_qty").html();
-			var price = $(".product_main #"+id).find("div.product_price").html();
+			// var price = $(".product_main #"+id).find("div.product_price").html();
+			var price = $(row).data('price');
 			total += (parseFloat(qty) * parseFloat(price));
 		});
 
@@ -230,7 +231,7 @@ $("document").ready(function(){
 					$("#productsummary").html("");
 
 
-					window.location = siteURL + "/order/success/"+btoa(res["id"]);
+					window.location = siteURL + "/order/detail/"+btoa(res["id"])+"?success=true";
 					//$("#confirmmodal").modal("hide");
 					//$("#productsummary").find(".row").addClass("saved");
 					//location.reload();

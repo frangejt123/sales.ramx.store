@@ -22,10 +22,12 @@ class Order extends CI_Controller
 
 
 
-	public function new() {
+	public function new($id = false) {
 
 		session_start();
 		if (isset($_SESSION["customer_id"])) {
+
+	
 	
 			$store_id = 1;
 			$user_id = $_SESSION["id"];
@@ -47,7 +49,20 @@ class Order extends CI_Controller
 			$customer = $this->modCustomer->getAll(["user_id" => $user_id])->row_array();
 	
 			$data["customer"] = $customer;
-	
+			$data["username"] = $_SESSION['username'];
+
+			if($id) {
+				$this->load->model('modTransaction', "", TRUE);
+				$this->load->model('modTransactionDetail', "", TRUE);
+
+				$id = base64_decode($id);
+
+				$data["transaction"] = $this->modTransaction->getAll(["id" => $id])->row_array();
+				$data["transactiondetail"] = $this->modTransactionDetail->getAll(["transaction_id" => $id])->result_array();
+
+				$data["update"] = true;
+			}
+
 
 			$this->load->view('order/new_order', $data);
 		} else {
@@ -236,6 +251,7 @@ class Order extends CI_Controller
 		if(isset($param["detail"])) {
 			foreach ($param["detail"] as $ind => $row) {
 				$row["transaction_id"] = $result["id"];
+				log_message('error', json_encode($row));
 				$row["total_price"] = $row["quantity"] * $row["price"];
 				if ($row["status"] == "new")
 					$this->modTransactionDetail->insert($row);
@@ -291,45 +307,32 @@ class Order extends CI_Controller
 		echo json_encode($result);
 	}
 
-	public function success($id) {
-		$this->load->model('modTransaction', "", TRUE);
-		$this->load->model('modTransactionDetail', "", TRUE);
 
-		$id = base64_decode($id);
-		$paramtrans["id"] = $id;
-		$data["transaction"] = $this->modTransaction->getAll($paramtrans)->row_array();
-		$data["payment_method"] = $this->modTransaction->PAYMENT_METHOD;
-
-		if(is_null($data["transaction"])) {
-			redirect('/order');
-		} else {
-
-			$data["detail"] = $this->modTransactionDetail->getAll(array("transaction_id" => $id))->result_array();
-
-			$this->load->view("order/success", $data);
-		}
-
-	}
 
 	public function detail($id) {
-		$this->load->model('modTransaction', "", TRUE);
-		$this->load->model('modTransactionDetail', "", TRUE);
-
-		$id = base64_decode($id);
-		$paramtrans["id"] = $id;
-		$data["transaction"] = $this->modTransaction->getAll($paramtrans)->row_array();
-		$data["payment_method"] = $this->modTransaction->PAYMENT_METHOD;
-
-
-	
-		if(is_null($data["transaction"])) {
-			redirect('/order');
+		session_start();
+		if(!isset($_SESSION['customer_id'])) {
+			$this->load->view("order/login");
 		} else {
+            $this->load->model('modTransaction', "", true);
+            $this->load->model('modTransactionDetail', "", true);
 
-			$data["detail"] = $this->modTransactionDetail->getAll(array("transaction_id" => $id))->result_array();
+            $id = base64_decode($id);
+            $paramtrans["id"] = $id;
+            $data["transaction"] = $this->modTransaction->getAll($paramtrans)->row_array();
+            $data["payment_method"] = $this->modTransaction->PAYMENT_METHOD;
+            $data["username"] = $_SESSION["username"];
 
-			$this->load->view("order/detail", $data);
-		}
+    
+            if (is_null($data["transaction"])) {
+                redirect('/order');
+            } else {
+                $data["tracking"] = $this->getStatus($data["transaction"], true);
+                $data["detail"] = $this->modTransactionDetail->getAll(array("transaction_id" => $id))->result_array();
+
+                $this->load->view("order/detail", $data);
+            }
+        }
 	}
 
 	public function login() {
@@ -377,62 +380,115 @@ class Order extends CI_Controller
 					->set_output(json_encode(["loggedOut" => true]));
 	}
 
-	private function getStatus($trans) {
+	private function getStatus($trans, $withHistory = false) {
+		
+		$tracking_history = [];
+		$has_result = false;
+
+		$pending = [
+			"success" => true,
+			"message" => 'Order is still pending for verification',
+			"status" => 'Pending',
+			"date" => date('m/d/Y H:i', strtotime($trans["datetime"])),
+			"color" => "#28a745"
+		];
+
+		$process = [
+			"success" => true,
+			"message" => 'Your order has been packed and is being handed over to our delivery team.',
+			"status" => 'Process',
+			"date" => is_null($trans["date_printed"]) ? null : date('m/d/Y H:i', strtotime($trans["date_printed"])),
+			"color" => '#ff9800'
+		];
+
+		$delivered = [
+			"success" => true,
+			"message" => 'Your order has been succesfuly delivered.',
+			"status" => 'Delivered',
+			'date' => is_null($trans["date_delivered"]) ? null : date('m/d/Y H:i', strtotime($trans["date_delivered"])),
+			"color" => "#2196f3"
+		];
+
+		$completed = [
+			"success" => true,
+			"message" => 'Your order is now completed. Thank you for purchasing at RAMX-X Meatshop!',
+			"status" => 'Completed',
+			"date" => null,
+			"color" => "#3f51b5"
+		];
+
+		$to_receive =  [
+			"success" => true,
+			"message" => 'Your order is ready for delivery.',
+			"status" => 'To Receive',
+			"date" => null,
+			"color" => "#00bcd4"
+		];
+
+		$cancelled =  [
+			"success" => true,
+			"message" => 'Your order has been voided',
+			"status" => 'Cancelled',
+			"date" => null,
+			"color" => "#f44336"
+		];
+
 
 		if($trans["status"] == 0) {
 			if($trans["printed"] == 1) {
-				$result = [
-					"success" => true,
-					"message" => 'Your order has been packed and is being handed over to our delivery team.',
-					"status" => 'Process',
-					"date" => $trans["date_printed"],
-					"color" => '#ff9800'
-				];					
-			} else {
-				$result = [
-					"success" => true,
-					"message" => 'Order is still pending for verification',
-					"status" => 'Pending',
-					"date" => $trans["datetime"],
-					"color" => "#28a745"
+				$tracking_history =  [
+					"pending" => $pending,
+					"process" => $process
 				];
-	
+				$result = $process;					
+			} else {
+				$result = $pending;
+				$tracking_history =  [
+					"pending" => $pending
+				];
 			}
 		} else if($trans["status"] == 1) {
-				$result = [
-					"success" => true,
-					"message" => 'Your order is ready for delivery.',
-					"status" => 'To Receive',
-					"date" => null,
-					"color" => "#00bcd4"
-				];
+			$tracking_history =  [
+				"pending" => $pending,
+				"process" => $process,
+				"to_receive" => $to_receive
+			];
+				$result = $to_receive;
 		} else if( $trans["status"] == 4) {
-			$result = [
-				"success" => true,
-				"message" => 'Your order has been succesfuly delivered.',
-				"status" => 'Delivered',
-				'date' => $trans["date_delivered"],
-				"color" => "#2196f3"
+			$tracking_history =  [
+				"pending" => $pending,
+				"process" => $process,
+				"to_receive" => $to_receive,
+				"delivered" => $delivered
 			];
+			$result = $delivered;
 		}  else if( $trans["status"] == 2) {
-			$result = [
-				"success" => true,
-				"message" => 'Your order is now completed. Thank you for purchasing at RAMX-X Meatshop!',
-				"status" => 'Completed',
-				"date" => null,
-				"color" => "#3f51b5"
+			$tracking_history =  [
+				"pending" => $pending,
+				"process" => $process,
+				"to_receive" => $to_receive,
+				"delivered" => $delivered,
+				"completed" => $completed
 			];
+			$result = $completed;
 		} else if( $trans["status"] == 3) {
-			$result = [
-				"success" => true,
-				"message" => 'Your order has been voided',
-				"status" => 'Cancelled',
-				"date" => null,
-				"color" => "#f44336"
+			$tracking_history =  [
+				"pending" => $pending,
+				"cancelled" => $cancelled
 			];
+			$result = $cancelled;
 		} 
 
-		return $result;
+		if(!$withHistory) {
+			return $result;
+		} else {
+			return [
+				"history" => $tracking_history,
+				"status" => $result
+			];
+		}
+
+	
 	}
 
 	public function purchases() {
@@ -461,7 +517,7 @@ class Order extends CI_Controller
 		   }
 		   $payment_method = $this->modTransaction->PAYMENT_METHOD;
 
-		   $this->load->view('order/purchases', ["purchases" => $purchases, "payment_method" => $payment_method]);
+		   $this->load->view('order/purchases', ["purchases" => $purchases, "payment_method" => $payment_method, "username" => $_SESSION['username']]);
 		} else {
 		   redirect('/order/login');
 		}
@@ -521,4 +577,64 @@ class Order extends CI_Controller
 		}
 
 	}
+
+	public function profile(){
+		session_start();
+		if (isset($_SESSION['customer_id'])) {  
+			$this->load->model('modCustomer', '', TRUE);
+			$this->load->model('modUser', '', TRUE);
+			$this->load->model('modCity', '', TRUE);
+
+			$data['customer'] = $this->modCustomer->getAll(["id" => $_SESSION['customer_id']])->row_array();
+			$data['user'] = $this->modUser->getAll(["id" => $data['customer']["user_id"]])->row_array();
+			$data['username'] = $_SESSION['username'];
+			$data['city'] = $this->modCity->getAll(null)->result_array();
+			
+			if($data["user"]) {
+				unset($data["user"]["password"]);
+			}
+
+			$this->load->view('order/profile', $data);
+		} else {
+			redirect('/order/login');
+		}
+
+	}
+
+	public function save_profile() {
+		session_start();
+		if (isset($_SESSION['customer_id'])) {  
+
+			$post = $this->input->post(NULL, TRUE);
+
+			$this->load->model('modCustomer', '', TRUE);
+			$this->load->model('modUser', '', TRUE);
+		
+			$result = [];
+			$name = '';
+			if(isset($post["customer"])) {
+				$name = $post['customer']['name'];
+				$result['customer'] = 	$this->modCustomer->update($post['customer']);
+			}
+
+			if(isset($post["user"])) {
+
+				if(array_key_exists('password', $post['user'])) {
+					$post['user']['password'] = md5($post['user']['password'] );
+				}
+
+				if($name != '') {
+					$post['user']['name'] = $name;
+				}
+
+				$result['user'] = $this->modUser->update($post['user']);
+			}
+
+			echo json_encode($result);
+		} else {
+			redirect('/order/login');
+		}
+	}
+
+	
 }

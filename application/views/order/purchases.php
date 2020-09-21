@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <body class='bg-light'>
    
 
-  <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg font-smaller fixed-top navbar-dark bg-dark">
  	 <a class="navbar-brand  mr-auto mr-lg-0" href="<?php echo site_url() . '/order' ?>">
 		<img src="<?=base_url()?>assets/app/img/favicon.png" width="20"  />
 			<span class="d-lg-inline-block d-none">RAM-X Meatshop</span>
@@ -43,12 +43,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	 	 <a class="nav-link" href="<?=site_url()?>/order/new">New Order <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
-	 	 <a class="nav-link" href="#">My Purchases</a>
+	 	 <a class="nav-link  " href="#">My Purchases</a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  		<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+		</svg>
+			<?=$username?></a>
         <div class="dropdown-menu dropdown-menu-left" style="left: -5rem !important" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" href="<?=site_url()?>/order/profile">Profile</a>
           <a class="dropdown-item" href="#" id="logout">Logout</a>
         </div>
       </li>

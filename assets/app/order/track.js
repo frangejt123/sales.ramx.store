@@ -20,34 +20,12 @@ window.addEventListener('load', function () {
 }())
 
 $(document).ready(function() {
-	$('form').submit(function(e) {
+	$('#edit-order').click((e) => {
 		e.preventDefault();
-		$('#loadingBtn').removeClass('d-none')
-		$('#submitBtn').addClass('d-none')
+		let id = $("#edit-order").data("id");
 
-		const customerName = $('#customerName').val();
-		const transId = $('#transactionId').val();
-
-		const data = { customerName, transId }
-
-		$.ajax({
-			method: 'get',
-			data: data,
-			url: baseurl+'/order/tracking',
-			success: function(res){
-				const resp = JSON.parse(res);
-				$("p#result").html(resp.message);
-				$('#loadingBtn').addClass('d-none')
-				$('#submitBtn').removeClass('d-none')
-			},
-			error: function(xhr, status, error){
-			
-			},
-			beforeSend: function(){
-				
-			}})
-
-	});
+		window.location = siteURL + "/order/new/"+btoa(id);
+	})
 });
 
 

@@ -15,6 +15,10 @@
 		$hasTransactions = count($transactions) > 0;
 	}
 
+	if(isset($user)) {
+		$username = $user["username"];
+	}
+
 	$paid = ["Unpaid", "Paid"];
 	$paid_class = ["danger", "success"];
 ?>
@@ -23,8 +27,12 @@
 	<button class="btn-danger lg-btn routing-btn" data-route-to="/customer">
 		<i class="fa fa-arrow-left"></i> &nbsp; Back
 	</button>
+
 	<button id="save-btn" class="btn-success pull-right lg-btn">
 			<i class="fa fa-save"></i> &nbsp; Save
+	</button>
+	<button id="create_user_btn" class="btn-primary pull-right lg-btn mr-2" style="width: auto">
+			<i class="fa fa-user"></i> &nbsp; Set Default User
 	</button>
 	<span class="pull-right span_seperator"></span>
 	<span class="pull-right span_seperator"></span>
@@ -182,7 +190,52 @@
 </div>
 </div>
 
+<div id="create_user" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><i class="fa fa-user-plus"></i> Set Default User</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Username</label>
+						<input type="text" class="form-control" id="username" value="<?=$username ?? null ?>">
+					</div>
+
+					<div class="form-group">
+						<label>Password</label>
+						<div class="input-group">
+							<input type="password" class="form-control" id="password">
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary show_password" id="show_password" type="button">
+									<i class="fa fa-eye"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>Confirm Password</label>
+						<div class="input-group">
+							<input type="password" class="form-control" id="confirmpassword">
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary show_password" id="show_confirmpassword" type="button">
+									<i class="fa fa-eye"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-warning" id="default-user">Set Default</button>
+					<button type="button" class="btn btn-primary" id="save_user">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <script type="text/javascript">
+	var siteURL = "<?= site_url() ?>"
 	window.form = <?php echo isset($customer) ? json_encode($customer) : 'null' ?>
 </script>

@@ -29,6 +29,7 @@ if(isset($transaction)){
 	$orderid = sprintf("%04s", $transaction["id"]);
 	$tnxdt =  date("mdY", strtotime($transaction["datetime"]));
 	$ordernumber = $tnxdt."-".$orderid;
+	$cust_location_image = $locationimage;
 } else {
 	$name = $customer["name"];
 	$fb_name = $customer["facebook_name"];
@@ -103,9 +104,13 @@ if($store_id == "2"){
 	 	 <a class="nav-link" href="<?=site_url()?>/order/purchases">My Purchases</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  		<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+		</svg>
+			<?=$username?></a>
         <div class="dropdown-menu dropdown-menu-left" style="left: -5rem !important" aria-labelledby="dropdown01">
-          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" href="<?=site_url()?>/order/profile">Profile</a>
           <a class="dropdown-item" href="#" id="logout">Logout</a>
         </div>
       </li>
@@ -212,15 +217,18 @@ if($store_id == "2"){
 						<?php
 						if(isset($transactiondetail)){
 							foreach($transactiondetail as $ind => $row){
-								echo '<div class="row prodsumrow existing" data-id="'.$row["id"].'" id="'.$row["product_id"].'">';
-								echo '<div class=" ml-2 summary_desc mr-auto ">asdf'.$row["description"].'</div>';
-								echo '<div class=" summary_qty mr-5">'.$row["quantity"].'</div>';
-								echo '<div class="mr-3">';
-								echo '<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" ';
-								echo '<i class="fa fa-trash"></i>';
-								echo '</button>';
-								echo '</div>';
-								echo '<div style="clear:both"></div>';
+								$price = $row["total_price"] / $row["quantity"];
+								echo '<div class="row prodsumrow existing  mb-2" data-id="'.$row["id"].'" data-price="'.$price.'"  id="'.$row["product_id"].'">';
+								echo '	<div class="d-flex flex-row w-100">';
+								echo '		<div class=" summary_desc mr-auto ">'.$row["description"].'</div>';
+								echo '		<div class=" summary_qty mr-5">'.$row["quantity"].'</div>';
+								echo '		<div class="mr-3">';
+								echo '			<button type="button" class="btn btn-danger delbtn" id="delbtn_'.$row["product_id"].'" >';
+								echo '				<i class="fa fa-trash"></i>';
+								echo '			</button>';
+								echo '		</div>';
+								echo '	</div>';
+								echo '		<div style="clear:both"></div>';
 								echo '</div>';
 							}
 						}
