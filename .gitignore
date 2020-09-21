@@ -39,4 +39,9 @@ application/config/config.php
 application/config/database.php
 .env
 .env.development
+<<<<<<< HEAD
+
+application/config/*
+=======
 /vendor/*
+>>>>>>> 03b8886b3fce93dc697664a1b40df5c6a6c27b2c
