@@ -107,6 +107,8 @@ class Customer extends CI_Controller {
 			$filepath = "assets/location_image/".$imgname.".jpeg";
 
 			file_put_contents($filepath, $image);
+
+			$param["location_image"] = $imgname.".jpeg";
 		}
 
 		if(!array_key_exists("id", $param)) {

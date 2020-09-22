@@ -115,7 +115,7 @@
 								<div class="form-group">
 									<label>Customer Location</label>
 									<input type='file' id="customer_location" />
-									<div id="map_preview" class="detail_map_preview">
+									<div id="map_preview" class="detail_map_preview" style="height: 300px">
 										<img id="map_img_preview" src="<?php echo $locationimage; ?>" alt="Map of Customer's Location" />
 									</div>
 								</div>

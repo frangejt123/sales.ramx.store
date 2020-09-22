@@ -30,6 +30,27 @@ class Product extends CI_Controller {
 	public function addProduct(){
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modProduct', "", TRUE);
+
+
+		if(isset($param["prod_img"])) {
+			$image = $param["prod_img"];
+			$imgname = strtolower(str_replace(" ", "", $param	["description"]));
+	
+			if($image != "") {
+				list($type, $image) = explode(';', $image);
+				list(, $image) = explode(',', $image);
+				$image = base64_decode($image);
+	
+				$filepath = "assets/prod_img/".$imgname.".jpeg";
+	
+				file_put_contents($filepath, $image);
+	
+				$param["prod_img"] = $imgname.".jpeg";
+			}
+		}
+	
+
+
 		$result = $this->modProduct->insert($param);
 
 		echo json_encode($result);
@@ -38,6 +59,25 @@ class Product extends CI_Controller {
 	public function update(){
 		$param = $this->input->post(NULL, "true");
 		$this->load->model('modProduct', "", TRUE);
+
+		if(isset($param["prod_img"])) {
+			$image = $param["prod_img"];
+			$imgname = strtolower(str_replace(" ", "", $param	["description"]));
+	
+			if($image != "") {
+				list($type, $image) = explode(';', $image);
+				list(, $image) = explode(',', $image);
+				$image = base64_decode($image);
+	
+				$filepath = "assets/prod_img/".$imgname.".jpeg";
+	
+				file_put_contents($filepath, $image);
+	
+				$param["prod_img"] = $imgname.".jpeg";
+			}
+		}
+		
+		
 		$result = $this->modProduct->update($param);
 
 		echo json_encode($result);

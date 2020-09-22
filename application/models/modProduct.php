@@ -14,7 +14,8 @@ class ModProduct extends CI_Model {
 				"uom" => "product.uom",
 				"category_id" => "product.category_id",
 				"phase_out" => "product.phase_out",
-				"store_id" => "product.store_id"
+				"store_id" => "product.store_id",
+				"prod_img" => "product.prod_img"
     );
 
     function __construct() {

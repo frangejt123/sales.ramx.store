@@ -158,3 +158,29 @@ span.span_seperator{
 .update_category{
 	border-left: 8px solid #0dbc5f;
 }
+
+#img_preview {
+	width: 200px;
+	height: 200px;
+	border: 1px solid #ced4da;
+	position: relative;
+	background-image: url("img/noimg.png");
+	background-color: #80808026
+}
+
+#upload-text {
+	background: #00000052;
+    color: white;
+    bottom: 0;
+    position: absolute;
+	display: none;
+	width: 100%;
+	cursor: pointer;
+	z-index: 99999
+}
+
+#img_preview:hover #upload-text, .croppie-container:hover #upload-text {
+	display: block
+}
+
+

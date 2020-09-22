@@ -24,6 +24,7 @@ class ModTransactionDetail extends CI_Model {
         $this->FIELDS["description"] = "product.description";
 		$this->FIELDS["price"] = "product.price";
 		$this->FIELDS["uom"] = "product.uom";
+		$this->FIELDS["prod_img"] = "product.prod_img";
         $tablefield = "";
 
         foreach ($this->FIELDS as $alias => $field) {

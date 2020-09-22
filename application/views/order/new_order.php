@@ -165,24 +165,24 @@ if($store_id == "2"){
                 echo '<div class=" col-lg-4 col-xl-3  main_product prodcat_'.$row["category_id"].'">';
                 echo '	<div class="card mb-4 shadow-sm product_main">';
                 echo '		<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
-                echo '			<svg class="bd-placeholder-img card-img-top product_desc" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
-									<title>Add to Cart</title>
-									<rect width="100%" height="100%" fill="#55595c"/>
-									<text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
-								</svg>
-								<div class="card-img-overlay text-white justify-content-center d-flex">
-									<h5 class="card-title text-center mt-5">'.$row["description"].'</h5>
-								</div>
+				echo '			<div class="img-placeholder">';
+								   if(!is_null($row["prod_img"])) {
+				echo '            	<img src="'.base_url() . 'assets/prod_img/' . $row["prod_img"].'" class="card-img" height="200"/>';					
+									}
+								
+				echo'				</div>
+						
 								<div class="product_desc"  style="display:none">'.$row["description"].'</div>
 								<div class="product_price" hidden>'.$row["price"].'</div>
 								';
 				echo '		</div>';//product_cont
 					
-            echo '		<div class="card-body">	
+            echo '		<div class="card-body pt-1">	
 							<div class="card-text">
+							<div class="text-center"><h6><b>'.$row["description"].'</b></h6></div>
 								<div class=" d-flex pa-3">
 									
-									<div class="p_price"><b> Price : '.number_format($row["price"], 2).'</b> / '.$row["uom"].''.'</div>
+									<div class="p_price text-success"><b> Price : '.number_format($row["price"], 2).'</b> / '.$row["uom"].''.'</div>
 									<div class="product_uom" id="produom_'.$row["id"].'" hidden>'.$row["uom"].'</div>
 									
 									<div id="qty_'.$row["id"].'" class="availqty_cont ml-sm-auto">

@@ -129,3 +129,15 @@ body {
 	right:50%;
 	margin-right:24px;
 }
+
+.img-placeholder {
+	background-image: url("../img/noimg.png");
+	background-color: #80808026;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	height: 82px;
+	border:1px solid rgba(0,0,0,.125);
+	width: 80px;
+}
+

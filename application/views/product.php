@@ -26,6 +26,7 @@ if($store_id == "2"){
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/slimscroll.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/nprogress.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/product.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/app/croppie.css">
 
 </head>
 <body>
@@ -93,7 +94,7 @@ if($store_id == "2"){
 						$cls = "";
 						if($row["avail_qty"] == 0)
 							$cls=' text-danger';
-						echo '<tr>';
+						echo '<tr data-image="'.$row["prod_img"].'">';
 						echo '<td>'.$row["description"].'</td>';
 						echo '<td>'.$row["uom"].'</td>';
 						echo '<td class="'.$cls.'">'.number_format($row["avail_qty"], 2).'</td>';
@@ -120,6 +121,16 @@ if($store_id == "2"){
 				</div>
 				<div class="modal-body">
 					<input type="hidden" id="product_id" class="not-required">
+
+					<div class="form-group">
+						<label>Product Image</label>
+						
+						<div id="img_preview" class="detail_map_preview mx-auto" >
+							<img id="map_img_preview" src=""  />
+							<div class='text-center' id="upload-text"><i class="fa fa-camera"></i> Upload Image</div>
+						</div>
+						<input type='file' id="product_img" class='d-none form-control' />
+					</div>
 					<div class="form-group">
 						<label>Description</label>
 						<input type="text" class="form-control" id="description">
@@ -264,7 +275,9 @@ if($store_id == "2"){
 <script src="<?php echo base_url(); ?>assets/plugins/iCheck/icheck.min.js"></script>
 <script>
 	//$.widget.bridge('uibutton', $.ui.button);
-	var baseurl = '<?php echo base_url(); ?>'+'index.php';
+
+	var baseURL = "<?= base_url() ?>"
+	var siteURL = "<?= site_url() ?>"
 	$(function () {
 		$('input').iCheck({
 			checkboxClass: 'icheckbox_square-blue',
@@ -276,6 +289,7 @@ if($store_id == "2"){
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/nprogress.js"></script>
+<script src="<?php echo base_url(); ?>assets/app/croppie.js"></script>
 <script src="<?php echo base_url(); ?>assets/app/product.js"></script>
 
 </body>

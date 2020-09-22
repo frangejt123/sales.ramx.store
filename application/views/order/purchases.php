@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  		<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+  			<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
 		</svg>
 			<?=$username?></a>
         <div class="dropdown-menu dropdown-menu-left" style="left: -5rem !important" aria-labelledby="dropdown01">
@@ -104,13 +104,12 @@ echo '<div class="card mb-3 order-card" data-id="'.$purchase["id"].'">
         if ($key <= 2) {
             echo '
 				  <li class="list-group-item d-flex border-top-0   border-bottom justify-content lh-condensed border-left-0 border-right-0">
-						<div class="mr-3">
-							<svg class="bd-placeholder-img " width="75" height="75" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
-								<title>Add to Cart</title>
-								<rect width="100%" height="100%" fill="#55595c"/>
-								<text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
-							</svg>
-						</div>
+						<div class="mr-3 img-placeholder">';
+
+						if(!is_null($row["prod_img"])) {
+			echo '           <img src="'.base_url() . 'assets/prod_img/' . $row["prod_img"].'" class="card-img" height="100" width="100"/>';					
+						}
+			echo'		</div>
 					  <div class="mr-auto">
 						  <h6 class="my-0">'.$row["description"].'</h6>
 						  <small class="text-muted">'.$row["quantity"].' ' . $row["uom"].'</small>

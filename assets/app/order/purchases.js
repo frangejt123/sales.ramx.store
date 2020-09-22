@@ -118,12 +118,8 @@ function appendPurchases(resp) {
 			if(key <= 2) {
 				detail_html = [
 					'<li class="list-group-item d-flex border-top-0   border-bottom justify-content lh-condensed border-left-0 border-right-0">',
-						'<div class="mr-3">',
-							'<svg class="bd-placeholder-img " width="75" height="75" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">',
-								'<title>Add to Cart</title>',
-								'<rect width="100%" height="100%" fill="#55595c"/>',
-								'<text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>',
-							'</svg>',
+						'<div class="mr-3 img-placeholder">',
+						detail["prod_img"] ? '<img src="' + baseURL + 'assets/prod_img/' + detail["prod_img"] + '" class="card-img" height="100" width="100"/>' : '',	
 						'</div>',
 						'<div class="mr-auto">',
 							'<h6 class="my-0">' + detail["description"] + '</h6>',
