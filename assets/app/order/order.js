@@ -138,6 +138,8 @@ $("document").ready(function(){
 
 		$("#totalvalue").html(toCurrency(total));
 		total = total;
+		
+		updateCartCount();
 	}
 
 	$("#settlebtn").on("click", function(){
@@ -543,7 +545,16 @@ $("document").ready(function(){
 
 	// $("#customer_details_main_btn").trigger('click')
 
-
+	function updateCartCount() {
+		let count = $(".prodsumrow").length;
+		if(count > 0) {
+			$(".cart-count").removeClass('d-none')
+							.html(count);
+		} else {
+			$(".cart-count").addClass('d-none')
+			.html(count);
+		}
+	}
 
 });
 
