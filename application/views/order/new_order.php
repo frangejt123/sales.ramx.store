@@ -85,10 +85,11 @@ if($store_id == "2"){
 		<span class=" d-lg-none d-md-inline-block ">New Order</span>
 	</a>
 
-	<button class="navbar-toggler p-0 border-0 mr-3 mb-1  d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+	<button class="navbar-toggler p-0 border-0 mr-3 mb-1  d-md-none collapsed" style="position:relative" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
 		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			<path fill-rule="evenodd" d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
 		</svg>
+		<span class="cart-count ">0</span>
 	</button>
 	<button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
 		<span class="navbar-toggler-icon"></span>
@@ -165,9 +166,9 @@ if($store_id == "2"){
                 echo '<div class=" col-lg-4 col-xl-3  main_product prodcat_'.$row["category_id"].'">';
                 echo '	<div class="card mb-4 shadow-sm product_main">';
                 echo '		<div class="product_cont'. ($availableqty == 0 ? " notavailable" : "") .'" id="'.$row["id"].'">';
-				echo '			<div class="img-placeholder">';
+				echo '			<div class="img-placeholder text-center">';
 								   if(!is_null($row["prod_img"])) {
-				echo '            	<img src="'.base_url() . 'assets/prod_img/' . $row["prod_img"].'" class="card-img" height="200"/>';					
+				echo '            	<img src="'.base_url() . 'assets/prod_img/' . $row["prod_img"].'" class="" height="200"/>';					
 									}
 								
 				echo'				</div>
@@ -241,9 +242,8 @@ if($store_id == "2"){
 						<h5 style="width: 100%">TOTAL: <span id="totalvalue"><?php echo $total == "" ? "0.00" : number_format($total, 2); ?></span></h5>
 					</div>
 				</div>
-				<br/>
 				<div class="row px-2 pb-3">
-					<button type="button" class="btn btn-success" id="settlebtn" style="height: 50px;width: 98%; font-size: 20px;">
+					<button type="button" class="btn btn-success mb-2" id="settlebtn" style="height: 50px;width: 98%; font-size: 20px;">
 						<i class="fa fa-check"></i>&nbsp; &nbsp; PLACE ORDER
 					</button>
 				</div>
