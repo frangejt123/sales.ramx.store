@@ -129,7 +129,7 @@ if($store_id == "2"){
 							<img id="map_img_preview" src=""  />
 							<div class='text-center' id="upload-text"><i class="fa fa-camera"></i> Upload Image</div>
 						</div>
-						<input type='file' id="product_img" class='d-none form-control' />
+						<input type='file' id="product_img" class='d-none form-control not-required' />
 					</div>
 					<div class="form-group">
 						<label>Description</label>
